@@ -1,5 +1,6 @@
 ﻿using System.Security.AccessControl;
 using Microsoft.EntityFrameworkCore;
+using SocialReview.Models;
 
 namespace SocialReview
 {
@@ -10,7 +11,7 @@ namespace SocialReview
 
 
         }
-        public DbSet<Users> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }

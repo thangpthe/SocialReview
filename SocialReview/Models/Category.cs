@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SocialReview.Models
 {
-    [Table("Categorires")]
+    [Table("Categories")]
     public class Category
     {
         [Key]
@@ -15,7 +15,7 @@ namespace SocialReview.Models
         public string CategoryName { get; set; }
         public string Description { get; set; }
 
-        public ICollection<Products> Products { get; set; }
+        public ICollection<Product> Products { get; set; }
 
 
 
