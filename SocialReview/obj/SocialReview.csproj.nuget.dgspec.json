@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\thaiph\\source\\repos\\SocialReview\\SocialReview\\SocialReview.csproj": {}
+    "D:\\C#\\ASPNETMVC\\SocialReview\\SocialReview\\SocialReview.csproj": {}
   },
   "projects": {
-    "C:\\Users\\thaiph\\source\\repos\\SocialReview\\SocialReview\\SocialReview.csproj": {
+    "D:\\C#\\ASPNETMVC\\SocialReview\\SocialReview\\SocialReview.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\thaiph\\source\\repos\\SocialReview\\SocialReview\\SocialReview.csproj",
+        "projectUniqueName": "D:\\C#\\ASPNETMVC\\SocialReview\\SocialReview\\SocialReview.csproj",
         "projectName": "SocialReview",
-        "projectPath": "C:\\Users\\thaiph\\source\\repos\\SocialReview\\SocialReview\\SocialReview.csproj",
-        "packagesPath": "C:\\Users\\thaiph\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\thaiph\\source\\repos\\SocialReview\\SocialReview\\obj\\",
+        "projectPath": "D:\\C#\\ASPNETMVC\\SocialReview\\SocialReview\\SocialReview.csproj",
+        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+        "outputPath": "D:\\C#\\ASPNETMVC\\SocialReview\\SocialReview\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\thaiph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
