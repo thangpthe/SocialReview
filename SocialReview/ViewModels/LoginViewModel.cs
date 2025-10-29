@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ReviewSocialNetwork.ViewModels
+namespace SocialReview.ViewModels
 {
     public class LoginViewModel
     {

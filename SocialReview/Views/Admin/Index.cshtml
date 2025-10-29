@@ -1,5 +1,672 @@
-﻿@* @model 
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Trustify</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --purple-700: #6A1B9A;
+            --purple-600: #8E24AA;
+            --purple-100: #E1BEE7;
+            --purple-50: #F3E5F5;
+            --bg-light: #F9F6FB;
+            --text-dark: #212121;
+            --text-gray: #555;
+        }
 
-{
-   
-} *@
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sidebar {
+            background-color: var(--purple-700);
+            color: white;
+            min-height: 100vh; /* Đảm bảo sidebar luôn cao bằng màn hình */
+        }
+
+            .sidebar a {
+                color: var(--purple-100);
+                transition: all 0.2s ease;
+            }
+
+                .sidebar a:hover, .sidebar a.active {
+                    background-color: var(--purple-600);
+                    color: white;
+                }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-3px);
+            }
+
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow-x: auto; /* Cho phép cuộn ngang trên mobile */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap; /* Ngăn text xuống dòng */
+        }
+
+        th {
+            background-color: var(--purple-50);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--purple-700);
+        }
+
+        td {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            display: inline-flex; /* Để icon và text thẳng hàng */
+            align-items: center;
+            gap: 4px;
+        }
+
+            .btn:hover {
+                opacity: 0.85;
+            }
+
+        .btn-green {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-red {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .btn-blue {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-yellow {
+            background-color: #FFC107;
+            color: var(--text-dark);
+        }
+
+        .btn-gray {
+            background-color: #e0e0e0;
+            color: var(--text-dark);
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-green {
+            background-color: #E8F5E9;
+            color: #388E3C;
+        }
+
+        .badge-red {
+            background-color: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .badge-yellow {
+            background-color: #FFFDE7;
+            color: #FBC02D;
+        }
+
+        /* Responsive Sidebar Toggle */
+        .sidebar-toggle {
+            display: none;
+        }
+        media (max-width: 1024px) { /* Đổi breakpoint sang lg */
+            .sidebar
+
+        {
+            position: fixed;
+            top: 0;
+            left: -256px; /* Ẩn ban đầu */
+            height: 100vh;
+            z-index: 50;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .sidebar-toggle {
+            display: block;
+        }
+
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="sidebar w-64 p-6 space-y-6 flex flex-col fixed h-full lg:relative lg:left-0 z-50" id="sidebar">
+        <h1 class="font-poppins text-2xl font-bold text-center text-white">Trustify <span class="text-sm font-normal block">Admin</span></h1>
+
+        <nav class="flex-grow space-y-2">
+            <!-- Sử dụng data-target để xác định nội dung cần hiển thị -->
+            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg" data-target="dashboard">
+                <i class="fa-solid fa-tachometer-alt w-5 text-center"></i>
+                <span>Tổng quan</span>
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg" data-target="users">
+                <i class="fa-solid fa-users w-5 text-center"></i>
+                <span>Quản lý User</span>
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg" data-target="companies">
+                <i class="fa-solid fa-building w-5 text-center"></i>
+                <span>Quản lý Doanh nghiệp</span>
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg" data-target="products">
+                <i class="fa-solid fa-box w-5 text-center"></i>
+                <span>Quản lý Sản phẩm</span>
+            </a>
+            <a href="#" class="sidebar-link active flex items-center gap-3 px-4 py-2 rounded-lg bg-purple-600 text-white" data-target="reviews">
+                <i class="fa-solid fa-check-double w-5 text-center"></i>
+                <span>Duyệt Review</span>
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg" data-target="reports">
+                <i class="fa-solid fa-flag w-5 text-center"></i>
+                <span>Xem Báo cáo</span>
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg" data-target="settings">
+                <i class="fa-solid fa-cog w-5 text-center"></i>
+                <span>Cài đặt</span>
+            </a>
+        </nav>
+
+        <div>
+            <a href="/Auth/Logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm hover:bg-red-500 hover:text-white">
+                <i class="fa-solid fa-sign-out-alt w-5 text-center"></i>
+                <span>Đăng xuất</span>
+            </a>
+            <form id="logout-form" action="/Auth/Logout" method="POST" style="display: none;">
+                <!-- @Html.AntiForgeryToken() -->
+            </form>
+        </div>
+    </aside>
+    <!-- Overlay for mobile sidebar -->
+    <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-content flex-grow p-6 md:p-10 space-y-8">
+        <!-- Header & Sidebar Toggle -->
+        <div class="flex justify-between items-center">
+            <h2 id="page-title" class="font-poppins text-2xl font-semibold">Duyệt Review Chờ</h2>
+            <button class="sidebar-toggle lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- SECTION: TỔNG QUAN (dashboard) - TẠM ẨN -->
+        <!-- ============================================== -->
+        <section id="dashboard-content" class="page-content hidden space-y-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards thống kê -->
+                <div class="stat-card p-6 flex items-center gap-4">...</div>
+                <div class="stat-card p-6 flex items-center gap-4">...</div>
+                <div class="stat-card p-6 flex items-center gap-4">...</div>
+            </div>
+            <p>Nội dung trang Tổng quan sẽ ở đây...</p>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION: QUẢN LÝ USER (users) - TẠM ẨN -->
+        <!-- ============================================== -->
+        <section id="users-content" class="page-content hidden space-y-8">
+            <h3 class="font-poppins text-xl font-semibold">Danh sách Người dùng</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ tên</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dữ liệu mẫu -->
+                        <tr>
+                            <td>1</td>
+                            <td>Admin Quản Trị</td>
+                            <td>admin</td>
+                            <td>admin@trustify.com</td>
+                            <td><span class="badge badge-red">Admin</span></td>
+                            <td><span class="badge badge-green">Active</span></td>
+                            <td>2025-10-30</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-blue"><i class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-yellow"><i class="fa-solid fa-lock"></i></button>
+                                <button class="btn btn-red"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Nguyễn Văn A</td>
+                            <td>nguyenvana</td>
+                            <td>user_a@gmail.com</td>
+                            <td><span class="badge badge-green">User</span></td>
+                            <td><span class="badge badge-green">Active</span></td>
+                            <td>2025-10-30</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-blue"><i class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-yellow"><i class="fa-solid fa-lock-open"></i></button>
+                                <button class="btn btn-red"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Thêm user khác -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION: QUẢN LÝ DOANH NGHIỆP (companies) - TẠM ẨN -->
+        <!-- ============================================== -->
+        <section id="companies-content" class="page-content hidden space-y-8">
+            <h3 class="font-poppins text-xl font-semibold">Danh sách Doanh nghiệp</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên Doanh nghiệp</th>
+                            <th>Người quản lý (User)</th>
+                            <th>Ngành</th>
+                            <th>Website</th>
+                            <th>Trạng thái User</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dữ liệu mẫu -->
+                        <tr>
+                            <td>1</td>
+                            <td>FPT Software</td>
+                            <td>fpt.software (ID: 5)</td>
+                            <td>Công nghệ thông tin</td>
+                            <td>fpt-software.com</td>
+                            <td><span class="badge badge-green">Active</span></td>
+                            <td class="space-x-2">
+                                <button class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem DN</button>
+                                <button class="btn btn-yellow"><i class="fa-solid fa-user-lock"></i> Khóa User</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>VNG Corporation</td>
+                            <td>vng.corp (ID: 6)</td>
+                            <td>Công nghệ & Internet</td>
+                            <td>vng.com.vn</td>
+                            <td><span class="badge badge-green">Active</span></td>
+                            <td class="space-x-2">
+                                <button class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem DN</button>
+                                <button class="btn btn-yellow"><i class="fa-solid fa-user-lock"></i> Khóa User</button>
+                            </td>
+                        </tr>
+                        <!-- Thêm company khác -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION: QUẢN LÝ SẢN PHẨM (products) - TẠM ẨN -->
+        <!-- ============================================== -->
+        <section id="products-content" class="page-content hidden space-y-8">
+            <h3 class="font-poppins text-xl font-semibold">Danh sách Sản phẩm/Dịch vụ</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên Sản phẩm/DV</th>
+                            <th>Doanh nghiệp</th>
+                            <th>Danh mục</th>
+                            <th>Loại</th>
+                            <th>Giá</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dữ liệu mẫu -->
+                        <tr>
+                            <td>1</td>
+                            <td>FPT.AI</td>
+                            <td>FPT Software</td>
+                            <td>Công nghệ</td>
+                            <td>Service</td>
+                            <td>N/A</td>
+                            <td>2025-10-30</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-blue"><i class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></button>
+                                <button class="btn btn-red"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Zalo</td>
+                            <td>VNG Corporation</td>
+                            <td>Công nghệ</td>
+                            <td>Product</td>
+                            <td>N/A</td>
+                            <td>2025-10-30</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-blue"><i class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></button>
+                                <button class="btn btn-red"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Thêm product khác -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- SECTION: DUYỆT REVIEW (reviews) - HIỂN THỊ MẶC ĐỊNH -->
+        <!-- ============================================== -->
+        <section id="reviews-content" class="page-content space-y-8">
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="stat-card p-6 flex items-center gap-4">
+                    <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                        <i class="fa-solid fa-users fa-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Tổng User</p>
+                        <p class="text-2xl font-semibold">1,250</p>
+                    </div>
+                </div>
+                <div class="stat-card p-6 flex items-center gap-4">
+                    <div class="bg-green-100 text-green-600 p-3 rounded-full">
+                        <i class="fa-solid fa-star fa-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Tổng Review</p>
+                        <p class="text-2xl font-semibold">3,400</p>
+                    </div>
+                </div>
+                <div class="stat-card p-6 flex items-center gap-4">
+                    <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full">
+                        <i class="fa-solid fa-clock fa-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Review Chờ Duyệt</p>
+                        <p class="text-2xl font-semibold">15</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Reviews Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tiêu đề Review</th>
+                            <th>Sản phẩm</th>
+                            <th>Tác giả</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="review-table-body">
+                        <!-- Dữ liệu mẫu -->
+                        <tr data-review-id="101">
+                            <td>101</td>
+                            <td>Trải nghiệm tuyệt vời tại Spa X</td>
+                            <td>Spa X</td>
+                            <td>nguyenvana</td>
+                            <td>2025-10-29</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-green" onclick="approveReview(101, this)">Duyệt</button>
+                                <button class="btn btn-red" onclick="rejectReview(101, this)">Từ chối</button>
+                            </td>
+                        </tr>
+                        <tr data-review-id="102">
+                            <td>102</td>
+                            <td>Sản phẩm Y chất lượng kém</td>
+                            <td>Điện thoại Y</td>
+                            <td>tranvanb</td>
+                            <td>2025-10-28</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-green" onclick="approveReview(102, this)">Duyệt</button>
+                                <button class="btn btn-red" onclick="rejectReview(102, this)">Từ chối</button>
+                            </td>
+                        </tr>
+                        <tr data-review-id="103">
+                            <td>103</td>
+                            <td>Nhà hàng Z phục vụ quá chậm</td>
+                            <td>Nhà hàng Z</td>
+                            <td>lethic</td>
+                            <td>2025-10-28</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-green" onclick="approveReview(103, this)">Duyệt</button>
+                                <button class="btn btn-red" onclick="rejectReview(103, this)">Từ chối</button>
+                            </td>
+                        </tr>
+                        <!-- Thêm các hàng khác nếu cần -->
+                    </tbody>
+                </table>
+                <!-- Có thể thêm phân trang ở đây -->
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION: XEM BÁO CÁO (reports) - TẠM ẨN -->
+        <!-- ============================================== -->
+        <section id="reports-content" class="page-content hidden space-y-8">
+            <h3 class="font-poppins text-xl font-semibold">Danh sách Báo cáo Vi phạm</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Loại (Review/Comment)</th>
+                            <th>ID Bị Báo cáo</th>
+                            <th>Người Báo cáo</th>
+                            <th>Lý do</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dữ liệu mẫu -->
+                        <tr>
+                            <td>1</td>
+                            <td>Review</td>
+                            <td>102</td>
+                            <td>user_d</td>
+                            <td>Spam</td>
+                            <td>2025-10-30</td>
+                            <td class="space-x-2">
+                                <button class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem</button>
+                                <button class="btn btn-red"><i class="fa-solid fa-trash"></i> Xóa Vi phạm</button>
+                                <button class="btn btn-gray"><i class="fa-solid fa-check"></i> Bỏ qua</button>
+                            </td>
+                        </tr>
+                        <!-- Thêm report khác -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION: CÀI ĐẶT (settings) - TẠM ẨN -->
+        <!-- ============================================== -->
+        <section id="settings-content" class="page-content hidden space-y-8">
+            <h3 class="font-poppins text-xl font-semibold">Cài đặt Hệ thống</h3>
+            <p>Nội dung trang Cài đặt sẽ ở đây...</p>
+            <!-- Ví dụ: Cấu hình email, bật/tắt tính năng... -->
+        </section>
+
+    </main>
+
+    <script>
+        // --- Sidebar Toggle for Mobile ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const pageContents = document.querySelectorAll('.page-content');
+        const pageTitle = document.getElementById('page-title');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+
+        // --- Sidebar Navigation Logic ---
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault(); // Ngăn chuyển trang
+
+                // Bỏ active tất cả link
+                sidebarLinks.forEach(l => l.classList.remove('active', 'bg-purple-600', 'text-white'));
+                // Active link được click
+                link.classList.add('active', 'bg-purple-600', 'text-white');
+
+                // Lấy target content
+                const targetId = link.getAttribute('data-target') + '-content';
+                const targetContent = document.getElementById(targetId);
+
+                // Ẩn tất cả content
+                pageContents.forEach(content => content.classList.add('hidden'));
+
+                // Hiển thị target content và cập nhật tiêu đề
+                if (targetContent) {
+                    targetContent.classList.remove('hidden');
+                    // Cập nhật tiêu đề trang (lấy text từ link)
+                    pageTitle.textContent = link.querySelector('span').textContent;
+                } else {
+                     pageTitle.textContent = "Lỗi: Không tìm thấy nội dung";
+                }
+
+                // Đóng sidebar trên mobile sau khi click
+                if (window.innerWidth < 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+
+        // --- Review Moderation Logic (Giữ nguyên) ---
+        const reviewTableBody = document.getElementById('review-table-body');
+        async function approveReview(reviewId, buttonElement) {
+            console.log(`Duyệt review ID: ${reviewId}`);
+            disableButtons(buttonElement.closest('td')); // Truyền td thay vì button
+            try {
+                const response = await fetch(`/api/Admin/ApproveReview/${reviewId}`, { /* ... */ });
+                if (response.ok) {
+                    buttonElement.closest('tr').remove();
+                } else {
+                    console.error('Lỗi khi duyệt:', response.statusText);
+                    alert('Đã xảy ra lỗi khi duyệt review.');
+                    enableButtons(buttonElement.closest('td')); // Truyền td
+                }
+            } catch (error) {
+                console.error('Lỗi mạng:', error);
+                alert('Đã xảy ra lỗi kết nối.');
+                enableButtons(buttonElement.closest('td')); // Truyền td
+            }
+        }
+        async function rejectReview(reviewId, buttonElement) {
+             console.log(`Từ chối review ID: ${reviewId}`);
+             disableButtons(buttonElement.closest('td')); // Truyền td
+             try {
+                 const response = await fetch(`/api/Admin/RejectReview/${reviewId}`, { /* ... */ });
+                 if (response.ok) {
+                    buttonElement.closest('tr').remove();
+                 } else {
+                     console.error('Lỗi khi từ chối:', response.statusText);
+                     alert('Đã xảy ra lỗi khi từ chối review.');
+                     enableButtons(buttonElement.closest('td')); // Truyền td
+                 }
+             } catch (error) {
+                 console.error('Lỗi mạng:', error);
+                 alert('Đã xảy ra lỗi kết nối.');
+                 enableButtons(buttonElement.closest('td')); // Truyền td
+             }
+        }
+        function disableButtons(tdElement) { // Nhận td thay vì button
+             const approveBtn = tdElement.querySelector('.btn-green');
+             const rejectBtn = tdElement.querySelector('.btn-red');
+             if(approveBtn) approveBtn.disabled = true;
+             if(rejectBtn) rejectBtn.disabled = true;
+             tdElement.closest('tr').style.opacity = '0.5';
+        }
+        function enableButtons(tdElement) { // Nhận td
+             const approveBtn = tdElement.querySelector('.btn-green');
+             const rejectBtn = tdElement.querySelector('.btn-red');
+             if(approveBtn) approveBtn.disabled = false;
+             if(rejectBtn) rejectBtn.disabled = false;
+             tdElement.closest('tr').style.opacity = '1';
+        }
+        // TODO: Load dữ liệu thật vào các bảng
+    </script>
+</body>
+</html>
+

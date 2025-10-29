@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ReviewSocialNetwork.ViewModels
+namespace SocialReview.ViewModels
 {
     public class RegisterViewModel
     {
@@ -21,6 +21,8 @@ namespace ReviewSocialNetwork.ViewModels
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string UserRole { get; set; }
 
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Mật khẩu và xác nhận mật khẩu không khớp.")]

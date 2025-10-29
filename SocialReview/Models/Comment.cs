@@ -14,7 +14,8 @@ namespace SocialReview.Models
         [Required]
         public int ReviewID { get; set; }
         [Required]
-        public int UserID { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
         [Required(ErrorMessage = "Không được để trống")]
         public string CommentContent { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
