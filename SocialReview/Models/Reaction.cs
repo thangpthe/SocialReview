@@ -13,7 +13,8 @@ namespace SocialReview.Models
         [Required]
         public int ReactionID { get; set; }
         [Required]
-        public int UserID { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
         [Required]
         public int ReviewID { get; set; }
         public string Type { get; set; }  // "Like", "Love", "Wow"

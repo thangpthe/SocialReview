@@ -112,6 +112,11 @@ namespace SocialReview
                 .WithMany(c=>c.Comments)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Reaction>()
+                .HasOne(c => c.User)
+                .WithMany(c=>c.Reactions)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }
