@@ -90,7 +90,7 @@ nav {
     gap: 12px;
 }
 
-.btn-login, .btn-signup {
+.btn-login, .btn-signup,.btn-logout {
     font-weight: 500;
     border-radius: 6px;
     padding: 6px 14px;
@@ -108,7 +108,7 @@ nav {
         background: var(--light-purple);
     }
 
-.btn-signup {
+.btn-signup,.btn-logout {
     background: var(--purple);
     color: white;
 }

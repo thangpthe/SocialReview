@@ -1,4 +1,4 @@
-﻿// Services/Implementations/AuthService.cs
+﻿
 using Microsoft.AspNetCore.Identity;
 using SocialReview.Models;
 using SocialReview.ViewModels;
@@ -16,7 +16,7 @@ namespace SocialReview.Services
             _signInManager = signInManager;
         }
 
-        public async Task<bool> RegisterAsync(RegisterViewModel model)
+        public async Task<IdentityResult> RegisterAsync(RegisterViewModel model)
         {
             var user = new User
             {
@@ -28,7 +28,7 @@ namespace SocialReview.Services
                 IsActive = true
             };
             var result = await _userManager.CreateAsync(user, model.Password);
-            return result.Succeeded;
+            return result;
         }
 
         public async Task<bool> LoginAsync(string username, string password)
