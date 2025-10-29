@@ -2,9 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap');
 /* Root Variables */
 :root {
-    --purple: #6A1B9A;
+    --purple: #912ec2;
     --light-purple: #F3E5F5;
     --dark-text: #212121;
+    --bg-light:#f9f4fb;
     --gray-text: #555;
 }
 
@@ -63,10 +64,11 @@ nav {
 .search-bar {
     display: flex;
     align-items: center;
-    background: var(--light-purple);
+    background: var(--bg-light);
+    border:1px solid #ccc;
     border-radius: 8px;
     padding: 6px 10px;
-    width: 260px;
+    width: 440px;
 }
 
     .search-bar input {

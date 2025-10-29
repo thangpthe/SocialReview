@@ -19,7 +19,7 @@ namespace SocialReview.Models
         public int TargetID { get; set; }
         [Required(ErrorMessage = "Lý do không được để trống")]
         public string Reason { get; set; }
-        public string? Description { get; set; }
+        public string? ReportDescription { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Navigation

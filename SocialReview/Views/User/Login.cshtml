@@ -1,29 +1,43 @@
 ﻿@{
     ViewData["Title"] = "Đăng nhập";
+    Layout = null;
 }
 
-<section class="auth-section">
-    <div class="auth-container">
-        <h2>Đăng nhập</h2>
-        <p>Chào mừng trở lại với <strong>Trustify</strong></p>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Trustify</title>
 
-        <form method="post" asp-action="Login" class="auth-form">
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="Email" required placeholder="Nhập email của bạn" />
-            </div>
+    <!-- Font + CSS -->
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+    <section class="auth-section">
+        <div class="auth-container">
+            <h2>Đăng nhập</h2>
+            <p>Chào mừng trở lại với <strong>Trustify</strong></p>
 
-            <div class="form-group">
-                <label>Mật khẩu</label>
-                <input type="password" name="Password" required placeholder="Nhập mật khẩu" />
-            </div>
+            <form method="post" class="auth-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="Email" required placeholder="Nhập email của bạn" />
+                </div>
 
-            <button type="submit" class="btn-primary">Đăng nhập</button>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="Password" required placeholder="Nhập mật khẩu" />
+                </div>
 
-            <div class="auth-links">
-                <a asp-action="ForgotPassword">Quên mật khẩu?</a>
-                <p>Chưa có tài khoản? <a asp-action="Register">Đăng ký</a></p>
-            </div>
-        </form>
-    </div>
-</section>
+                <button type="submit" class="btn-primary">Đăng nhập</button>
+
+                <div class="auth-links">
+                    <a href="/Account/ForgotPassword">Quên mật khẩu?</a>
+                    <p>Chưa có tài khoản? <a href="/User/Register">Đăng ký</a></p>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

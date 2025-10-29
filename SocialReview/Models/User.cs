@@ -14,14 +14,24 @@ namespace SocialReview.Models
         [Required(ErrorMessage = "Họ tên là bắt buộc")]
         [StringLength(100, ErrorMessage = "Họ tên tối đa 100 ký tự")]
         public string FullName { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập tên tài khoản")]
+        [StringLength(32)]
+        public string Username { get; set; }
         [EmailAddress(ErrorMessage = "Sai định dạng email")]
         [Required(ErrorMessage = "Email là bắt buộc")]
         [StringLength(100, ErrorMessage = "Email có độ dài tối đa 100 ký tự")]
+        public string UserEmail { get; set; }
 
+        [Required]
+        [StringLength(255)]
         public string PasswordHash { get; set; }
-        // [Required(ErrorMessage = "")]
-        public string? Avatar { get; set; }
-        public string Role { get; set; }
+        [StringLength(255)]        
+        
+        public string? UserAvatar { get; set; }
+        [Required]
+        [StringLength(20)]
+        public string UserRole { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
 

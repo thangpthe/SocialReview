@@ -16,7 +16,7 @@ namespace SocialReview.Models
         [Required]
         public int UserID { get; set; }
         [Required(ErrorMessage = "Không được để trống")]
-        public string Content { get; set; }
+        public string CommentContent { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Navigation

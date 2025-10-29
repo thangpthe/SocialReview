@@ -17,15 +17,15 @@ namespace SocialReview.Models
         [Required(ErrorMessage = "Tên sản phẩm là bắt buộc")]
         [StringLength(200, ErrorMessage = "Tên công ty tối đa 200 ký tự")]
         public string ProductName { get; set; }
-        public string Description { get; set; }
+        public string ProductDescription { get; set; }
         // [Required(ErrorMessage = "")]
         [StringLength(255, ErrorMessage = "Link ảnh có độ dài không quá 255 ký tự")]
-        public string Image { get; set; }
+        public string ProductImage { get; set; }
 
         [StringLength(200, ErrorMessage = "Độ dài url không quá 200 ký tự")]
-        public int Price { get; set; }
+        public int ProductPrice { get; set; }
         [Required(ErrorMessage = "Loại sản phẩm là bắt buộc")]
-        public string Type { get; set; }
+        public string ProductType { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public Company Company { get; set; }

@@ -1,1 +1,53 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký - Trustify</title>
+
+    <!-- Font + CSS -->
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+    <section class="auth-section">
+        <div class="auth-container">
+            <h2>Tạo tài khoản</h2>
+            <p>Tham gia <strong>Trustify</strong> và bắt đầu chia sẻ review của bạn</p>
+
+            <form method="post" class="auth-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="FullName" required placeholder="Nhập username" />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="Email" required placeholder="Nhập email" />
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="Password" required placeholder="Tạo mật khẩu" />
+                </div>
+
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu</label>
+                    <input type="password" name="ConfirmPassword" required placeholder="Nhập lại mật khẩu" />
+                </div>
+
+                <button type="submit" class="btn-primary">Đăng ký</button>
+
+                <div class="auth-links">
+                    <p>Đã có tài khoản? <a href="/User/Login">Đăng nhập</a></p>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

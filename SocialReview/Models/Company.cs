@@ -18,7 +18,7 @@ namespace SocialReview.Models
 
         [StringLength(255, ErrorMessage = "Đường dẫn ảnh không quá 255 ký tự")]
         public string Logo { get; set; }
-        public string Description { get; set; }
+        public string CompanyDescription { get; set; }
         // [Required(ErrorMessage = "")]
         [StringLength(100, ErrorMessage = "Tên lĩnh vực không quá 100 ký tự")]
         public string Industry { get; set; }

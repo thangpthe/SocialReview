@@ -13,7 +13,7 @@ namespace SocialReview.Models
         [Required(ErrorMessage = "Tên loại là bắt buộc")]
         [StringLength(100, ErrorMessage = "Tên loaij tối đa 100 ký tự")]
         public string CategoryName { get; set; }
-        public string Description { get; set; }
+        public string CategoryDescription { get; set; }
 
         public ICollection<Product> Products { get; set; }
 
