@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SocialReview.Data;
 using SocialReview.Repositories.Interface;
 
 namespace SocialReview.Repositories.Class

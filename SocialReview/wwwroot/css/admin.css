@@ -1,0 +1,176 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600&display=swap');
+:root {
+    --purple-700: #6A1B9A;
+    --purple-600: #8E24AA;
+    --purple-100: #E1BEE7;
+    --purple-50: #F3E5F5;
+    --bg-light: #F9F6FB;
+    --text-dark: #212121;
+    --text-gray: #555;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+h1, h2, h3, h4, h5, h6, .font-poppins {
+    font-family: 'Poppins', sans-serif;
+}
+
+.sidebar {
+    background-color: var(--purple-700);
+    color: white;
+    min-height: 100vh; /* Đảm bảo sidebar luôn cao bằng màn hình */
+}
+
+    .sidebar a {
+        color: var(--purple-100);
+        transition: all 0.2s ease;
+    }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: var(--purple-600);
+            color: white;
+        }
+
+.stat-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+
+.table-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow-x: auto; /* Cho phép cuộn ngang trên mobile */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap; /* Ngăn text xuống dòng */
+}
+
+th {
+    background-color: var(--purple-50);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--purple-700);
+}
+
+td {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    display: inline-flex; /* Để icon và text thẳng hàng */
+    align-items: center;
+    gap: 4px;
+}
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+.btn-green {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-red {
+    background-color: #F44336;
+    color: white;
+}
+
+.btn-blue {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-yellow {
+    background-color: #FFC107;
+    color: var(--text-dark);
+}
+
+.btn-gray {
+    background-color: #e0e0e0;
+    color: var(--text-dark);
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-green {
+    background-color: #E8F5E9;
+    color: #388E3C;
+}
+
+.badge-red {
+    background-color: #FFEBEE;
+    color: #D32F2F;
+}
+
+.badge-yellow {
+    background-color: #FFFDE7;
+    color: #FBC02D;
+}
+
+/* Responsive Sidebar Toggle */
+.sidebar-toggle {
+    display: none;
+}
+
+media (max-width: 1024px) { /* Đổi breakpoint sang lg */
+    .sidebar
+
+{
+    position: fixed;
+    top: 0;
+    left: -256px; /* Ẩn ban đầu */
+    height: 100vh;
+    z-index: 50;
+    transition: left 0.3s ease;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
+.sidebar-toggle {
+    display: block;
+}

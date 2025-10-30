@@ -117,11 +117,21 @@ nav {
         opacity: 0.9;
     }
 
-/* ===== MAIN ===== */
-main {
-    padding: 40px 0;
-    min-height: 70vh;
+.btn-logout {
+    border: 1px solid var(--purple);
+    color: var(--purple);
+    background: transparent;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
+    /* ===== MAIN ===== */
+    main {
+        padding: 40px 0;
+        min-height: 70vh;
+    }
 
 /* ===== FOOTER ===== */
 footer {

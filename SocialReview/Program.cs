@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using SocialReview;
+using SocialReview.Data;
 using SocialReview.Models;
+using SocialReview.Repositories.Class;
+using SocialReview.Repositories.Interface;
 using SocialReview.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,8 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SocialReview")));
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
     
@@ -27,7 +31,10 @@ builder.Services.AddSession(options =>
 }); 
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    await DataSeeder.SeedAsync(scope.ServiceProvider);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -43,6 +50,10 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "AdminArea",
+    pattern: "{area:exists}/{controller=AdminDashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

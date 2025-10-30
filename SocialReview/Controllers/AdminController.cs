@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using SocialReview.Models;
 using System.Linq;
 using System.Threading.Tasks;
-using SocialReview;
+using SocialReview.Data;
 
 namespace ReviewSocialNetwork.Controllers
 {
-    // BƯỚC QUAN TRỌNG: Bảo vệ toàn bộ Controller này
-    // Chỉ những ai đã đăng nhập VÀ có Role = "Admin" mới được vào
+    
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {

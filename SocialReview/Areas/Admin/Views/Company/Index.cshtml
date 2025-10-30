@@ -1,0 +1,55 @@
+﻿@model IEnumerable<SocialReview.Models.Company>
+@{
+    ViewData["Title"] = "Danh sách doanh nghiệp";
+    Layout = "_AdminLayout";
+}
+<section id="companies-content" class="space-y-8">
+
+    <div class="flex justify-between items-center">
+        <h3 class="font-poppins text-xl font-semibold">Danh sách Doanh nghiệp</h3>
+        <a asp-action="Create" class="btn btn-green">
+            <i class="fa-solid fa-plus"></i> Tạo mới
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Doanh nghiệp</th>
+                    <th>Mô tả</th>
+                    <th>Lĩnh vực</th>
+                    <th>Email</th>
+                    <th>SDT</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.CompanyID</td>
+                        <td>@item.CompanyName</td>
+                        <td>
+                            @item.CompanyDescription
+                        </td>
+                       <td>
+                           @item.Industry
+                       </td>
+                       <td>@item.ContactEmail</td>
+                       <td>@item.Phone</td>
+                        
+                        <td class="space-x-2">
+                            <a  class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
+                            <a  class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
+                            <a  class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+

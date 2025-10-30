@@ -1,0 +1,61 @@
+﻿@model IEnumerable<SocialReview.Models.User>
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+    Layout = "_AdminLayout";
+}
+<section id="companies-content" class="space-y-8">
+
+    <div class="flex justify-between items-center">
+        <h3 class="font-poppins text-xl font-semibold">Danh sách người dùng</h3>
+        <a asp-action="Create" class="btn btn-green">
+            <i class="fa-solid fa-plus"></i> Tạo mới
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Vai trò</th>
+                    <th>Hành động </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    if(item.UserRole != "Admin")
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.UserName</td>
+                            <td>
+                                @(item.UserRole == "User" ? "Cá nhân" : "Doanh nghiệp")
+                            </td>
+
+                            @* <td>
+                            @if (item.User != null && item.User.IsActive)
+                            {
+                                <span class="badge badge-green">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-gray">Inactive</span>
+                            }
+                        </td> *@
+                            <td class="space-x-2">
+                                <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
+                                <a class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
+                                <a class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                   
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+

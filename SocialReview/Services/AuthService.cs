@@ -28,13 +28,26 @@ namespace SocialReview.Services
                 IsActive = true
             };
             var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, model.UserRole);
+            }
+
             return result;
         }
 
-        public async Task<bool> LoginAsync(string username, string password)
+        public async Task<string?> LoginAsync(string username, string password)
         {
-            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
-            return result.Succeeded;
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return null;
+
+            var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+            if (!result.Succeeded)
+                return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles.FirstOrDefault();
         }
 
         public async Task LogoutAsync()

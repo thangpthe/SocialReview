@@ -1,16 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SocialReview.Data;
 using SocialReview.Models;
 using SocialReview.Repositories.Interface;
 
 namespace SocialReview.Repositories.Class
 {
-    public class UserRepository 
+    public class UserRepository : IUserRepository
     {
-        //private readonly ApplicationDbContext _context;
-        //public UserRepository (ApplicationDbContext context) :base(context)
-        //{
-           
-        //}
+        private readonly ApplicationDbContext _context;
+
+       
+        public UserRepository(ApplicationDbContext context) 
+        {
+            _context = context;
+        }
 
         //public async Task<bool> ExistsByEmail(string email)
         //{
@@ -30,7 +33,7 @@ namespace SocialReview.Repositories.Class
 
         //public async Task<User?> Authenticate(string username, string password)
         //{
-            
+
         //    var user = await GetUserByUsername(username);
         //    if (user == null)
         //    {
@@ -46,6 +49,16 @@ namespace SocialReview.Repositories.Class
         //{
         //    await _context.Users.AddAsync(user);
         //    await _context.SaveChangesAsync();
+        //}
+        public async Task<IEnumerable<User>> GetAllUser()
+        {
+            return await _context.Users.ToListAsync();
+        }
+            
+
+        //public async Task<User> GetUserById(int id)
+        //{
+        //    return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         //}
     }
 }

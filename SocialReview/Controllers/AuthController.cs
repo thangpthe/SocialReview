@@ -1,61 +1,4 @@
 ﻿
-//using Microsoft.AspNetCore.Mvc;
-//using SocialReview.ViewModels;
-//using SocialReview.Services;
-
-//public class AuthController : Controller
-//{
-//    private readonly IAuthService _authService;
-
-//    public AuthController(IAuthService authService)
-//    {
-//        _authService = authService;
-//    }
-
-//    [HttpGet]
-//    public IActionResult Login() => View();
-
-//    [HttpPost]
-//    public async Task<IActionResult> Login(LoginViewModel model)
-//    {
-//        if (!ModelState.IsValid)
-//            return View(model);
-
-//        var result = await _authService.LoginAsync(model.Username, model.Password);
-//        if (!result)
-//        {
-//            ModelState.AddModelError("", "Email hoặc mật khẩu không đúng.");
-//            return View(model);
-//        }
-
-//        return RedirectToAction("Index", "Home");
-//    }
-
-//    [HttpGet]
-//    public IActionResult Register() => View();
-
-//    [HttpPost]
-//    public async Task<IActionResult> Register(RegisterViewModel model)
-//    {
-//        if (!ModelState.IsValid)
-//            return View(model);
-
-//        var success = await _authService.RegisterAsync(model);
-//        if (!success)
-//        {
-//            ModelState.AddModelError("", "Email đã tồn tại hoặc mật khẩu không hợp lệ.");
-//            return View(model);
-//        }
-
-//        return RedirectToAction("Login");
-//    }
-
-//    public IActionResult Logout()
-//    {
-//        _authService.LogoutAsync();
-//        return RedirectToAction("Login");
-//    }
-//}
 
 using Microsoft.AspNetCore.Mvc;
 using SocialReview.ViewModels;
@@ -81,33 +24,26 @@ public class AuthController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken] // <-- Thêm để chống CSRF
-    public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = "/")
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
-        var result = await _authService.LoginAsync(model.Username, model.Password);
-        if (!result)
+        var role = await _authService.LoginAsync(model.Username, model.Password);
+
+        if (role == null)
         {
-            // Giữ thông báo lỗi chung chung để bảo mật
             ModelState.AddModelError(string.Empty, "Tên đăng nhập hoặc mật khẩu không đúng.");
             return View(model);
         }
 
-        if (string.IsNullOrEmpty(returnUrl) || returnUrl == "/")
-        {
-            // Nếu đúng, luôn chuyển hướng về trang chủ /Home/Index
-            return RedirectToAction("Index", "Home");
-        }
+        if (role == "Admin")
+            return RedirectToAction("Index", "AdminDashboard",new {area="Admin"});
         else
-        {
-            // 2. Nếu returnUrl CÓ giá trị (ví dụ: /Profile/MyPage)
-            //    chuyển hướng an toàn về trang đó.
-            return LocalRedirect(returnUrl);
-        }
+            return RedirectToAction("Index", "Home");
 
     }
 
@@ -116,7 +52,7 @@ public class AuthController : Controller
     public IActionResult Register() => View();
 
     [HttpPost]
-    [ValidateAntiForgeryToken] // <-- Thêm để chống CSRF
+    [ValidateAntiForgeryToken] 
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid)
@@ -124,10 +60,9 @@ public class AuthController : Controller
             return View(model);
         }
 
-        // --- Cải thiện xử lý lỗi ---
         var result = await _authService.RegisterAsync(model);
 
-        if (result.Succeeded) // Nếu hàm trả về bool như code của bạn
+        if (result.Succeeded) 
         {
            
             return RedirectToAction("Login");
@@ -138,7 +73,6 @@ public class AuthController : Controller
             //return View(model);
             foreach (var error in result.Errors)
             {
-                // error.Description sẽ là: "Passwords must be at least 6 characters.", "Username 'abc' is already taken."...
                 ModelState.AddModelError(string.Empty, error.Description);
             }
             return View(model);
