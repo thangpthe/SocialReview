@@ -47,6 +47,11 @@ namespace SocialReview.Repositories.Class
                 .FirstOrDefaultAsync(c => c.CompanyID == id);
         }
 
+        public async Task<Company?> GetCompanyByUserIdAsync(int userId)
+        {
+            return await _context.Companies.Include(c => c.Products).FirstOrDefaultAsync(c => c.UserID == userId);
+        }
+
         public async Task UpdateAsync(Company company)
         {
             _context.Companies.Update(company);

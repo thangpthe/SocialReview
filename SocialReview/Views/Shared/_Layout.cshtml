@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -13,7 +14,7 @@
    <link rel="icon" href="~/images/logo.ico" type="image/x-icon"/>
     <!-- Font Awesome -->
     <link href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" rel="stylesheet">
-
+    @await RenderSectionAsync("Styles", required: false)
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/layout.css" />
 </head>
@@ -34,10 +35,19 @@
 
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                        <a class="nav-greeting" asp-controller="Profile" asp-action="Index">
-                            Xin chào, <strong>@User.Identity.Name</strong>!
-                        </a>
-
+                          if (User.IsInRole("Company"))
+                        {
+                            <a class="nav-greeting" asp-controller="Company" asp-action="Index">
+                                Xin chào, <strong>@User.Identity.Name</strong>!
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="nav-greeting" asp-controller="User" asp-action="Index">
+                                <!-- Trỏ đến trang Profile (Views/User/Profile.cshtml) -->
+                                Xin chào, <strong>@User.Identity.Name</strong>!
+                            </a>
+                        }
                         <form asp-controller="Auth" asp-action="Logout" method="post">
                             <button type="submit" class="btn-logout">Đăng xuất</button>
                         </form>
@@ -61,42 +71,16 @@
     <!-- FOOTER -->
     <footer>
         <div class="container">
-            <div class="grid">
-                <div>
-                    <h4>Trustify</h4>
-                    <p>Đọc đánh giá đáng tin cậy để đưa ra quyết định mua hàng thông minh hơn.</p>
-                </div>
-
-                <div>
-                    <h5>Liên kết nhanh</h5>
-                    <ul>
-                        <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
-                        <li><a asp-controller="Review" asp-action="Index">Đánh giá</a></li>
-                        <li><a asp-controller="Company" asp-action="Index">Doanh nghiệp</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h5>Danh mục</h5>
-                    <ul>
-                        <li><a href="#">Sản phẩm</a></li>
-                        <li><a href="#">Dịch vụ</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h5>Liên hệ</h5>
-                    <ul>
-                        <li><a href="mailto:support@trustify.com">support@trustify.com</a></li>
-                        <li><a href="#">+84 999 999 999</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <img src="~/images/logo.png" alt="Trustify" width="40" loading="lazy" />
-                © 2025 Trustify. All rights reserved.
-            </div>
+            <p>&copy; @DateTime.Now.Year Trustify. All rights reserved.</p>
+            <nav>
+                <ul>
+                    <!-- Bạn sẽ cần tạo các Action/View cho các trang này (ví dụ: trong HomeController) -->
+                    <li><a asp-controller="Home" asp-action="About">Giới thiệu</a></li>
+                    <li><a asp-controller="Home" asp-action="Privacy">Chính sách Bảo mật</a></li>
+                    <li><a asp-controller="Home" asp-action="Terms">Điều khoản Dịch vụ</a></li>
+                    <li><a asp-controller="Home" asp-action="Contact">Liên hệ</a></li>
+                </ul>
+            </nav>
         </div>
     </footer>
 </body>

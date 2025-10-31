@@ -15,15 +15,12 @@ namespace SocialReview.Repositories.Class
             _context = context;
         }
 
-        //public async Task<bool> ExistsByEmail(string email)
-        //{
-        //   return await _dbSet.AnyAsync(u => u.UserEmail == email);
-        //}
 
-        //public async Task<User?> GetUserByUsername(string username)
-        //{
-        //    return await _dbSet.FirstOrDefaultAsync(u => u.Username == username);
-        //}
+
+        public async Task<User?> GetUserByUsername(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        }
 
         //public async Task<User?> GetUserById(int id)
         //{

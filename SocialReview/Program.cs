@@ -15,11 +15,15 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SocialReview")));
+
+//Repository
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
-    
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedAccount = false;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>() // Báo Identity dùng DbContext này
     .AddDefaultTokenProviders();
@@ -57,6 +61,6 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

@@ -27,7 +27,7 @@ namespace SocialReview.Models
         [Required(ErrorMessage = "Loại sản phẩm là bắt buộc")]
         public string ProductType { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
         public Company Company { get; set; }
         public Category Category{ get; set; }
 

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +24,7 @@
                 <i class="fa-solid fa-tachometer-alt w-5 text-center"></i>
                 <span>Tổng quan</span>
             </a>
-            <a asp-area="Admin" asp-controller="User" asp-action="Index" onclick="window.location.href=" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
+            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
                 <i class="fa-solid fa-users w-5 text-center"></i>
                 <span>Quản lý User</span>
             </a>
@@ -35,7 +36,7 @@
                 <i class="fa-solid fa-box w-5 text-center"></i>
                 <span>Quản lý Sản phẩm</span>
             </a>
-           
+
             <a asp-area="Admin" asp-controller="Report" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
                 <i class="fa-solid fa-flag w-5 text-center"></i>
                 <span>Xem Báo cáo</span>
@@ -70,11 +71,8 @@
             </button>
         </div>
 
-        <!-- ============================================== -->
-        <!-- NỘI DUNG CỦA TỪNG TRANG CON SẼ HIỂN THỊ Ở ĐÂY -->
-        <!-- ============================================== -->
         @RenderBody()
-        <!-- ============================================== -->
+
 
     </main>
 
@@ -88,8 +86,7 @@
             overlay.classList.toggle('hidden');
         }
 
-        // TODO: Thêm logic highlight link sidebar
-        // (Bạn có thể làm việc này bằng cách so sánh
+
         // window.location.pathname với href của link)
     </script>
 

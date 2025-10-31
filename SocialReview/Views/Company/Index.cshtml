@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model SocialReview.ViewModels.CompanyViewModel
+@* @addTagHelper *@
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -72,22 +74,7 @@
     </style>
 </head>
 <body>
-
-    <!-- ****** BẮT ĐẦU: Header (Giả định) ****** -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <nav class="container py-4 flex justify-between items-center">
-            <a href="/" class="font-poppins text-2xl font-bold text-[--purple-700]">Trustify</a>
-            <!-- Thêm search bar, menu user... -->
-            <div>
-                <a href="/Auth/Login" class="text-gray-600 hover:text-[--purple-700] mr-4">Đăng nhập</a>
-                <a href="/Auth/Register" class="bg-[--purple-700] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[--purple-600]">Đăng ký</a>
-            </div>
-        </nav>
-    </header>
-    <!-- ****** KẾT THÚC: Header (Giả định) ****** -->
-
     <main class="container py-10 md:py-16 space-y-12">
-
         <!-- ===== SECTION: THÔNG TIN CHUNG DOANH NGHIỆP ===== -->
         <section class="card p-6 md:p-8 flex flex-col md:flex-row items-start gap-8">
             <!-- Logo -->
@@ -97,21 +84,17 @@
 
             <!-- Thông tin chính -->
             <div class="flex-grow">
-                <h1 class="font-poppins text-3xl md:text-4xl font-bold mb-2">FPT Software</h1>
-                <p class="text-[--text-gray] text-lg mb-4">Công nghệ thông tin</p>
+                <h1 class="font-poppins text-3xl md:text-4xl font-bold mb-2">@Model.CompanyProfile.CompanyName</h1>
+                <p class="text-[--text-gray] text-lg mb-4">@Model.CompanyProfile.Industry</p>
                 <p class="mb-5 leading-relaxed">
-                    Công ty phần mềm hàng đầu Việt Nam, chuyên về chuyển đổi số, AI và Cloud. Cung cấp giải pháp công nghệ cho các doanh nghiệp toàn cầu.
+                    @Model.CompanyProfile.CompanyDescription
                 </p>
                 <div class="flex items-center gap-4 text-sm text-[--text-gray]">
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-link text-[--purple-600]"></i> <a href="https://fpt-software.com" target="_blank" class="hover:underline">fpt-software.com</a></span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-link text-[--purple-600]"></i> <a href="https://fpt-software.com" target="_blank" class="hover:underline">@Model.CompanyProfile.Website</a></span>
                     <span class="hidden md:inline">|</span>
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-[--purple-600]"></i> Hà Nội, Việt Nam</span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-[--purple-600]"></i></span>
                 </div>
-                <div class="mt-6">
-                    <a href="#write-review" class="btn-primary inline-flex items-center gap-2">
-                        <i class="fa-solid fa-pencil"></i> Viết Review
-                    </a>
-                </div>
+                
             </div>
         </section>
 
@@ -119,56 +102,52 @@
         <section>
             <h2 class="section-title">Thông tin liên hệ</h2>
             <div class="card p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <div>
-                    <h4 class="font-semibold mb-1 text-[--purple-700]">Địa chỉ</h4>
-                    <p class="text-[--text-gray]">Tòa nhà FPT, 17 Duy Tân, Cầu Giấy, Hà Nội</p>
-                </div>
+               
                 <div>
                     <h4 class="font-semibold mb-1 text-[--purple-700]">Email liên hệ</h4>
-                    <p class="text-[--text-gray]">contact@fpt-software.com</p>
+                    <p class="text-[--text-gray]">@Model.CompanyProfile.ContactEmail</p>
                 </div>
                 <div>
                     <h4 class="font-semibold mb-1 text-[--purple-700]">Số điện thoại</h4>
-                    <p class="text-[--text-gray]">024 7300 7300</p>
+                    <p class="text-[--text-gray]">@Model.CompanyProfile.Phone</p>
                 </div>
                 <div>
                     <h4 class="font-semibold mb-1 text-[--purple-700]">Website</h4>
-                    <a href="https://fpt-software.com" target="_blank" class="text-[--purple-600] hover:underline">https://fpt-software.com</a>
+                    <a href="https://fpt-software.com" target="_blank" class="text-[--purple-600] hover:underline">@Model.CompanyProfile.Website</a>
                 </div>
             </div>
         </section>
 
-        <!-- ===== SECTION: SẢN PHẨM / DỊCH VỤ NỔI BẬT (Nếu có) ===== -->
         <section>
             <h2 class="section-title">Sản phẩm / Dịch vụ nổi bật</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Product Card 1 -->
-                <div class="card">
-                    <img src="https://placehold.co/600x400/004F9F/white?text=FPT.AI" alt="FPT.AI" class="w-full h-40 object-cover">
-                    <div class="p-4">
-                        <h4 class="font-semibold mb-1">FPT.AI</h4>
-                        <p class="text-xs text-[--text-gray] mb-2">Service</p>
-                        <p class="text-sm text-[--text-gray] line-clamp-2">Nền tảng Trí tuệ nhân tạo toàn diện của FPT.</p>
-                        <a href="/Product/Detail/1" class="text-sm text-[--purple-600] hover:underline mt-2 inline-block">Xem chi tiết &rarr;</a>
-                    </div>
-                </div>
-                <!-- Product Card 2 -->
-                <div class="card">
-                    <img src="https://placehold.co/600x400/004F9F/white?text=akaMES" alt="akaMES" class="w-full h-40 object-cover">
-                    <div class="p-4">
-                        <h4 class="font-semibold mb-1">akaMES</h4>
-                        <p class="text-xs text-[--text-gray] mb-2">Product</p>
-                        <p class="text-sm text-[--text-gray] line-clamp-2">Hệ thống điều hành sản xuất thông minh cho nhà máy.</p>
-                        <a href="#" class="text-sm text-[--purple-600] hover:underline mt-2 inline-block">Xem chi tiết &rarr;</a>
-                    </div>
-                </div>
-                <!-- Thêm card khác nếu cần -->
+                @if (Model.ProductList != null && Model.ProductList.Any())
+                {
+                    @foreach (var product in Model.ProductList)
+                    {
+                        <div class="card">
+                            <img src="@product.ProductImage" alt="@product.ProductName" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h4 class="font-semibold mb-1">@product.ProductName</h4>
+                                <p class="text-xs text-[--text-gray] mb-2">@product.ProductType</p>
+                                <p class="text-sm text-[--text-gray] line-clamp-2">@product.ProductDescription</p>
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="text-sm text-[--purple-600] hover:underline mt-2 inline-block">Xem chi tiết &rarr;</a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-[--text-gray]">Doanh nghiệp này chưa có sản phẩm nào.</p>
+                }
+
             </div>
         </section>
 
         <!-- ===== SECTION: ĐÁNH GIÁ TỪ NGƯỜI DÙNG ===== -->
         <section id="reviews">
-            <h2 class="section-title">Đánh giá về FPT Software</h2>
+            <h2 class="section-title">Đánh giá về @Model.CompanyProfile.CompanyName</h2>
             <!-- Vùng hiển thị các review cards -->
             <div class="space-y-6">
                 <!-- Review Card 1 -->
@@ -213,51 +192,11 @@
         </section>
 
         <!-- ===== SECTION: VIẾT REVIEW (Form) ===== -->
-        <section id="write-review">
-            <h2 class="section-title">Chia sẻ đánh giá của bạn</h2>
-            <div class="card p-6 md:p-8">
-                <form class="space-y-4">
-                    <div class="form-group">
-                        <label for="review-title" class="block text-sm font-medium mb-1">Tiêu đề đánh giá *</label>
-                        <input type="text" id="review-title" name="Title" required class="w-full border border-[--border-color] rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[--purple-600]" placeholder="Ví dụ: Dịch vụ tuyệt vời!">
-                    </div>
-                    <div class="form-group">
-                        <label for="review-rating" class="block text-sm font-medium mb-1">Đánh giá của bạn *</label>
-                        <!-- Có thể dùng thư viện JS để làm sao đẹp hơn -->
-                        <select id="review-rating" name="Rating" required class="w-full border border-[--border-color] rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[--purple-600]">
-                            <option value="">Chọn số sao</option>
-                            <option value="5">5 sao - Rất hài lòng</option>
-                            <option value="4">4 sao - Hài lòng</option>
-                            <option value="3">3 sao - Bình thường</option>
-                            <option value="2">2 sao - Không hài lòng</option>
-                            <option value="1">1 sao - Rất tệ</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="review-content" class="block text-sm font-medium mb-1">Nội dung đánh giá *</label>
-                        <textarea id="review-content" name="Content" rows="5" required class="w-full border border-[--border-color] rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[--purple-600]" placeholder="Chia sẻ chi tiết trải nghiệm của bạn..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="review-image" class="block text-sm font-medium mb-1">Ảnh đính kèm (Tùy chọn)</label>
-                        <input type="file" id="review-image" name="Image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[--purple-50] file:text-[--purple-700] hover:file:bg-[--purple-100]">
-                    </div>
-                    <div class="text-right">
-                        <button type="submit" class="btn-primary">Gửi đánh giá</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+
 
     </main>
 
-    <!-- ****** BẮT ĐẦU: Footer (Giả định) ****** -->
-    <footer class="bg-[--purple-700] text-white mt-16">
-        <div class="container py-10">
-            <!-- Footer content -->
-            <p class="text-center text-sm text-[--purple-100]">&copy; 2025 Trustify. All rights reserved.</p>
-        </div>
-    </footer>
-    <!-- ****** KẾT THÚC: Footer (Giả định) ****** -->
+   
 
 </body>
 </html>

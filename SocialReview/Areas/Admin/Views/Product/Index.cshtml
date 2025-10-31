@@ -1,0 +1,55 @@
+﻿@model IEnumerable<SocialReview.Models.Product>
+@{
+    ViewData["Title"] = "Danh sách sản phẩm/dịch vụ";
+    Layout = "_AdminLayout";
+}
+<section id="companies-content" class="space-y-8">
+
+    <div class="flex justify-between items-center">
+        <h3 class="font-poppins text-xl font-semibold">Danh sách Sản phẩm/Dịch vụ</h3>
+        <a asp-action="Create" class="btn btn-green">
+            <i class="fa-solid fa-plus"></i> Tạo mới
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên sản phẩm/Dịch vụ</th>
+                    <th class="max-w-sm">Mô tả</th>
+                    <th>Ảnh</th>
+                    <th>Giá</th>
+                    <th>Loại sản phẩm/dịch vụ</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ProductID</td>
+                        <td>@item.ProductName</td>
+                        <td class="max-w-sm truncate" title="@item.ProductDescription">
+                            @item.ProductDescription
+                        </td>
+                        <td>
+                            <img src="@item.ProductImage" alt="@item.ProductName" class="w-16 h-16 object-cover rounded-md" />
+                        </td>
+                        <td>@item.ProductPrice</td>
+                        <td>@item.ProductType</td>
+
+                        <td class="space-x-2">
+                            <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
+                            <a class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
+                            <a class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+

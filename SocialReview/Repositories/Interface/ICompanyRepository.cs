@@ -16,5 +16,6 @@ namespace SocialReview.Repositories.Interface
         Task UpdateAsync(Company company);
 
         Task DeleteAsync(int id);
+        Task<Company?> GetCompanyByUserIdAsync(int userId);
     }
 }

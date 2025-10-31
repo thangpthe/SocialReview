@@ -1,46 +1,4 @@
-﻿@* @{
-    ViewData["Title"] = "Đăng nhập";
-    Layout = null;
-}
-
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đăng nhập - Trustify</title>
-
-    <!-- Font + CSS -->
-    <link rel="stylesheet" href="~/css/auth.css" />
-</head>
-<body>
-    <section class="auth-section">
-        <div class="auth-container">
-            <h2>Đăng nhập</h2>
-            <p>Chào mừng trở lại với <strong>Trustify</strong></p>
-
-            <form method="post" class="auth-form">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="Email" required placeholder="Nhập email của bạn" />
-                </div>
-
-                <div class="form-group">
-                    <label>Mật khẩu</label>
-                    <input type="password" name="Password" required placeholder="Nhập mật khẩu" />
-                </div>
-
-                <button type="submit" class="btn-primary">Đăng nhập</button>
-
-                <div class="auth-links">
-                    <a href="/Account/ForgotPassword">Quên mật khẩu?</a>
-                    <p>Chưa có tài khoản? <a href="/Auth/Register">Đăng ký</a></p>
-                </div>
-            </form>
-        </div>
-    </section>
-</body>
-</html> *@
+﻿
 
 @model SocialReview.ViewModels.LoginViewModel
 @{
