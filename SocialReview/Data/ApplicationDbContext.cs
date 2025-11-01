@@ -43,20 +43,20 @@ namespace SocialReview.Data
 
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.User)
-                .WithMany()
+                .WithMany(r => r.Reviews)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Product)
-                .WithMany()
+                .WithMany(p => p.Reviews)
                 .HasForeignKey(r => r.ProductID)
                 .OnDelete(DeleteBehavior.Cascade);
-
+        
             // Nếu có Reports, Comments, Reactions... cũng nên thêm tương tự:
             modelBuilder.Entity<Report>()
                 .HasOne(r => r.Reporter)
-                .WithMany()
+                .WithMany(r => r.Reports)
                 .HasForeignKey(r => r.ReporterID)
                 .OnDelete(DeleteBehavior.Restrict);
 

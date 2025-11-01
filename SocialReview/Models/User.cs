@@ -19,7 +19,7 @@ namespace SocialReview.Models
         public bool IsActive { get; set; }
 
         public ICollection<Company>? Companies { get; set; }
-        //public ICollection<Review>? Reviews { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<Reaction>? Reactions { get; set; }
         public ICollection<Report>? Reports { get; set; }

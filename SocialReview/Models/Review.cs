@@ -12,11 +12,12 @@ namespace SocialReview.Models
         public int ReviewID { get; set; }
 
         [Required]
+        [ForeignKey("ProductID")]
         public int ProductID { get; set; }
         public virtual Product Product { get; set; }
 
         [Required]
-        [ForeignKey("User")]
+        [ForeignKey("UserId")]
         public int UserId { get; set; }   
         public virtual User User { get; set; }
 
@@ -36,9 +37,7 @@ namespace SocialReview.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        [Required]
-        [StringLength(20)]
-        public string Status { get; set; } = "Pending";
+        public string? Status { get; set; } = "Pending";
 
         public virtual ICollection<Comment>? Comments { get; set; }
         public virtual ICollection<Reaction>? Reactions { get; set; }

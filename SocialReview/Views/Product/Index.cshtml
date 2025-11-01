@@ -1,0 +1,82 @@
+﻿@model SocialReview.ViewModels.ProductSearchViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Duyệt sản phẩm và dịch vụ";
+    Layout = "_Layout";
+}
+
+@* 1. Liên kết đến tệp CSS (File 2) *@
+@section Styles {
+    <link rel="stylesheet" href="~/css/product-search.css" />
+}
+
+<div class="product-search-container">
+
+    <!-- ===== BỘ LỌC (FILTER SIDEBAR) ĐƠN GIẢN ===== -->
+    <aside class="filter-sidebar">
+        <h3 class="filter-title">Bộ lọc</h3>
+
+        <form asp-controller="Product" asp-action="Index" method="get">
+
+            <!-- Lọc theo Loại (Type) - Dùng Dropdown (Select) -->
+            <div class="filter-group">
+                <h4 class="filter-subtitle">Loại</h4>
+                <!-- asp-for giữ lại giá trị đã chọn -->
+                <select asp-for="CurrentType" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Tất cả các loại</option>
+                    @foreach (var type in Model.TypeOptions)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Lọc theo Đánh giá (Rating) - Dùng Dropdown (Select) -->
+            <div class="filter-group">
+                <h4 class="filter-subtitle">Đánh giá</h4>
+                <select asp-for="CurrentRating" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Tất cả đánh giá</option>
+                    @foreach (var r in Model.RatingOptions)
+                    {
+                        <option value="@r">Từ @r sao trở lên</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Nút này có thể ẩn đi nếu bạn dùng onchange() -->
+            <button type="submit" class="btn-filter-apply">Áp dụng</button>
+        </form>
+    </aside>
+
+    <!-- ===== LƯỚI SẢN PHẨM (PRODUCT GRID) ĐƠN GIẢN ===== -->
+    <main class="product-grid-container">
+
+        <div class="product-grid">
+
+            @foreach (var product in Model.Products)
+            {
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="product-card-link">
+                    <article class="product-card">
+                        <div class="image-wrapper">
+                            <img src="@(product.ProductImage ?? "https://placehold.co/400x300/eee/ccc?text=No+Image")"
+                                 alt="@product.ProductName" />
+                        </div>
+                        <div class="card-content">
+                            <h3 class="product-title">@product.ProductName</h3>
+                            <p class="product-company">bởi @(product.Company?.CompanyName ?? "...")</p>
+                            <span class="product-type-badge">@product.ProductType</span>
+                        </div>
+                    </article>
+                </a>
+            }
+
+            @if (!Model.Products.Any())
+            {
+                <p class="no-results">Không tìm thấy sản phẩm nào khớp với bộ lọc.</p>
+            }
+        </div>
+
+    </main>
+
+</div>
+

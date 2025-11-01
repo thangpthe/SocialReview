@@ -51,7 +51,12 @@ namespace SocialReview.Repositories.Class
         {
             return await _context.Users.ToListAsync();
         }
-            
+
+        public async Task<User> GetUserReview(string username)
+        {
+           return await _context.Users.Include(u =>  u.Reviews).ThenInclude(u=>u.Product).FirstOrDefaultAsync(u => u.UserName == username);
+        }
+
 
         //public async Task<User> GetUserById(int id)
         //{

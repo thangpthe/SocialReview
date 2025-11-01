@@ -365,14 +365,9 @@ namespace SocialReview.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("ReportID");
 
                     b.HasIndex("ReporterID");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Reports");
                 });
@@ -403,9 +398,7 @@ namespace SocialReview.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -634,14 +627,10 @@ namespace SocialReview.Migrations
             modelBuilder.Entity("SocialReview.Models.Report", b =>
                 {
                     b.HasOne("SocialReview.Models.User", "Reporter")
-                        .WithMany()
+                        .WithMany("Reports")
                         .HasForeignKey("ReporterID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("SocialReview.Models.User", null)
-                        .WithMany("Reports")
-                        .HasForeignKey("UserId");
 
                     b.Navigation("Reporter");
                 });
@@ -649,13 +638,13 @@ namespace SocialReview.Migrations
             modelBuilder.Entity("SocialReview.Models.Review", b =>
                 {
                     b.HasOne("SocialReview.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SocialReview.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -675,6 +664,11 @@ namespace SocialReview.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("SocialReview.Models.Product", b =>
+                {
+                    b.Navigation("Reviews");
+                });
+
             modelBuilder.Entity("SocialReview.Models.Review", b =>
                 {
                     b.Navigation("Comments");
@@ -691,6 +685,8 @@ namespace SocialReview.Migrations
                     b.Navigation("Reactions");
 
                     b.Navigation("Reports");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

@@ -35,26 +35,23 @@ namespace SocialReview.Controllers
             //};
 
 
-            //return View(viewModel);
             var username = _userManager.GetUserName(User);
             if (string.IsNullOrEmpty(username))
             {
                 // Nếu không có username (lỗi lạ), quay về trang chủ
                 return RedirectToAction("Index", "Home");
             }
-            var user = await _userRepo.GetUserByUsername(username);
+            var user = await _userRepo.GetUserReview(username);
 
             if (user == null)
             {
-                // Lỗi không tìm thấy user (dù đã đăng nhập??)
                 return NotFound("Không tìm thấy tài khoản.");
             }
+
             var viewModel = new UserInfoViewModel
             {
-                // Giả sử ViewModel của bạn có thuộc tính UserProfile
                 UserProfile = user,
-                // TODO: Lấy thêm danh sách review của user này
-                // UserReviews = await _reviewRepo.GetReviewsByUserIdAsync(user.Id)
+                UserReviews = user.Reviews ?? new List<Review>()
             };
 
 

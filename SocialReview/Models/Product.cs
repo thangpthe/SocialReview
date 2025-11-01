@@ -30,7 +30,7 @@ namespace SocialReview.Models
         public DateTime? CreatedAt { get; set; }
         public Company Company { get; set; }
         public Category Category{ get; set; }
-
+        public virtual ICollection<Review> Reviews { get; set; }
 
     }
 

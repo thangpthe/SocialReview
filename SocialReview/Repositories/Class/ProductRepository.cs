@@ -2,6 +2,7 @@
 using SocialReview.Data;
 using SocialReview.Models;
 using SocialReview.Repositories.Interface;
+using SocialReview.ViewModels;
 
 namespace SocialReview.Repositories.Class
 {
@@ -48,6 +49,49 @@ namespace SocialReview.Repositories.Class
         {
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Product> GetProductDetailById(int id)
+        {
+            //return await _context.Products.Include(p =>p.Reviews).ThenInclude(p => p.User).FirstOrDefaultAsync(p => p.ProductID == id);
+            return await _context.Products
+                .Include(p => p.Company)
+
+               
+                .Include(p => p.Reviews) 
+                    .ThenInclude(r => r.User)
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.Comments) 
+                        .ThenInclude(c => c.User) 
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.Reactions) 
+
+                .FirstOrDefaultAsync(p => p.ProductID == id);
+        }
+
+
+
+        public async Task<IEnumerable<Product>> FilterAsync(string? productType, int? rating)
+        {
+            var query = _context.Products
+                                .Include(p => p.Company)
+                                .AsQueryable();
+            if (!string.IsNullOrEmpty(productType))
+            {
+                query = query.Where(p => p.ProductType == productType);
+            }
+
+            if (rating.HasValue)
+            {
+                
+                query = query.Where(p => p.Reviews.Any() && p.Reviews.Average(r => r.Rating) >= rating.Value);
+            }
+            return await query.ToListAsync();
+        }
+
+        public Task<IEnumerable<Product>> Search(string query)
+        {
+            throw new NotImplementedException();
         }
     }
     }

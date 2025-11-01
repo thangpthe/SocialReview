@@ -6,292 +6,31 @@
 }
 
 @section Styles {
-   
-    <style>
-        /* --- CSS Reset & Variables --- */
-        :root {
-            --primary-color: #8B5CF6; /* Màu tím */
-            --primary-light: #E9D5FF;
-            --text-dark: #1F2937;
-            --text-light: #6B7280;
-            --bg-light: #F9F6FF;
-            --white: #FFFFFF;
-            --border-color: #E5E7EB;
-            --star-color: #FBBF24;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Xóa 'body' và 'html' vì nó được kế thừa từ _Layout.cshtml 
-           CSS cho các thành phần cụ thể vẫn giữ nguyên
-        */
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        a {
-            text-decoration: none;
-            color: var(--primary-color);
-        }
-
-        /* --- Components (Buttons) --- */
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            border: 2px solid transparent;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--white);
-        }
-        .btn-primary:hover {
-            background-color: #7C3AED;
-        }
-
-        .btn-edit {
-            background-color: var(--white);
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        .btn-edit:hover {
-            background-color: var(--primary-light);
-        }
-
-        /* --- 1. Profile Header --- */
-        .profile-header {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 24px;
-            display: flex;
-            align-items: flex-start;
-            gap: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
-        }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 4px solid var(--primary-light);
-            object-fit: cover;
-        }
-
-        .profile-info {
-            flex-grow: 1;
-        }
-        .profile-info h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .member-since {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-bottom: 12px;
-        }
-        .bio {
-            font-size: 1rem;
-            color: var(--text-dark);
-            max-width: 60ch;
-        }
-
-        .profile-stats {
-            display: flex;
-            gap: 20px;
-            padding-top: 10px; /* Căn chỉnh với info */
-            flex-wrap: wrap;
-        }
-        .stat-item {
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        .profile-action {
-            margin-left: auto; /* Đẩy nút sang phải */
-            padding-top: 10px;
-        }
-        
-        /* Responsive cho Header */
-        media (max-width: 768px) {
-            .profile-header {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            .profile-stats {
-                justify-content: center;
-                width: 100%;
-            }
-            .profile-action {
-                margin-left: 0;
-                width: 100%;
-                text-align: center;
-            }
-            .btn-edit {
-                width: 100%;
-            }
-        }
-
-        /* --- 2. Profile Tabs --- */
-        .profile-tabs {
-            display: flex;
-            gap: 16px;
-            border-bottom: 2px solid var(--border-color);
-            margin-top: 32px;
-            margin-bottom: 32px;
-        }
-        .tab-link {
-            padding: 12px 4px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-light);
-            text-decoration: none;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .tab-link:hover {
-            color: var(--text-dark);
-        }
-        .tab-link.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        /* --- 3. Main Content (Review Grid) --- */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        .section-header h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-        }
-
-        .review-grid {
-            display: grid;
-            /* Grid responsive: tự động khớp, tối thiểu 280px */
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .review-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .review-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
-        .review-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background-color: #eee;
-        }
-        
-        .review-body {
-            padding: 16px;
-        }
-
-        .rating {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.9rem;
-            color: var(--star-color);
-            margin-bottom: 8px;
-        }
-        .rating .rating-text {
-            color: var(--text-dark);
-            font-weight: 600;
-            margin-left: 4px;
-        }
-        .rating .fa-star.empty {
-            color: var(--border-color);
-        }
-
-        .review-title-link {
-            text-decoration: none;
-            color: var(--text-dark);
-        }
-        .review-title-link h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .review-title-link:hover h3 {
-            color: var(--primary-color);
-        }
-
-        .product-name {
-            font-size: 0.95rem;
-            color: var(--text-light);
-            margin-bottom: 12px;
-        }
-
-        .review-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-light);
-            border-top: 1px solid var(--border-color);
-            padding-top: 12px;
-        }
-        .helpful {
-            font-weight: 600;
-        }
-    </style>
-
-    
-    
+   <link rel="stylesheet" href="~/css/user-profile.css"/>
 }
 
 <div class="container">
     <div class="profile-header">
-        <img src="" alt="Avatar" class="avatar">
+        @if (Model.UserProfile != null && !string.IsNullOrEmpty(Model.UserProfile.UserAvatar))
+        {
+            <!-- 1. Nếu CÓ Avatar, hiển thị <img> -->
+            <img src="@Model.UserProfile.UserAvatar"
+                 class="avatar"
+                 alt="Avatar của @Model.UserProfile.FullName">
+        }
+        else
+        {
+            <!-- 2. Nếu KHÔNG CÓ Avatar, hiển thị icon (Font Awesome) -->
+            <div class"avatar-icon-wrapper"
+                 title="@(Model.UserProfile?.FullName ?? "Người dùng")">
+                <i class="fa-solid fa-user"></i>
+            </div>
+        }
         
         <div class="profile-info">
             <!-- SEO: H1 là tiêu đề chính của trang -->
             <h1>@Model.UserProfile.FullName</h1>
-            <p class="member-since">Thành viên</p>
-            <p class="bio">Đam mê thử nghiệm sản phẩm mới và giúp người khác đưa ra quyết định sáng suốt.</p>
+            @* <p class="bio">Đam mê thử nghiệm sản phẩm mới và giúp người khác đưa ra quyết định sáng suốt.</p> *@
         </div>
 
         <div class="profile-stats">
@@ -320,106 +59,47 @@
             
             <div class="section-header">
                 <!-- SEO: H2 cho tiêu đề mục -->
-                <h2>Các bài đánh giá của tôi (4)</h2>
-                <a href="#" class="btn btn-primary">Viết đánh giá mới</a>
+                <h2>Các bài đánh giá của tôi</h2>
             </div>
-            
-            <div class="review-grid">
 
-                <!-- Review 1: Dùng <article> vì là nội dung độc lập, tốt cho SEO -->
-                <article class="review-card">
-                    <img src="https://placehold.co/400x200/FCD34D/333?text=Headphones" alt="Tai nghe chống ồn Amazing Noise-Cancelling Headphones" class="review-image">
-                    <div class="review-body">
-                        <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star empty"></i>
-                            <i class="fas fa-star empty"></i>
-                            <i class="fas fa-star empty"></i>
-                            <i class="fas fa-star empty"></i>
-                            <span class="rating-text">1.0</span>
-                        </div>
-                        <a href="#" class="review-title-link">
-                            <!-- SEO: H3 cho tiêu đề bài viết con -->
-                            <h3>Amazing Noise-Cancelling Headphones</h3>
-                        </a>
-                        <p class="product-name">Sony WH-1000XM5</p>
-                        <div class="review-meta">
-                            <span class="date">March 15, 2024</span>
-                            <span class="helpful">🔥 1234 found helpful</span>
-                        </div>
-                    </div>
-                </article>
+            @if (Model.UserReviews != null && Model.UserReviews.Any())
+            {
+                <div class="review-grid">
+                    @* ===== SỬA LỖI: BẮT ĐẦU VÒNG LẶP ĐỘNG ===== *@
+                    @foreach (var review in Model.UserReviews)
+                    {
+                        <article class="review-card">
+                            <img src="@(review.Product?.ProductImage ?? "https://placehold.co/400x200/eee/ccc?text=No+Image")"
+                                 alt="Ảnh của sản phẩm @(review.Product?.ProductName ?? "Sản phẩm")" class="review-image">
 
-                <!-- Review 2 -->
-                <article class="review-card">
-                    <img src="https://placehold.co/400x200/F87171/333?text=Sneakers" alt="Giày thể thao Perfect Everyday Sneakers" class="review-image">
-                    <div class="review-body">
-                        <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span class="rating-text">4.5</span>
-                        </div>
-                        <a href="#" class="review-title-link">
-                            <h3>Perfect Everyday Sneakers</h3>
-                        </a>
-                        <p class="product-name">Nike Air Max 270</p>
-                        <div class="review-meta">
-                            <span class="date">March 10, 2024</span>
-                            <span class="helpful">🔥 892 found helpful</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Review 3 -->
-                <article class="review-card">
-                    <img src="https://placehold.co/400x200/A78BFA/333?text=Coffee" alt="Cà phê Must-Try Artisanal Coffee" class="review-image">
-                    <div class="review-body">
-                        <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span class="rating-text">4.8</span>
-                        </div>
-                        <a href="#" class="review-title-link">
-                            <h3>Must-Try Artisanal Coffee</h3>
-                        </a>
-                        <p class="product-name">Blue Bottle Coffee</p>
-                        <div class="review-meta">
-                            <span class="date">March 5, 2024</span>
-                            <span class="helpful">🔥 756 found helpful</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Review 4 -->
-                <article class="review-card">
-                    <img src="https://placehold.co/400x200/60A5FA/333?text=Display" alt="Màn hình Crystal Clear Display" class="review-image">
-                    <div class="review-body">
-                        <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span class="rating-text">4.9</span>
-                        </div>
-                        <a href="#" class="review-title-link">
-                            <h3>Crystal Clear Display</h3>
-                        </a>
-                        <p class="product-name">iPad Pro 12.9</p>
-                        <div class="review-meta">
-                            <span class="date">February 28, 2024</span>
-                            <span class="helpful">🔥 645 found helpful</span>
-                        </div>
-                    </div>
-                </article>
-
-            </div> <!-- .review-grid -->
+                            <div class="review-body">
+                                <div class="rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= review.Rating ? "" : "empty")"></i>
+                                    }
+                                    <span class="rating-text">@review.Rating.ToString("F1")</span>
+                                </div>
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@review.ProductID" class="review-title-link">
+                                   
+                                </a>
+                                <p class="product-name">@(review.Product?.ProductName ?? "Sản phẩm đã bị xóa")</p>
+                                <div class="review-meta">
+                                    <span class="date">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                    @* <span class="helpful">🔥 0 found helpful</span> *@
+                                </div>
+                            </div>
+                        </article>
+                    }
+                    @* ===== KẾT THÚC VÒNG LẶP ĐỘNG ===== *@
+                </div>
+            }
+            else
+            {
+                <div class="card-no-reviews" style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <p style="color: var(--text-gray);">Người dùng này chưa viết bài đánh giá nào.</p>
+                </div>
+            }
         </section> <!-- .review-section -->
 
     </main> <!-- .profile-content -->

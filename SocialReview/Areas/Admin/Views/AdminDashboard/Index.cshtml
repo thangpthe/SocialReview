@@ -1,8 +1,8 @@
-﻿@{
+﻿@model SocialReview.ViewModels.DashboardViewModel
+@{
     ViewData["Title"] = "Tổng quan";
     Layout = "_AdminLayout";
 }
-
 <!-- SECTION: TỔNG QUAN (dashboard) -->
 <section id="dashboard-content" class="space-y-8">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -12,7 +12,7 @@
             </div>
             <div>
                 <p class="text-sm text-gray-500">Tổng User</p>
-                <p class="text-2xl font-semibold">@* TODO: Load data *@</p>
+                <p class="text-2xl font-semibold">@Model.TotalUsers</p>
             </div>
         </div>
         <div class="stat-card p-6 flex items-center gap-4">
@@ -21,18 +21,10 @@
             </div>
             <div>
                 <p class="text-sm text-gray-500">Tổng Review</p>
-                <p class="text-2xl font-semibold">@* TODO: Load data *@</p>
+                <p class="text-2xl font-semibold">@Model.TotalReviews</p>
             </div>
         </div>
-        <div class="stat-card p-6 flex items-center gap-4">
-            <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full">
-                <i class="fa-solid fa-clock fa-lg"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-500">Review Chờ Duyệt</p>
-                <p class="text-2xl font-semibold">@* TODO: Load data *@</p>
-            </div>
-        </div>
+       
     </div>
 </section>
 

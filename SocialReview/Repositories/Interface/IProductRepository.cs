@@ -1,4 +1,5 @@
 ﻿using SocialReview.Models;
+using SocialReview.ViewModels;
 
 namespace SocialReview.Repositories.Interface
 {
@@ -9,12 +10,16 @@ namespace SocialReview.Repositories.Interface
 
         Task<IEnumerable<Product>> GetAllAsync();
 
-
+        Task<Product> GetProductDetailById(int id);
         Task AddAsync(Product product);
 
 
         Task UpdateAsync(Product product);
 
         Task DeleteAsync(int id);
+        Task<IEnumerable<Product>> Search(string query);
+
+        Task<IEnumerable<Product>> FilterAsync(string? productType, int? rating);
+
     }
 }

@@ -11,6 +11,7 @@ namespace SocialReview.Repositories.Interface
 
         
         Task AddAsync(Company company);
+       
 
        
         Task UpdateAsync(Company company);

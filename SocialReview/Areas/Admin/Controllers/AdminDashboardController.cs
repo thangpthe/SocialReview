@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SocialReview.Services;
 
 namespace SocialReview.Areas.Admin.Controllers
 {
@@ -7,9 +8,15 @@ namespace SocialReview.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminDashboardController : Controller
     {
-        public IActionResult Index()
+        private readonly IDashboardService _dashboardService;
+        public AdminDashboardController(IDashboardService dashboardService)
         {
-            return View();
+            _dashboardService = dashboardService;
+        }
+        public async Task<IActionResult> Index()
+        {
+            var statsViewModel = await _dashboardService.GetDashboardStatsAsync();
+            return View(statsViewModel);
         }
     }
-}
+    }

@@ -1,2 +1,314 @@
-﻿body {
+﻿
+:root {
+    --primary-color: #8B5CF6; 
+    --primary-light: #E9D5FF;
+    --text-dark: #1F2937;
+    --text-light: #6B7280;
+    --bg-light: #F9F6FF;
+    --white: #FFFFFF;
+    --border-color: #E5E7EB;
+    --star-color: #FBBF24;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+/* --- Components (Buttons) --- */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+    .btn-primary:hover {
+        background-color: #7C3AED;
+    }
+
+.btn-edit {
+    background-color: var(--white);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+    .btn-edit:hover {
+        background-color: var(--primary-light);
+    }
+
+/* --- 1. Profile Header --- */
+.profile-header {
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--primary-light);
+    object-fit: cover;
+}
+
+.avatar-icon-wrapper {
+    /* Kích thước (giống .avatar) */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    /* Viền (giống .avatar) */
+    border: 4px solid var(--primary-light);
+    /* Căn giữa icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Màu nền và màu icon */
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    flex-shrink: 0; /* Ngăn icon bị co lại */
+}
+
+    .avatar-icon-wrapper .fa-user {
+        font-size: 3rem; /* 48px */
+    }
+
+.profile-info {
+    flex-grow: 1;
+}
+
+    .profile-info h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+.member-since {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 12px;
+}
+
+.bio {
+    font-size: 1rem;
+    color: var(--text-dark);
+    max-width: 60ch;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 20px;
+    padding-top: 10px; /* Căn chỉnh với info */
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.profile-action {
+    margin-left: auto; /* Đẩy nút sang phải */
+    padding-top: 10px;
+}
+
+/* Responsive cho Header */
+media (max-width: 768px) {
+    .profile-header
+
+{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-stats {
+    justify-content: center;
+    width: 100%;
+}
+
+.profile-action {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-edit {
+    width: 100%;
+}
+
+}
+
+/* --- 2. Profile Tabs --- */
+.profile-tabs {
+    display: flex;
+    gap: 16px;
+    border-bottom: 2px solid var(--border-color);
+    margin-top: 32px;
+    margin-bottom: 32px;
+}
+
+.tab-link {
+    padding: 12px 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+    .tab-link:hover {
+        color: var(--text-dark);
+    }
+
+    .tab-link.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+/* --- 3. Main Content (Review Grid) --- */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+    .section-header h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+
+.review-grid {
+    display: grid;
+    /* Grid responsive: tự động khớp, tối thiểu 280px */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.review-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+.review-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background-color: #eee;
+}
+
+.review-body {
+    padding: 16px;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: var(--star-color);
+    margin-bottom: 8px;
+}
+
+    .rating .rating-text {
+        color: var(--text-dark);
+        font-weight: 600;
+        margin-left: 4px;
+    }
+
+    .rating .fa-star.empty {
+        color: var(--border-color);
+    }
+
+.review-title-link {
+    text-decoration: none;
+    color: var(--text-dark);
+}
+
+    .review-title-link h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .review-title-link:hover h3 {
+        color: var(--primary-color);
+    }
+
+.product-name {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin-bottom: 12px;
+}
+
+.review-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+}
+
+.helpful {
+    font-weight: 600;
+}
+
+
