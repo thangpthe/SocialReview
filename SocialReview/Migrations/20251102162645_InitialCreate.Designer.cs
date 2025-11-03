@@ -12,7 +12,7 @@ using SocialReview.Data;
 namespace SocialReview.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251101035418_InitialCreate")]
+    [Migration("20251102162645_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -1,21 +1,32 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SocialReview.Models;
+using SocialReview.Repositories.Interface; // <-- (Xóa Using này)
+using SocialReview.Services;
+using SocialReview.ViewModels;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SocialReview.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IDashboardService _dashboardService;
+        // XÓA: private readonly IReviewRepository _reviewRepo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IDashboardService dashboardService) // <-- Sửa: Xóa IReviewRepository
         {
-            _logger = logger;
+            _dashboardService = dashboardService;
+            // XÓA: _reviewRepo = reviewRepo;
         }
 
-        public IActionResult Index()
+        // --- SỬA LẠI ACTION INDEX ---
+        public async Task<IActionResult> Index()
         {
-            return View();
+            // Lấy thông tin thống kê (Total Users, Companies...)
+            var statsViewModel = await _dashboardService.GetDashboardStatsAsync();
+
+            // Gửi "khay" thống kê đến View
+            return View(statsViewModel);
         }
 
         public IActionResult Privacy()
@@ -30,3 +41,4 @@ namespace SocialReview.Controllers
         }
     }
 }
+

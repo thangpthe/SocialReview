@@ -1,0 +1,103 @@
+﻿@model SocialReview.Models.Review
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+<div class="review-card-wrapper" id="review-@Model.ReviewID">
+    @* 1. CARD REVIEW (Hiển thị Review) *@
+    <div class="card p-5 flex gap-4 items-start">
+        @* Avatar *@
+        @if (Model.User != null && !string.IsNullOrEmpty(Model.User.UserAvatar))
+        {
+            <img src="@Model.User.UserAvatar" class="avatar" alt="Avatar của @Model.User.FullName">
+        }
+        else
+        {
+            <div class="avatar-icon-wrapper" title="@(Model.User?.UserName ?? "Người dùng ẩn danh")">
+                <i class="fa-solid fa-user"></i>
+            </div>
+        }
+
+        @* Nội dung review *@
+        <div class="flex-grow">
+            <div class="flex justify-between items-center mb-1">
+                <span class="font-semibold text-sm">@(Model.User?.UserName ?? "Người dùng ẩn danh")</span>
+                <span class="text-xs text-gray-400">@Model.CreatedAt.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            @* Tiêu đề (Click để đến trang Chi tiết Sản phẩm) *@
+            <a asp-controller="Product" asp-action="Detail" asp-route-id="@Model.ProductID" class="review-title-link">
+                <h4 class="font-semibold mb-1 text-base">@Model.Title</h4>
+            </a>
+
+            <div class="star-rating mb-2" title="@Model.Rating.ToString("F1") sao">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <i class="@(i <= Model.Rating ? "fa-solid fa-star" : "fa-regular fa-star")"></i>
+                }
+            </div>
+
+            @* Hiển thị "Về sản phẩm: ..." CHỈ KHI Ở TRANG CHỦ *@
+            @* (Kiểm tra xem ViewContext có phải là trang Product/Detail không) *@
+            @if (ViewContext.RouteData.Values["controller"]?.ToString() != "Product")
+            {
+                <p class="product-name-link">
+                    Về sản phẩm:
+                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@Model.ProductID">
+                        @(Model.Product?.ProductName ?? "Sản phẩm đã bị xóa")
+                    </a>
+                </p>
+            }
+
+            <p class="text-sm text-[--text-gray] leading-relaxed">@Model.Content</p>
+
+            @* NÚT BẤM TƯƠNG TÁC (REACTION & COMMENT) *@
+            <div class="review-actions">
+                <!-- NÚT REACTION (HỮU ÍCH) -->
+                <button class="action-btn btn-toggle-reaction"
+                        data-review-id="@Model.ReviewID"
+                        data-type="Helpful">
+                    <i class="fa-regular fa-thumbs-up mr-1"></i>
+                    Hữu ích <span>(@(Model.Reactions?.Count(r => r.Type == "Helpful") ?? 0))</span>
+                </button>
+
+                <!-- NÚT MỞ COMMENT -->
+                <button class="action-btn btn-toggle-comment" data-review-id="@Model.ReviewID">
+                    <i class="fa-regular fa-comment mr-1"></i>
+                    Bình luận <span>(@(Model.Comments?.Count ?? 0))</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @* 2. KHU VỰC COMMENT (Bị ẩn ban đầu) *@
+    <div class="comment-section hidden" id="comment-section-@Model.ReviewID">
+
+        @* 2a. Danh sách comment đã có *@
+        <div class="comment-list" id="comment-list-@Model.ReviewID">
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+                @foreach (var comment in Model.Comments.OrderBy(c => c.CreatedAt)) // Sắp xếp comment
+                {
+                    @* Dùng Partial View để render (tái sử dụng) *@
+                    <partial name="_CommentCardPartial" model="comment" />
+                }
+            }
+            else
+            {
+                <p class="no-comments">Chưa có bình luận nào.</p>
+            }
+        </div>
+
+        @* 2b. Form viết comment mới (Cho AJAX) *@
+        <form asp-controller="Comment" asp-action="Create" method="post"
+              class="comment-form" data-review-id="@Model.ReviewID">
+            <input type="hidden" name="ReviewID" value="@Model.ReviewID" />
+            <input type="text" name="Content" class="form-input" placeholder="Viết bình luận của bạn..." required />
+            <button type="submit" class="btn-submit-comment">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+        <div class="comment-error-message" id="comment-error-@Model.ReviewID"></div>
+    </div>
+
+</div>

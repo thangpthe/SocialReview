@@ -1,0 +1,25 @@
+﻿@model SocialReview.Models.Comment
+
+
+<div class="comment-card">
+    <!-- Avatar -->
+    @if (Model.User != null && !string.IsNullOrEmpty(Model.User.UserAvatar))
+    {
+        <img src="@Model.User.UserAvatar" class="avatar comment-avatar" alt="Avatar của @Model.User.UserName">
+    }
+    else
+    {
+        <div class="avatar-icon-wrapper comment-avatar" title="@(Model.User?.UserName ?? "Người dùng")">
+            <i class="fa-solid fa-user"></i>
+        </div>
+    }
+    <!-- Nội dung Comment -->
+    <div class="comment-body">
+        <div class="comment-header">
+            <span class="font-semibold text-sm">@(Model.User?.UserName ?? "Người dùng")</span>
+            <span class="text-xs text-gray-400">@Model.CreatedAt.ToString("dd/MM/yyyy")</span>
+        </div>
+        <p class="text-sm text-[--text-gray] leading-relaxed">@Model.CommentContent</p>
+    </div>
+</div>
+

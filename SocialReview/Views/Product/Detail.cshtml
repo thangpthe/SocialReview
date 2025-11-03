@@ -1,250 +1,241 @@
 ﻿@model SocialReview.ViewModels.ProductDetailViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = Model.Product.ProductName;
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Product.ProductName; // Tốt cho SEO
 }
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết Sản phẩm - Trustify</title>
-    <!-- Tailwind CSS -->
+@section Styles {
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --purple-700: #6A1B9A;
-            --purple-600: #8E24AA;
-            --purple-100: #E1BEE7;
-            --purple-50: #F3E5F5;
-            --bg-light: #F9F6FB;
-            --text-dark: #212121;
-            --text-gray: #555;
-            --border-color: #e0e0e0;
-        }
+    <link rel="stylesheet" href="~/css/product_detail.css"/>
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-        }
+<main class="container py-10 md:py-16 space-y-12">
 
-        h1, h2, h3, h4, h5, h6, .font-poppins {
-            font-family: 'Poppins', sans-serif;
-        }
+    <!-- ===== SECTION: THÔNG TIN SẢN PHẨM ===== -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <!-- Ảnh sản phẩm -->
+        <div class="card aspect-video lg:aspect-square">
+            <img src="@Model.Product.ProductImage" alt="@Model.Product.ProductName" class="w-full h-full object-cover">
+        </div>
 
-        .container {
-            width: min(1200px, 95%);
-            margin-left: auto;
-            margin-right: auto;
-        }
+        <!-- Chi tiết sản phẩm -->
+        <div class="space-y-4">
+            <span class="inline-block bg-[--purple-50] text-[--purple-700] text-xs font-semibold px-2.5 py-0.5 rounded-full">@Model.Product.ProductType</span>
+            <h1 class="font-poppins text-3xl md:text-4xl font-bold">@Model.Product.ProductName</h1>
 
-        .btn-primary {
-            background-color: var(--purple-700);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background-color 0.2s ease;
-        }
-
-            .btn-primary:hover {
-                background-color: var(--purple-600);
-            }
-
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-
-        .section-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 600;
-            margin-bottom: 1.5rem; /* mb-6 */
-            color: var(--purple-700);
-            border-bottom: 2px solid var(--purple-100);
-            padding-bottom: 0.5rem;
-        }
-
-        .breadcrumb a {
-            color: var(--purple-600);
-            text-decoration: none;
-        }
-
-            .breadcrumb a:hover {
-                text-decoration: underline;
-            }
-
-        .breadcrumb span {
-            color: var(--text-gray);
-        }
-    </style>
-</head>
-<body>
-    <main class="container py-10 md:py-16 space-y-12">
-
-       
-
-        <!-- ===== SECTION: THÔNG TIN SẢN PHẨM ===== -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            <!-- Ảnh sản phẩm -->
-            <div class="card aspect-video lg:aspect-square">
-                <img src="@Model.Product.ProductImage" alt="@Model.Product.ProductName" class="w-full h-full object-cover">
-                
-            </div>
-
-            <!-- Chi tiết sản phẩm -->
-            <div class="space-y-4">
-                <span class="inline-block bg-[--purple-50] text-[--purple-700] text-xs font-semibold px-2.5 py-0.5 rounded-full">@Model.Product.ProductType</span>
-                <h1 class="font-poppins text-3xl md:text-4xl font-bold">@Model.Product.ProductName</h1>
-                <div class="flex items-center gap-2">
-                    @if (Model.TotalReviews > 0)
-                    {
-                        <span class="text-yellow-500 flex items-center">
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                <i class="fa-solid fa-star @(i <= Model.AverageRating ? "" : "fa-regular")"></i>
-                            }
-                        </span>
-                        <span class="text-sm text-[--text-gray]">(@Model.AverageRating.ToString("F1")) / @Model.TotalReviews.ToString("N0") đánh giá</span>
-                    }
-                    else
-                    {
-                        <span class="text-sm text-[--text-gray]">Chưa có đánh giá</span>
-                    }
-                </div>
-                <!-- Giá (nếu có)
-                <p class="text-2xl font-semibold text-[--purple-700]">Liên hệ</p>
-                -->
-                <div class="text-[--text-gray] leading-relaxed space-y-3 pt-2">
-                    <p>@Model.Product.ProductDescription</p>
-                    @* <ul class="list-disc list-inside text-sm space-y-1">
-                        <li>Giải pháp Chatbot tự động hóa CSKH.</li>
-                        <li>Công nghệ OCR nhận dạng ký tự chính xác.</li>
-                        <li>Nền tảng eKYC định danh khách hàng điện tử.</li>
-                    </ul> *@
-                </div>
-
-               
-
-                @* <div class="pt-6">
-                    <a href="#write-review" class="btn-primary inline-flex items-center gap-2">
-                        <i class="fa-solid fa-pencil"></i> Viết Review
-                    </a>
-                    <!-- Có thể thêm nút "Lưu lại" -->
-                </div> *@
-            </div>
-        </section>
-
-        <!-- ===== SECTION: ĐÁNH GIÁ CHI TIẾT ===== -->
-        <section id="reviews">
-            <h2 class="section-title">Đánh giá về @Model.Product.ProductName</h2>
-            <!-- Vùng hiển thị các review cards -->
-            <div class="space-y-6">
-                @if (Model.Reviews != null && Model.Reviews.Any())
+            <!-- Hiển thị Rating động -->
+            <div class="flex items-center gap-2">
+                @if (Model.TotalReviews > 0)
                 {
-                    @foreach (var review in Model.Reviews)
-                    {
+                    <div class="star-rating" title="@Model.AverageRating.ToString("F1") sao">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="@(i <= Model.AverageRating ? "fa-solid fa-star" : "fa-regular fa-star")"></i>
+                        }
+                    </div>
+                    <span class="text-sm text-[--text-gray]">(@Model.AverageRating.ToString("F1")) / @Model.TotalReviews.ToString("N0") đánh giá</span>
+                }
+                else
+                {
+                    <span class="text-sm text-[--text-gray]">Chưa có đánh giá</span>
+                }
+            </div>
+
+            <div class="text-[--text-gray] leading-relaxed space-y-3 pt-2">
+                <p>@Model.Product.ProductDescription</p>
+            </div>
+
+            <!-- Hiển thị thông tin CÔNG TY -->
+            <div class="pt-4 border-t border-[--border-color]">
+                <p class="text-sm font-medium mb-2">Cung cấp bởi:</p>
+                @if (Model.Product.Company != null)
+                {
+                    <a asp-controller="Company" asp-action="Dashboard" asp-route-id="@Model.Product.CompanyID" class="company-link-card">
+                        <img src="@(Model.Product.Company.Logo ?? "https://placehold.co/40x40/ccc/999?text=C")" alt="Logo @Model.Product.Company.CompanyName" class="company-logo">
+                        <div>
+                            <p class="font-semibold">@Model.Product.Company.CompanyName</p>
+                        </div>
+                    </a>
+                }
+                @* else
+                {
+                    <span class="text-sm text-[--text-gray]">Không rõ nhà cung cấp</span>
+                } *@
+            </div>
+
+            <div class="pt-6">
+                <a href="#write-review" class="btn-primary inline-flex items-center gap-2">
+                    <i class="fa-solid fa-pencil"></i> Viết Review
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION: ĐÁNH GIÁ CHI TIẾT ===== -->
+    <section id="reviews">
+        <h2 class="section-title">Đánh giá về @Model.Product.ProductName (@Model.TotalReviews)</h2>
+        <div class="reviews-list space-y-6">
+
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                @foreach (var review in Model.Reviews)
+                {
+                    <div class="review-card-wrapper" id="review-@review.ReviewID">
+                        @* Thẻ div này chứa 1 card review và khu vực comment của nó *@
+
+                        @* 1. CARD REVIEW (Hiển thị Review) *@
                         <div class="card p-5 flex gap-4 items-start">
+                            @* Avatar *@
                             @if (review.User != null && !string.IsNullOrEmpty(review.User.UserAvatar))
                             {
-                                <img src="@review.User.UserAvatar"
-                                     class="w-10 h-10 rounded-full flex-shrink-0 object-cover"
-                                     alt="Avatar của @review.User.FullName">
+                                <img src="@review.User.UserAvatar" class="avatar" alt="Avatar của @review.User.UserName">
                             }
                             else
                             {
-                                <div class="w-10 h-10 rounded-full flex-shrink-0 bg-purple-100 flex items-center justify-center"
-                                     title="@(review.User?.FullName ?? "Người dùng ẩn danh")">
-                                    <i class="fa-solid fa-user text-purple-600"></i>
+                                <div class="avatar-icon-wrapper" title="@(review.User?.FullName ?? "Người dùng ẩn danh")">
+                                    <i class="fa-solid fa-user"></i>
                                 </div>
                             }
+
+                            @* Nội dung review *@
                             <div class="flex-grow">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="font-semibold text-sm">@(review.User?.FullName ?? "Người dùng ẩn danh")</span>
+                                    <span class="font-semibold text-sm">@(review.User?.UserName ?? "Người dùng ẩn danh")</span>
                                     <span class="text-xs text-gray-400">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
                                 </div>
-                                @* <h4 class="font-semibold mb-1 text-base">@review.Title</h4> *@
-                                <p class="text-sm text-[--text-gray] leading-relaxed">@review.Content</p>
-                                <div class="flex items-center gap-1 text-yellow-500 mb-2">
-                                    @* Dùng vòng lặp for để hiển thị sao động *@
+                                <div class="star-rating mb-2" title="@review.Rating.ToString("F1") sao">
                                     @for (int i = 1; i <= 5; i++)
                                     {
                                         <i class="@(i <= review.Rating ? "fa-solid fa-star" : "fa-regular fa-star")"></i>
                                     }
-
                                 </div>
 
-                                @* TODO: Thêm logic cho nút Hữu ích / Bình luận *@
-                                <div class="mt-3 flex items-center gap-4 text-xs text-gray-500">
-                                    <button class="hover:text-[--purple-600]"><i class="fa-regular fa-thumbs-up mr-1"></i> Hữu ích (0)</button>
-                                    <button class="hover:text-[--purple-600]"><i class="fa-regular fa-comment mr-1"></i> Bình luận (0)</button>
+                                <h4 class="font-semibold mb-1 text-base">@review.Title</h4>
+                                <p class="text-sm text-[--text-gray] leading-relaxed">@review.Content</p>
+
+                                <div class="review-actions">
+                                    <!-- NÚT REACTION (HỮU ÍCH) -->
+                                    <button class="action-btn btn-toggle-reaction"
+                                            data-review-id="@review.ReviewID"
+                                            data-type="Helpful">
+                                        <i class="fa-regular fa-thumbs-up mr-1"></i>
+                                        Hữu ích <span>(@(review.Reactions?.Count(r => r.Type == "Helpful") ?? 0))</span>
+                                    </button>
+
+                                    <!-- NÚT MỞ COMMENT -->
+                                    <button class="action-btn btn-toggle-comment" data-review-id="@review.ReviewID">
+                                        <i class="fa-regular fa-comment mr-1"></i>
+                                        Bình luận <span>(@(review.Comments?.Count ?? 0))</span>
+                                    </button>
+                                    <button class="action-btn btn-toggle-reaction"
+                                            data-review-id="@review.ReviewID"
+                                            data-type="Helpful">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        Báo cáo 
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    }
+
+                        @* 2. KHU VỰC COMMENT (Bị ẩn ban đầu) *@
+                        <div class="comment-section hidden" id="comment-section-@review.ReviewID">
+
+                            @* 2a. Danh sách comment đã có *@
+                            <div class="comment-list" id="comment-list-@review.ReviewID">
+                                @if (review.Comments != null && review.Comments.Any())
+                                {
+                                    @foreach (var comment in review.Comments)
+                                    {
+                                        <partial name="_CommentCardPartial" model="comment" />
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="no-comments">Chưa có bình luận nào.</p>
+                                }
+                            </div>
+
+                            @* 2b. Form viết comment mới (Cho AJAX) *@
+                            <form asp-controller="Comment" asp-action="Create" method="post"
+                                  class="comment-form" data-review-id="@review.ReviewID">
+                                <!-- Token sẽ được lấy từ form chính -->
+                                <input type="hidden" name="ReviewID" value="@review.ReviewID" />
+                                <input type="text" name="Content" class="form-input" placeholder="Viết bình luận của bạn..." required />
+                                <button type="submit" class="btn-submit-comment">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            <div class="comment-error-message hidden" id="comment-error-@review.ReviewID"></div>
+                        </div>
+
+                    </div>
                 }
-                else
-                {
-                    <div class="card p-5 text-center">
-                        <p class="text-[--text-gray]">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên!</p>
-                    </div>
-                }
+            }
+            else
+            {
+                <div class="card p-5 text-center">
+                    <p class="text-[--text-gray]">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên!</p>
+                </div>
+            }
+        </div>
+    </section>
 
-                <!-- Thêm review khác -->
-            </div>
-            <!-- Nút xem thêm / Phân trang -->
-            <div class="text-center mt-8">
-                <a href="#" class="text-[--purple-600] hover:underline font-medium">Xem tất cả đánh giá</a>
-            </div>
-        </section>
+    <!-- ===== SECTION: VIẾT REVIEW (Form AJAX) ===== -->
+    <section id="write-review">
+        <h2 class="section-title">Chia sẻ đánh giá của bạn</h2>
+        <div class="card p-6 md:p-8">
 
-        <!-- ===== SECTION: VIẾT REVIEW (Form) ===== -->
-        <section id="write-review">
-            <h2 class="section-title">Chia sẻ đánh giá của bạn</h2>
-            <div class="card p-6 md:p-8">
-                <form class="space-y-4">
-                    <div class="form-group">
-                        <label for="review-title" class="block text-sm font-medium mb-1">Tiêu đề đánh giá *</label>
-                        <input type="text" id="review-title" name="Title" required class="w-full border border-[--border-color] rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[--purple-600]" placeholder="Ví dụ: Dịch vụ tuyệt vời!">
-                    </div>
-                    <div class="form-group">
-                        <label for="review-rating" class="block text-sm font-medium mb-1">Đánh giá của bạn *</label>
-                        <select id="review-rating" name="Rating" required class="w-full border border-[--border-color] rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[--purple-600]">
-                            <option value="">Chọn số sao</option>
-                            <option value="5">5 sao - Rất hài lòng</option>
-                            <option value="4">4 sao - Hài lòng</option>
-                            <option value="3">3 sao - Bình thường</option>
-                            <option value="2">2 sao - Không hài lòng</option>
-                            <option value="1">1 sao - Rất tệ</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="review-content" class="block text-sm font-medium mb-1">Nội dung đánh giá *</label>
-                        <textarea id="review-content" name="Content" rows="5" required class="w-full border border-[--border-color] rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[--purple-600]" placeholder="Chia sẻ chi tiết trải nghiệm của bạn..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="review-image" class="block text-sm font-medium mb-1">Ảnh đính kèm (Tùy chọn)</label>
-                        <input type="file" id="review-image" name="Image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[--purple-50] file:text-[--purple-700] hover:file:bg-[--purple-100]">
-                    </div>
-                    <div class="text-right">
-                        <button type="submit" class="btn-primary">Gửi đánh giá</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+            <form id="form-create-review" asp-controller="Product" asp-action="CreateReview" method="post" class="space-y-4">
 
-    </main>
+                <!-- QUAN TRỌNG: Thêm AntiForgeryToken cho AJAX -->
+                @Html.AntiForgeryToken()
 
-    
+                <div id="review-form-error" class="form-error-message hidden"></div>
 
-</body>
-</html>
+                <input type="hidden" asp-for="NewReviewForm.ProductId" value="@Model.Product.ProductID" />
+
+                <div class="form-group">
+                    <label asp-for="NewReviewForm.Title" class="form-label">Tiêu đề đánh giá *</label>
+                    <input asp-for="NewReviewForm.Title" class="form-input" placeholder="Ví dụ: Dịch vụ tuyệt vời!" required>
+                    <span asp-validation-for="NewReviewForm.Title" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NewReviewForm.Rating" class="form-label">Đánh giá của bạn *</label>
+                    <select asp-for="NewReviewForm.Rating" class="form-select" required>
+                        <option value="">Chọn số sao</option>
+                        <option value="5">5 sao - Rất hài lòng</option>
+                        <option value="4">4 sao - Hài lòng</option>
+                        <option value="3">3 sao - Bình thường</option>
+                        <option value="2">2 sao - Không hài lòng</option>
+                        <option value="1">1 sao - Rất tệ</option>
+                    </select>
+                    <span asp-validation-for="NewReviewForm.Rating" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NewReviewForm.Content" class="form-label">Nội dung đánh giá *</label>
+                    <textarea asp-for="NewReviewForm.Content" rows="5" class="form-textarea" placeholder="Chia sẻ chi tiết trải nghiệm của bạn..." required></textarea>
+                    <span asp-validation-for="NewReviewForm.Content" class="field-validation-error"></span>
+                </div>
+
+                <div class="text-right">
+                    <button type="submit" id="btn-submit-review" class="btn-primary">Gửi đánh giá</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+</main>
+
+
+@section Scripts {
+    <script src="~/js/product-detail.js" asp-append-version="true"></script>
+}
+

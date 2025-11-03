@@ -4,15 +4,19 @@ using Microsoft.AspNetCore.Mvc;
 using SocialReview.ViewModels;
 using SocialReview.Services;
 using System.Threading.Tasks; // <-- Thêm thư viện Task
-using Microsoft.AspNetCore.Authorization; // <-- Thêm thư viện Authorization (nếu cần cho Logout)
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using SocialReview.Models; // <-- Thêm thư viện Authorization (nếu cần cho Logout)
 
 public class AuthController : Controller
 {
     private readonly IAuthService _authService;
+    private readonly UserManager<User> _userManager;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService,UserManager<User> userManager)
     {
         _authService = authService;
+        _userManager = userManager;
     }
 
     // --- Đăng nhập ---
@@ -25,7 +29,7 @@ public class AuthController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = "/")
     {
         if (!ModelState.IsValid)
         {
@@ -40,10 +44,17 @@ public class AuthController : Controller
             return View(model);
         }
 
-        if (role == "Admin")
-            return RedirectToAction("Index", "AdminDashboard",new {area="Admin"});
+        if (role == "Admin") { 
+        return RedirectToAction("Index", "AdminDashboard", new { area = "Admin" });
+        }
+        else if(role == "Company")
+        {
+            return LocalRedirect("/CompanyDashboard/Index");
+        }
         else
-            return RedirectToAction("Index", "Home");
+        {
+            return LocalRedirect("/Profile/Index");
+        }
 
     }
 

@@ -1,0 +1,578 @@
+﻿@model SocialReview.ViewModels.CompanyViewModel
+@{
+    ViewData["Title"] = Model.CompanyProfile.CompanyName;
+    Layout = "_Layout"; // Dùng layout chung
+    // Lấy danh sách Categories từ ViewData (cho Modal)
+    var categories = ViewData["Categories"] as List<SocialReview.Models.Category> ?? new List<SocialReview.Models.Category>();
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<style>
+    /* (Copy style từ file EditProfile.cshtml (lượt trước) cho .form-container, .btn-primary, .form-group...) */
+    .form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
+        background-color: #FAFAFA;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            box-shadow: 0 0 0 2px #E1BEE7;
+            background-color: white;
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .btn-primary {
+        background-color: #6A1B9A;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background-color: #8E24AA;
+        }
+
+    .btn-green {
+        background-color: #10B981;
+        color: white;
+    }
+
+        .btn-green:hover {
+            background-color: #059669;
+        }
+
+    .btn-red {
+        background-color: #EF4444;
+        color: white;
+    }
+
+        .btn-red:hover {
+            background-color: #DC2626;
+        }
+
+    .btn-gray {
+        background-color: #E5E7EB;
+        color: #374151;
+    }
+
+        .btn-gray:hover {
+            background-color: #D1D5DB;
+        }
+
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    /* Bảng */
+    .stat-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 1.5rem;
+    }
+
+    .table-container {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        white-space: nowrap;
+    }
+
+    th {
+        background-color: #F9F6FB;
+        font-weight: 600;
+        color: #6A1B9A;
+    }
+
+    tbody tr:hover {
+        background-color: #fcfaff;
+    }
+
+    /* Modal */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        width: 90%;
+        max-width: 600px;
+        transform: scale(0.95);
+        transition: transform 0.3s;
+    }
+
+    .modal-overlay.open .modal-content {
+        transform: scale(1);
+    }
+
+    .modal-validation-summary {
+        display: none;
+        color: #dc3545;
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="container mx-auto p-4 md:p-8">
+
+    <!-- Thông báo thành công (nếu có) -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg" role="alert">
+            <p class="font-bold">Thành công</p>
+            <p>@TempData["SuccessMessage"]</p>
+        </div>
+    }
+
+    <h1 class="text-3xl font-bold mb-8 font-poppins text-purple-700">Trang quản lý Doanh nghiệp</h1>
+
+    <!-- ============================================== -->
+    <!-- SECTION 1: THÔNG TIN DOANH NGHIỆP (TỪ CODE BẠN DÁN) -->
+    <!-- ============================================== -->
+    <div class="stat-card mb-8">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                @if (!string.IsNullOrEmpty(Model.CompanyProfile.Logo))
+                {
+                    <img src="@Model.CompanyProfile.Logo" alt="Logo" class="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover border border-gray-200">
+                }
+                else
+                {
+                    <div class="w-24 h-24 md:w-32 md:h-32 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-5xl font-bold">
+                        @Model.CompanyProfile.CompanyName.Substring(0, 1)
+                    </div>
+                }
+            </div>
+
+            <!-- Details -->
+            <div class="text-center md:text-left flex-grow">
+                <h3 class="text-2xl font-bold font-poppins">@Model.CompanyProfile.CompanyName</h3>
+                <p class="text-gray-600">@Model.CompanyProfile.Industry</p>
+                <p class="text-gray-500 text-sm mt-2 max-w-xl">@Model.CompanyProfile.CompanyDescription</p>
+            </div>
+
+            <!-- Nút sửa -->
+            <div class="flex-shrink-0">
+                <a asp-action="EditProfile" asp-controller="CompanyDashboard"
+                   class="btn btn-primary">
+                    <i class="fas fa-pencil-alt mr-1"></i> Sửa Thông tin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 2: QUẢN LÝ SẢN PHẨM (TỪ FILE BÊN PHẢI) -->
+    <!-- ============================================== -->
+    <div class="table-container">
+        <div class="flex justify-between items-center p-4">
+            <h2 class="text-2xl font-semibold font-poppins text-purple-700">Sản phẩm/Dịch vụ của tôi</h2>
+            <button type="button" class="btn btn-primary" onclick="openCreateModal()">
+                <i class="fas fa-plus mr-1"></i> Thêm Sản phẩm
+            </button>
+        </div>
+
+        <!-- Danh sách sản phẩm -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên Sản phẩm/DV</th>
+                    <th>Giá</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="product-table-body">
+                @if (Model.CompanyProducts.Any())
+                {
+                    @foreach (var product in Model.CompanyProducts)
+                    {
+                        <!-- SỬA: Dùng Partial View -->
+                        <partial name="_ProductRow" model="product" />
+                    }
+                }
+                else
+                {
+                    <tr id="no-products-row">
+                        <td colspan="6" class="text-center text-gray-500 py-4">Bạn chưa thêm sản phẩm/dịch vụ nào.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- MODAL THÊM/SỬA SẢN PHẨM (TỪ FILE BÊN PHẢI) -->
+<!-- ========================================================= -->
+<div id="product-modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+            <h3 id="modal-title" class="text-2xl font-bold font-poppins text-purple-700">Thêm Sản phẩm</h3>
+            <button type="button" class="text-gray-400 hover:text-gray-700" onclick="closeModal()">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+
+        <form id="product-form" onsubmit="handleProductFormSubmit(event)">
+            <input type="hidden" id="ProductID" name="ProductID" value="0" />
+            <div id="modal-validation-summary" class="modal-validation-summary"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group md:col-span-2">
+                    <label for="ProductName" class="form-label">Tên Sản phẩm/Dịch vụ</label>
+                    <input type="text" id="ProductName" name="ProductName" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="CategoryID" class="form-label">Danh mục</label>
+                    <select id="CategoryID" name="CategoryID" class="form-control" required>
+                        <option value="">-- Chọn danh mục --</option>
+                        <option value="1">Sản phẩm</option>
+                        <option value="2">Dịch vụ</option>
+                        
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ProductType" class="form-label">Loại</label>
+                    @* <select id="ProductType" name="ProductType" class="form-control" required>
+                        <option value="">-- Chọn loại --</option>
+                        <option value="Product">Sản phẩm (Product)</option>
+                        <option value="Service">Dịch vụ (Service)</option>
+                    </select> *@
+                    <input class="form-control" id="ProductType" name="ProductType"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ProductPrice" class="form-label">Giá</label>
+                <input type="number" id="ProductPrice" name="ProductPrice" class="form-control" value="0" min="0" step="1000" />
+            </div>
+            <div class="form-group">
+                <label for="ProductImage" class="form-label">Link ảnh (Tùy chọn)</label>
+                <input type="url" id="ProductImage" name="ProductImage" class="form-control" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+                <label for="ProductDescription" class="form-label">Mô tả (Tùy chọn)</label>
+                <textarea id="ProductDescription" name="ProductDescription" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="text-right mt-6 space-x-3">
+                <button type="button" class="btn btn-gray" onclick="closeModal()">Hủy bỏ</button>
+                <button type="submit" id="modal-submit-button" class="btn btn-primary">Lưu Sản phẩm</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Lấy các element
+        const modalOverlay = document.getElementById('product-modal-overlay');
+        const modalTitle = document.getElementById('modal-title');
+        const productForm = document.getElementById('product-form');
+        const modalSubmitButton = document.getElementById('modal-submit-button');
+        const modalValidationSummary = document.getElementById('modal-validation-summary');
+
+        // const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        const categoriesList = @Html.Raw(Json.Serialize(categories));
+
+        // --- Mở Modal (Tạo mới) ---
+        function openCreateModal() {
+            productForm.reset();
+            document.getElementById('ProductID').value = "0";
+            modalTitle.textContent = "Thêm Sản phẩm mới";
+            modalSubmitButton.textContent = "Tạo mới";
+            productForm.setAttribute('data-mode', 'create');
+            clearValidationErrors();
+            modalOverlay.classList.add('open');
+        }
+
+        // --- Mở Modal (Sửa) ---
+        async function openEditModal(productId) {
+            clearValidationErrors();
+            try {
+                const response = await fetch(`/CompanyDashboard/GetProductDetails/${productId}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json', }
+                });
+                if (!response.ok) throw new Error('Không thể tải dữ liệu sản phẩm.');
+                const product = await response.json();
+
+                // Điền dữ liệu vào form
+                document.getElementById('ProductID').value = product.productID;
+                document.getElementById('ProductName').value = product.productName;
+                document.getElementById('ProductDescription').value = product.productDescription;
+                document.getElementById('ProductImage').value = product.productImage;
+                document.getElementById('ProductPrice').value = product.productPrice;
+                document.getElementById('ProductType').value = product.productType;
+                document.getElementById('CategoryID').value = product.categoryID;
+
+                modalTitle.textContent = "Sửa Sản phẩm";
+                modalSubmitButton.textContent = "Lưu thay đổi";
+                productForm.setAttribute('data-mode', 'edit');
+                modalOverlay.classList.add('open');
+            } catch (error) {
+                console.error('Lỗi khi mở modal sửa:', error);
+                alert(error.message);
+            }
+        }
+
+        // --- Đóng Modal ---
+        function closeModal() {
+            modalOverlay.classList.remove('open');
+        }
+
+        // --- Xử lý Submit Form (AJAX) ---
+        async function handleProductFormSubmit(event) {
+            event.preventDefault();
+            const mode = productForm.getAttribute('data-mode');
+            const productId = document.getElementById('ProductID').value;
+            const isCreating = (mode === 'create');
+            const url = isCreating ? '/CompanyDashboard/CreateProduct' : `/CompanyDashboard/EditProduct/${productId}`;
+
+            const formData = {
+                ProductID: parseInt(productId),
+                ProductName: document.getElementById('ProductName').value,
+                ProductDescription: document.getElementById('ProductDescription').value,
+                ProductImage: document.getElementById('ProductImage').value,
+                ProductPrice: parseFloat(document.getElementById('ProductPrice').value),
+                ProductType: document.getElementById('ProductType').value,
+                CategoryID: parseInt(document.getElementById('CategoryID').value)
+            };
+
+            clearValidationErrors();
+            modalSubmitButton.disabled = true;
+            modalSubmitButton.textContent = 'Đang xử lý...';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        // 'RequestVerificationToken': antiForgeryToken
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const errorResult = await response.json();
+                    throw errorResult;
+                }
+                const result = await response.json();
+
+                if (isCreating) {
+                    appendTableRow(result);
+                } else {
+                    updateTableRow(result);
+                }
+                closeModal();
+            } catch (error) {
+                console.error('Lỗi khi submit form:', error);
+                showValidationErrors(error);
+            } finally {
+                modalSubmitButton.disabled = false;
+                modalSubmitButton.textContent = isCreating ? 'Tạo mới' : 'Lưu thay đổi';
+            }
+        }
+
+        // --- Xử lý Xóa Sản phẩm (AJAX) ---
+                async function deleteProduct(productId) {
+            if (!confirm(`Bạn có chắc muốn xóa sản phẩm ID ${productId}?
+        (Tất cả review liên quan cũng sẽ bị xóa!)`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/CompanyDashboard/DeleteProduct/${productId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    const result = await response.json();
+                    throw new Error(result.message || 'Không thể xóa sản phẩm.');
+                }
+
+                removeTableRow(productId);
+            } catch (error) {
+                console.error('Lỗi khi xóa:', error);
+                alert(error.message || "Đã xảy ra lỗi khi xóa sản phẩm.");
+            }
+        }
+
+
+        // --- Helper: Cập nhật UI ---
+        function appendTableRow(product) {
+            document.getElementById('no-products-row')?.remove();
+            const tableBody = document.getElementById('product-table-body');
+            const newRow = createRowHtml(product);
+            tableBody.insertAdjacentHTML('beforeend', newRow);
+        }
+
+        function updateTableRow(product) {
+            const row = document.getElementById(`product-row-${product.productID}`);
+            if (row) {
+                row.outerHTML = createRowHtml(product);
+            }
+        }
+
+        function removeTableRow(productId) {
+            document.getElementById(`product-row-${productId}`)?.remove();
+             const tableBody = document.getElementById('product-table-body');
+             if (tableBody.childElementCount === 0) {
+                 tableBody.innerHTML = '<tr id="no-products-row"><td colspan="6" class="text-center text-gray-500 py-4">Bạn chưa thêm sản phẩm/dịch vụ nào.</td></tr>';
+             }
+        }
+
+        function createRowHtml(product) {
+            let categoryName = 'N/A';
+            const category = categoriesList.find(c => c.categoryID === product.categoryID);
+            if (category) {
+                categoryName = category.categoryName;
+            } else if (product.category) { // Nếu API trả về
+                 categoryName = product.category.categoryName;
+            }
+
+            const price = product.productPrice > 0 ? `${product.productPrice.toLocaleString('vi-VN')} ₫` : 'N/A';
+            const typeBadge = product.productType === 'Product'
+                ? '<span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">Sản phẩm</span>'
+                : '<span class.="bg-green-100 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">Dịch vụ</span>';
+
+            const createdAt = new Date(product.createdAt).toLocaleDateString('vi-VN');
+
+            return `
+                <tr id="product-row-${product.productID}">
+                    <td class="font-medium">${escapeHTML(product.productName)}</td>
+                    <td>${escapeHTML(categoryName)}</td>
+                    <td>${typeBadge}</td>
+                    <td>${price}</td>
+                    <td>${createdAt}</td>
+                    <td class="space-x-3">
+                        <button type="button" onclick="openEditModal(${product.productID})" class="text-blue-600 hover:underline text-sm">Sửa</button>
+                        <button type="button" onclick="deleteProduct(${product.productID})" class="text-red-600 hover:underline text-sm">Xóa</button>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        // --- Helper: Xử lý Lỗi Validation (AJAX) ---
+        function clearValidationErrors() {
+            modalValidationSummary.innerHTML = '';
+            modalValidationSummary.style.display = 'none';
+        }
+
+        function showValidationErrors(errors) {
+            modalValidationSummary.style.display = 'block';
+            let ul = document.createElement('ul');
+
+            // Lỗi từ ModelState (thường là lỗi validation)
+            if (errors && errors.errors) {
+                for (const key in errors.errors) {
+                    errors.errors[key].forEach(err => {
+                        let li = document.createElement('li');
+                        li.textContent = err;
+                        ul.appendChild(li);
+                    });
+                }
+            }
+            // Lỗi ModelState chung (string.Empty)
+            else if (errors && errors[""]) {
+                 errors[""].forEach(err => {
+                        let li = document.createElement('li');
+                        li.textContent = err;
+                        ul.appendChild(li);
+                    });
+            }
+            // Lỗi chung (từ catch hoặc logic)
+            else if (errors && errors.Error) {
+                 errors.Error.forEach(err => {
+                        let li = document.createElement('li');
+                        li.textContent = err;
+                        ul.appendChild(li);
+                    });
+            }
+             else {
+                let li = document.createElement('li');
+                li.textContent = errors.message || "Đã xảy ra lỗi không xác định.";
+                ul.appendChild(li);
+            }
+
+            modalValidationSummary.appendChild(ul);
+        }
+
+    </script>
+}
+

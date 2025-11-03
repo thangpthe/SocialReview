@@ -1,7 +1,137 @@
-﻿@{
+﻿@model SocialReview.ViewModels.DashboardViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
     ViewData["Title"] = "Trang chủ";
+    Layout = "_Layout";
 }
 
-<div class="container">
-   
+@* CSS Tạm thời cho các Thống kê *@
+@section Styles {
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem; /* Thêm khoảng cách dưới */
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            padding: 1rem;
+            border-radius: 50%;
+            background-color: #F3E5F5; /* --purple-50 */
+            color: #6A1B9A; /* --purple-700 */
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6A1B9A; /* --purple-700 */
+        }
+
+        .stat-info p {
+            font-size: 0.9rem;
+            color: #555; /* --text-gray */
+        }
+
+        .home-banner {
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-top: 1rem;
+        }
+
+            .home-banner h1 {
+                font-family: 'Poppins', sans-serif;
+                font-size: 2.25rem; /* text-4xl */
+                font-weight: 700;
+                color: #6A1B9A; /* --purple-700 */
+            }
+
+            .home-banner p {
+                font-size: 1.125rem; /* text-lg */
+                color: #555; /* --text-gray */
+                margin-top: 0.5rem; /* mt-2 */
+            }
+
+            .home-banner .btn-primary {
+                display: inline-block;
+                margin-top: 1.5rem; /* mt-6 */
+                background-color: #8E24AA; /* --purple-600 */
+                color: white;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-weight: 500;
+                text-decoration: none;
+            }
+
+                .home-banner .btn-primary:hover {
+                    background-color: #6A1B9A; /* --purple-700 */
+                }
+    </style>
+}
+
+<div class="container home-container">
+
+    <div class="home-banner">
+        <h1>Chào mừng đến với Trustify</h1>
+        <p>Nền tảng đánh giá sản phẩm và dịch vụ trung thực.</p>
+        <a asp-controller="Product" asp-action="Index" class="btn-primary">
+            Duyệt sản phẩm ngay
+        </a>
+    </div>
+
+    <!-- Hiển thị thống kê -->
+    @if (Model != null)
+    {
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="stat-info">
+                    <h3>@Model.TotalUsers.ToString("N0")</h3>
+                    <p>Người dùng</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
+                <div class="stat-info">
+                    <h3>@Model.TotalCompanies.ToString("N0")</h3>
+                    <p>Doanh nghiệp</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+                <div class="stat-info">
+                    <h3>@Model.TotalProducts.ToString("N0")</h3>
+                    <p>Sản phẩm/Dịch vụ</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+                <div class="stat-info">
+                    <h3>@Model.TotalReviews.ToString("N0")</h3>
+                    <p>Lượt đánh giá</p>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+

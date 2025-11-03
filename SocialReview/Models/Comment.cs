@@ -16,13 +16,13 @@ namespace SocialReview.Models
         [Required]
         [ForeignKey("User")]
         public int UserId { get; set; }
+        public virtual User User { get; set; }
         [Required(ErrorMessage = "Không được để trống")]
         public string CommentContent { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Navigation
         public Review Review { get; set; }
-        public User User { get; set; }
 
 
 

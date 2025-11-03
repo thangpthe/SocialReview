@@ -1,6 +1,6 @@
-﻿
+﻿/* --- CSS Reset & Variables --- */
 :root {
-    --primary-color: #8B5CF6; 
+    --primary-color: #8B5CF6; /* Màu tím */
     --primary-light: #E9D5FF;
     --text-dark: #1F2937;
     --text-light: #6B7280;
@@ -10,29 +10,8 @@
     --star-color: #FBBF24;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-a {
-    text-decoration: none;
-    color: var(--primary-color);
-}
+/* Kế thừa .container từ _Layout.css, không cần định nghĩa lại */
+/* .container { ... } */
 
 /* --- Components (Buttons) --- */
 .btn {
@@ -78,40 +57,41 @@ a {
     flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
 }
 
+/* === CSS BẠN ĐANG TÌM (CHO AVATAR/ICON) === */
 .avatar {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     border: 4px solid var(--primary-light);
     object-fit: cover;
+    flex-shrink: 0; /* Ngăn co lại */
 }
 
 .avatar-icon-wrapper {
-    /* Kích thước (giống .avatar) */
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    /* Viền (giống .avatar) */
     border: 4px solid var(--primary-light);
-    /* Căn giữa icon */
+    background-color: var(--primary-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Màu nền và màu icon */
-    background-color: var(--primary-light);
-    color: var(--primary-color);
-    flex-shrink: 0; /* Ngăn icon bị co lại */
+    flex-shrink: 0; /* Ngăn co lại */
 }
 
     .avatar-icon-wrapper .fa-user {
-        font-size: 3rem; /* 48px */
+        font-size: 60px; /* Kích thước icon (đã tăng) */
+        color: var(--primary-color);
     }
+/* === KẾT THÚC CSS AVATAR === */
+
 
 .profile-info {
     flex-grow: 1;
 }
 
     .profile-info h1 {
+        font-family: 'Poppins', sans-serif;
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 4px;
@@ -157,30 +137,27 @@ a {
 }
 
 /* Responsive cho Header */
-media (max-width: 768px) {
-    .profile-header
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
 
-{
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
+    .profile-stats {
+        justify-content: center;
+        width: 100%;
+    }
 
-.profile-stats {
-    justify-content: center;
-    width: 100%;
-}
+    .profile-action {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
 
-.profile-action {
-    margin-left: 0;
-    width: 100%;
-    text-align: center;
-}
-
-.btn-edit {
-    width: 100%;
-}
-
+    .btn-edit {
+        width: 100%;
+    }
 }
 
 /* --- 2. Profile Tabs --- */
@@ -222,6 +199,7 @@ media (max-width: 768px) {
 }
 
     .section-header h2 {
+        font-family: 'Poppins', sans-serif;
         font-size: 1.75rem;
         font-weight: 700;
     }
@@ -272,7 +250,8 @@ media (max-width: 768px) {
         margin-left: 4px;
     }
 
-    .rating .fa-star.empty {
+    .rating .fa-star.empty,
+    .rating .fa-regular.fa-star {
         color: var(--border-color);
     }
 
@@ -282,9 +261,14 @@ media (max-width: 768px) {
 }
 
     .review-title-link h3 {
+        font-family: 'Poppins', sans-serif;
         font-size: 1.2rem;
         font-weight: 600;
         margin-bottom: 4px;
+        /* Thêm truncate nếu tiêu đề quá dài */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .review-title-link:hover h3 {
@@ -310,5 +294,3 @@ media (max-width: 768px) {
 .helpful {
     font-weight: 600;
 }
-
-

@@ -1,6 +1,6 @@
 ﻿@model SocialReview.ViewModels.UserInfoViewModel
 @{
-    ViewData["Title"] = "Trusitfy | Người dùng";
+    ViewData["Title"] = "Người dùng";
     Layout = "_Layout";
 
 }
@@ -11,7 +11,7 @@
 
 <div class="container">
     <div class="profile-header">
-        @if (Model.UserProfile != null && !string.IsNullOrEmpty(Model.UserProfile.UserAvatar))
+        @* @if (Model.UserProfile != null && !string.IsNullOrEmpty(Model.UserProfile.UserAvatar))
         {
             <!-- 1. Nếu CÓ Avatar, hiển thị <img> -->
             <img src="@Model.UserProfile.UserAvatar"
@@ -25,7 +25,7 @@
                  title="@(Model.UserProfile?.FullName ?? "Người dùng")">
                 <i class="fa-solid fa-user"></i>
             </div>
-        }
+        } *@
         
         <div class="profile-info">
             <!-- SEO: H1 là tiêu đề chính của trang -->
@@ -41,16 +41,16 @@
             
         </div>
 
-        <div class="profile-action">
+        @* <div class="profile-action">
             <a href="#" class="btn btn-edit">
                 <i class="fas fa-edit"></i> Chỉnh sửa Hồ sơ
             </a>
-        </div>
+        </div> *@
     </div>
 
-    <nav class="profile-tabs">
+    @* <nav class="profile-tabs">
         <a href="#" class="tab-link active">Bài đánh giá đã đăng</a>
-    </nav>
+    </nav> *@
 
     <main class="profile-content">
         
@@ -59,7 +59,7 @@
             
             <div class="section-header">
                 <!-- SEO: H2 cho tiêu đề mục -->
-                <h2>Các bài đánh giá của tôi</h2>
+                <h2>Các bài đánh giá</h2>
             </div>
 
             @if (Model.UserReviews != null && Model.UserReviews.Any())
@@ -68,11 +68,17 @@
                     @* ===== SỬA LỖI: BẮT ĐẦU VÒNG LẶP ĐỘNG ===== *@
                     @foreach (var review in Model.UserReviews)
                     {
-                        <article class="review-card">
+                        <a class="review-card" asp-controller="Product" asp-action="Detail" asp-route-id="@review.ProductID" class="review-title-link">
                             <img src="@(review.Product?.ProductImage ?? "https://placehold.co/400x200/eee/ccc?text=No+Image")"
                                  alt="Ảnh của sản phẩm @(review.Product?.ProductName ?? "Sản phẩm")" class="review-image">
 
                             <div class="review-body">
+                                
+                                <p class="product-name">@(review.Product?.ProductName ?? "Sản phẩm đã bị xóa")</p>
+                                <div class="review-meta">
+                                    <span class="date">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                    @* <span class="helpful">🔥 0 found helpful</span> *@
+                                </div>
                                 <div class="rating">
                                     @for (int i = 1; i <= 5; i++)
                                     {
@@ -80,18 +86,10 @@
                                     }
                                     <span class="rating-text">@review.Rating.ToString("F1")</span>
                                 </div>
-                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@review.ProductID" class="review-title-link">
-                                   
-                                </a>
-                                <p class="product-name">@(review.Product?.ProductName ?? "Sản phẩm đã bị xóa")</p>
-                                <div class="review-meta">
-                                    <span class="date">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
-                                    @* <span class="helpful">🔥 0 found helpful</span> *@
-                                </div>
                             </div>
-                        </article>
+                        </a>
                     }
-                    @* ===== KẾT THÚC VÒNG LẶP ĐỘNG ===== *@
+                  
                 </div>
             }
             else

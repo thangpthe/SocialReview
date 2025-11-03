@@ -34,7 +34,7 @@ namespace SocialReview.Controllers
             var viewModel = new CompanyViewModel
             {
                 CompanyProfile = company,
-                ProductList = company.Products ?? new List<Product>() // Đảm bảo Products không bị null
+                CompanyProducts = company.Products ?? new List<Product>() // Đảm bảo Products không bị null
             };
 
             // 6. Gửi "khay" đến View (Views/Company/Dashboard.cshtml)

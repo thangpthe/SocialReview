@@ -11,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAntiforgery(options => {
+    options.HeaderName = "RequestVerificationToken";
+});
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
@@ -18,10 +21,12 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SocialReview")));
 
 //Repository
-builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
     options.SignIn.RequireConfirmedEmail = false;
@@ -56,6 +61,8 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "AdminArea",
