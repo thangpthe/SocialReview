@@ -17,9 +17,8 @@ namespace SocialReview.Repositories.Interface
         Task UpdateAsync(Product product);
 
         Task DeleteAsync(int id);
-        Task<IEnumerable<Product>> Search(string query);
-
         Task<IEnumerable<Product>> FilterAsync(string? productType, int? rating);
+        Task<IEnumerable<Product>> Search(string query);
 
     }
 }

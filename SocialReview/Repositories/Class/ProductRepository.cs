@@ -69,29 +69,80 @@ namespace SocialReview.Repositories.Class
                 .FirstOrDefaultAsync(p => p.ProductID == id);
         }
 
+        //public async Task<IEnumerable<Product>> FilterAsync(string? productType, int? rating)
+        //{
+        //    var query = _context.Products
+        //                        .Include(p => p.Company)
+        //                        .Include(p => p.Reviews) // Thêm này nếu lọc theo rating
+        //                        .AsQueryable();
 
+        //    if (!string.IsNullOrEmpty(productType))
+        //    {
+        //        query = query.Where(p => p.ProductType == productType);
+        //    }
+
+        //    if (rating.HasValue)
+        //    {
+        //        query = query.Where(p => p.Reviews.Any() &&
+        //                                 p.Reviews.Average(r => r.Rating) >= rating.Value);
+        //    }
+
+        //    return await query.ToListAsync();
+        //}
 
         public async Task<IEnumerable<Product>> FilterAsync(string? productType, int? rating)
         {
+            // Bắt đầu với query cơ bản
             var query = _context.Products
-                                .Include(p => p.Company)
-                                .AsQueryable();
+                .Include(p => p.Company)
+                .AsQueryable();
+
+            // Lọc theo loại sản phẩm
             if (!string.IsNullOrEmpty(productType))
             {
                 query = query.Where(p => p.ProductType == productType);
             }
 
+            // Lọc theo rating - CHÚ Ý: Phải Include Reviews trước
             if (rating.HasValue)
             {
-                
-                query = query.Where(p => p.Reviews.Any() && p.Reviews.Average(r => r.Rating) >= rating.Value);
+                query = query
+                    .Include(p => p.Reviews) // Include Reviews để tính average
+                    .Where(p => p.Reviews.Any() &&
+                                p.Reviews.Average(r => r.Rating) >= rating.Value);
             }
-            return await query.ToListAsync();
+            else
+            {
+                // Nếu không lọc theo rating, vẫn include Reviews cho hiển thị
+                query = query.Include(p => p.Reviews);
+            }
+
+            var results = await query.ToListAsync();
+
+            // DEBUG: In ra console để kiểm tra
+            Console.WriteLine($"Filter params - Type: {productType}, Rating: {rating}");
+            Console.WriteLine($"Results count: {results.Count()}");
+
+            return results;
         }
 
-        public Task<IEnumerable<Product>> Search(string query)
+        // --- THỰC HIỆN PHƯƠNG THỨC NÀY ---
+        public async Task<IEnumerable<Product>> Search(string query)
         {
-            throw new NotImplementedException();
+            // Chuyển sang chữ thường để tìm kiếm không phân biệt hoa/thường
+            var lowerQuery = query.ToLower();
+
+            var results = await _context.Products
+                                    .Include(p => p.Company) // Include Company để hiển thị card
+                                    .Where(p =>
+                                        // Tìm theo tên sản phẩm
+                                        p.ProductName.ToLower().Contains(lowerQuery) ||
+                                        // Hoặc tìm theo tên công ty
+                                        (p.Company != null && p.Company.CompanyName.ToLower().Contains(lowerQuery))
+                                    )
+                                    .ToListAsync();
+
+            return results;
         }
     }
     }

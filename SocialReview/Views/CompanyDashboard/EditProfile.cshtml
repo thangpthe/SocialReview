@@ -15,15 +15,18 @@
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
+
     .form-group {
         margin-bottom: 1.25rem;
     }
+
     .form-label {
         display: block;
         margin-bottom: 0.5rem;
         font-weight: 600;
         color: #374151; /* gray-700 */
     }
+
     .form-control {
         display: block;
         width: 100%;
@@ -32,14 +35,17 @@
         border-radius: 8px;
         transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .form-control:focus {
-        outline: none;
-        border-color: #6A1B9A; /* purple-700 */
-        box-shadow: 0 0 0 2px #E1BEE7; /* purple-100 */
-    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6A1B9A; /* purple-700 */
+            box-shadow: 0 0 0 2px #E1BEE7; /* purple-100 */
+        }
+
     textarea.form-control {
         min-height: 120px;
     }
+
     .btn-primary {
         background-color: #6A1B9A; /* purple-700 */
         color: white;
@@ -50,11 +56,23 @@
         cursor: pointer;
         transition: background-color 0.2s ease;
     }
-    .btn-primary:hover {
-        background-color: #8E24AA; /* purple-600 */
+
+        .btn-primary:hover {
+            background-color: #8E24AA; /* purple-600 */
+        }
+
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
     }
-    .field-validation-error { color: #dc3545; font-size: 0.875rem; margin-top: 0.25rem; }
-    .validation-summary-errors ul { color: #dc3545; list-style: none; padding:0; margin-bottom: 1rem; }
+
+    .validation-summary-errors ul {
+        color: #dc3545;
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
 </style>
 
 <div class="form-container">
@@ -63,9 +81,9 @@
 
     <!-- Form sử dụng Tag Helpers -->
     <form asp-action="EditProfile" method="post">
-        
+
         @Html.AntiForgeryToken()
-        
+
         <!-- Hiển thị lỗi chung -->
         <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
 
@@ -83,7 +101,7 @@
                 <input asp-for="Logo" class="form-control" placeholder="https://..." />
                 <span asp-validation-for="Logo" class="field-validation-error"></span>
             </div>
-            
+
             <!-- Ngành -->
             <div class="form-group">
                 <label asp-for="Industry" class="form-label">Lĩnh vực</label>
@@ -105,10 +123,10 @@
             <textarea asp-for="CompanyDescription" class="form-control" rows="5"></textarea>
             <span asp-validation-for="CompanyDescription" class="field-validation-error"></span>
         </div>
-        
-        <hr class="my-6"/>
+
+        <hr class="my-6" />
         <h2 class="text-xl font-semibold mb-4 font-poppins">Thông tin liên hệ</h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Số điện thoại -->
             <div class="form-group">
@@ -116,7 +134,7 @@
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="field-validation-error"></span>
             </div>
-            
+
             <!-- Email liên hệ -->
             <div class="form-group md:col-span-2">
                 <label asp-for="ContactEmail" class="form-label">Email </label>

@@ -7,14 +7,6 @@
 -->
 <tr id="product-row-@Model.ProductID">
     <td class="font-medium">@Model.ProductName</td>
-    <td>
-        @Model.Category?.CategoryName
-        @* (Tên Category sẽ hiển thị nếu bạn 'Include' nó trong Controller) *@
-    </td>
-    <td>
-            <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">@Model.Category?.CategoryName</span>
-
-    </td>
     <td>@Model.ProductPrice</td>
     @* <td>@Model.CreatedAt.ToString("dd/MM/yyyy")</td> *@
     <td class="space-x-3">

@@ -1,0 +1,106 @@
+﻿@model SocialReview.ViewModels.EditProfileViewModel
+@{
+    ViewData["Title"] = "Chỉnh sửa thông tin cá nhân";
+}
+
+<div class="container mx-auto p-4 md:p-8 max-w-3xl">
+    <div class="mb-6">
+        <a asp-action="Index" class="text-purple-600 hover:text-purple-800 flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Quay lại trang cá nhân
+        </a>
+    </div>
+
+    <div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold mb-6 font-poppins text-purple-700">Chỉnh sửa thông tin cá nhân</h1>
+
+        <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4"></div>
+
+            <!-- Avatar Section -->
+            <div class="mb-6 text-center">
+                <label class="block text-gray-700 font-semibold mb-3">Avatar</label>
+
+                @if (!string.IsNullOrEmpty(Model.CurrentAvatar))
+                {
+                    <img src="@Model.CurrentAvatar" alt="Avatar hiện tại" class="w-32 h-32 rounded-full object-cover border-4 border-purple-200 mx-auto mb-4" id="avatarPreview">
+                }
+                else
+                {
+                    <div class="w-32 h-32 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-5xl font-bold mx-auto mb-4" id="avatarPreview">
+                        ?
+                    </div>
+                }
+
+                <div class="mt-4">
+                    <label class="cursor-pointer bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors inline-block">
+                        <i class="fas fa-upload mr-2"></i>Chọn ảnh mới
+                        <input type="file" asp-for="AvatarFile" accept="image/*" class="hidden" id="avatarInput" onchange="previewAvatar(this)">
+                    </label>
+                    <span asp-validation-for="AvatarFile" class="text-red-600 text-sm block mt-2"></span>
+                </div>
+            </div>
+
+            <!-- Full Name -->
+            <div class="mb-6">
+                <label asp-for="FullName" class="block text-gray-700 font-semibold mb-2"></label>
+                <input asp-for="FullName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Nhập họ và tên">
+                <span asp-validation-for="FullName" class="text-red-600 text-sm"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-6">
+                <label asp-for="Email" class="block text-gray-700 font-semibold mb-2"></label>
+                <input asp-for="Email" type="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Nhập email">
+                <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
+            </div>
+
+            <!-- Change Password Section -->
+            <div class="border-t pt-6 mt-6">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">Đổi mật khẩu (tùy chọn)</h3>
+
+                <!-- New Password -->
+                <div class="mb-6">
+                    <label asp-for="NewPassword" class="block text-gray-700 font-semibold mb-2"></label>
+                    <input asp-for="NewPassword" type="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Để trống nếu không đổi">
+                    <span asp-validation-for="NewPassword" class="text-red-600 text-sm"></span>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-6">
+                    <label asp-for="ConfirmPassword" class="block text-gray-700 font-semibold mb-2"></label>
+                    <input asp-for="ConfirmPassword" type="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Nhập lại mật khẩu mới">
+                    <span asp-validation-for="ConfirmPassword" class="text-red-600 text-sm"></span>
+                </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="flex gap-4 mt-8">
+                <button type="submit" class="flex-1 bg-purple-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-purple-700 transition-colors">
+                    <i class="fas fa-save mr-2"></i>Lưu thay đổi
+                </button>
+                <a asp-action="Index" class="flex-1 text-center bg-gray-300 text-gray-700 px-6 py-3 rounded-md font-semibold hover:bg-gray-400 transition-colors">
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('avatarPreview');
+                    preview.innerHTML = '<img src="' + e.target.result + '" class="w-32 h-32 rounded-full object-cover border-4 border-purple-200 mx-auto">';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

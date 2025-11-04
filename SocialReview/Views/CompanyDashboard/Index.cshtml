@@ -8,7 +8,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <style>
-    /* (Copy style từ file EditProfile.cshtml (lượt trước) cho .form-container, .btn-primary, .form-group...) */
+    /* (Styles của bạn giữ nguyên - không thay đổi) */
     .form-container {
         max-width: 800px;
         margin: 2rem auto;
@@ -103,7 +103,6 @@
         margin-top: 0.25rem;
     }
 
-    /* Bảng */
     .stat-card {
         background-color: white;
         border-radius: 12px;
@@ -140,7 +139,6 @@
         background-color: #fcfaff;
     }
 
-    /* Modal */
     .modal-overlay {
         position: fixed;
         inset: 0;
@@ -175,17 +173,19 @@
     }
 
     .modal-validation-summary {
-        display: none;
+        display: none; /* Ẩn mặc định */
         color: #dc3545;
+        background-color: #fbebee;
+        border: 1px solid #f0c0c5;
+        border-radius: 8px;
         list-style: none;
-        padding: 0;
+        padding: 1rem;
         margin-bottom: 1rem;
     }
 </style>
 
 <div class="container mx-auto p-4 md:p-8">
 
-    <!-- Thông báo thành công (nếu có) -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg" role="alert">
@@ -196,12 +196,8 @@
 
     <h1 class="text-3xl font-bold mb-8 font-poppins text-purple-700">Trang quản lý Doanh nghiệp</h1>
 
-    <!-- ============================================== -->
-    <!-- SECTION 1: THÔNG TIN DOANH NGHIỆP (TỪ CODE BẠN DÁN) -->
-    <!-- ============================================== -->
     <div class="stat-card mb-8">
         <div class="flex flex-col md:flex-row items-center gap-6">
-            <!-- Logo -->
             <div class="flex-shrink-0">
                 @if (!string.IsNullOrEmpty(Model.CompanyProfile.Logo))
                 {
@@ -215,14 +211,12 @@
                 }
             </div>
 
-            <!-- Details -->
             <div class="text-center md:text-left flex-grow">
                 <h3 class="text-2xl font-bold font-poppins">@Model.CompanyProfile.CompanyName</h3>
                 <p class="text-gray-600">@Model.CompanyProfile.Industry</p>
                 <p class="text-gray-500 text-sm mt-2 max-w-xl">@Model.CompanyProfile.CompanyDescription</p>
             </div>
 
-            <!-- Nút sửa -->
             <div class="flex-shrink-0">
                 <a asp-action="EditProfile" asp-controller="CompanyDashboard"
                    class="btn btn-primary">
@@ -232,9 +226,6 @@
         </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- SECTION 2: QUẢN LÝ SẢN PHẨM (TỪ FILE BÊN PHẢI) -->
-    <!-- ============================================== -->
     <div class="table-container">
         <div class="flex justify-between items-center p-4">
             <h2 class="text-2xl font-semibold font-poppins text-purple-700">Sản phẩm/Dịch vụ của tôi</h2>
@@ -243,7 +234,6 @@
             </button>
         </div>
 
-        <!-- Danh sách sản phẩm -->
         <table>
             <thead>
                 <tr>
@@ -257,14 +247,13 @@
                 {
                     @foreach (var product in Model.CompanyProducts)
                     {
-                        <!-- SỬA: Dùng Partial View -->
                         <partial name="_ProductRow" model="product" />
                     }
                 }
                 else
                 {
                     <tr id="no-products-row">
-                        <td colspan="6" class="text-center text-gray-500 py-4">Bạn chưa thêm sản phẩm/dịch vụ nào.</td>
+                        <td colspan="5" class="text-center text-gray-500 py-4">Bạn chưa thêm sản phẩm/dịch vụ nào.</td>
                     </tr>
                 }
             </tbody>
@@ -272,9 +261,6 @@
     </div>
 </div>
 
-<!-- ========================================================= -->
-<!-- MODAL THÊM/SỬA SẢN PHẨM (TỪ FILE BÊN PHẢI) -->
-<!-- ========================================================= -->
 <div id="product-modal-overlay" class="modal-overlay">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-4">
@@ -286,7 +272,11 @@
 
         <form id="product-form" onsubmit="handleProductFormSubmit(event)">
             <input type="hidden" id="ProductID" name="ProductID" value="0" />
-            <div id="modal-validation-summary" class="modal-validation-summary"></div>
+
+            <div id="modal-error-alert" class="modal-validation-summary">
+                <ul id="modal-error-list" style="padding-left: 20px; list-style: disc;">
+                </ul>
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group md:col-span-2">
@@ -297,9 +287,9 @@
                     <label for="CategoryID" class="form-label">Danh mục</label>
                     <select id="CategoryID" name="CategoryID" class="form-control" required>
                         <option value="">-- Chọn danh mục --</option>
+
                         <option value="1">Sản phẩm</option>
                         <option value="2">Dịch vụ</option>
-                        
                     </select>
                 </div>
                 <div class="form-group">
@@ -309,7 +299,7 @@
                         <option value="Product">Sản phẩm (Product)</option>
                         <option value="Service">Dịch vụ (Service)</option>
                     </select> *@
-                    <input class="form-control" id="ProductType" name="ProductType"/>
+                    <input class="form-control" id="ProductType" name="ProductType" />
                 </div>
             </div>
             <div class="form-group">
@@ -334,46 +324,104 @@
 
 @section Scripts {
     <script>
-        // Lấy các element
+        // ==================== CONSTANTS ====================
         const modalOverlay = document.getElementById('product-modal-overlay');
         const modalTitle = document.getElementById('modal-title');
         const productForm = document.getElementById('product-form');
         const modalSubmitButton = document.getElementById('modal-submit-button');
-        const modalValidationSummary = document.getElementById('modal-validation-summary');
 
-        // const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        // SỬA LỖI: Đảm bảo các ID này khớp với HTML
+        const modalErrorAlert = document.getElementById('modal-error-alert');
+        const modalErrorList = document.getElementById('modal-error-list');
+
         const categoriesList = @Html.Raw(Json.Serialize(categories));
 
-        // --- Mở Modal (Tạo mới) ---
+        // ==================== HELPER FUNCTIONS ====================
+
+        function showError(message, errors = []) {
+            console.error('Error:', message, errors);
+
+            // Kiểm tra null (để an toàn, dù HTML đã sửa)
+            if (!modalErrorAlert || !modalErrorList) {
+                console.error("Không tìm thấy phần tử hiển thị lỗi modal!");
+                alert(message + (errors.length > 0 ? "\n- " + errors.join("\n- ") : ""));
+                return;
+            }
+
+            modalErrorList.innerHTML = ''; // Giờ sẽ không bị null
+
+            if (errors && errors.length > 0) {
+                errors.forEach(err => {
+                    const li = document.createElement('li');
+                    li.textContent = err;
+                    modalErrorList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = message;
+                modalErrorList.appendChild(li);
+            }
+
+            modalErrorAlert.style.display = 'block'; // Giờ sẽ không bị null
+        }
+
+        function hideError() {
+            if (modalErrorAlert && modalErrorList) {
+                modalErrorList.innerHTML = '';
+                modalErrorAlert.style.display = 'none';
+            }
+        }
+
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ==================== MODAL FUNCTIONS ====================
+
         function openCreateModal() {
             productForm.reset();
             document.getElementById('ProductID').value = "0";
             modalTitle.textContent = "Thêm Sản phẩm mới";
             modalSubmitButton.textContent = "Tạo mới";
             productForm.setAttribute('data-mode', 'create');
-            clearValidationErrors();
+            hideError(); // Sẽ chạy đúng
             modalOverlay.classList.add('open');
         }
 
-        // --- Mở Modal (Sửa) ---
         async function openEditModal(productId) {
-            clearValidationErrors();
+            hideError(); // Sẽ chạy đúng
             try {
+                console.log('Đang tải sản phẩm ID:', productId);
+
                 const response = await fetch(`/CompanyDashboard/GetProductDetails/${productId}`, {
                     method: 'GET',
-                    headers: { 'Accept': 'application/json', }
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
                 });
-                if (!response.ok) throw new Error('Không thể tải dữ liệu sản phẩm.');
-                const product = await response.json();
+
+                const result = await response.json();
+                console.log('Response từ GetProductDetails:', result);
+
+                if (!response.ok || !result || result.success === false) {
+                    throw new Error(result?.message || 'Không thể tải dữ liệu sản phẩm.');
+                }
 
                 // Điền dữ liệu vào form
-                document.getElementById('ProductID').value = product.productID;
-                document.getElementById('ProductName').value = product.productName;
-                document.getElementById('ProductDescription').value = product.productDescription;
-                document.getElementById('ProductImage').value = product.productImage;
-                document.getElementById('ProductPrice').value = product.productPrice;
-                document.getElementById('ProductType').value = product.productType;
-                document.getElementById('CategoryID').value = product.categoryID;
+                document.getElementById('ProductID').value = result.productID || result.ProductID || 0;
+                document.getElementById('ProductName').value = result.productName || result.ProductName || '';
+                document.getElementById('ProductDescription').value = result.productDescription || result.ProductDescription || '';
+                document.getElementById('ProductImage').value = result.productImage || result.ProductImage || '';
+                document.getElementById('ProductPrice').value = result.productPrice || result.ProductPrice || 0;
+                document.getElementById('ProductType').value = result.productType || result.ProductType || '';
+                document.getElementById('CategoryID').value = result.categoryID || result.CategoryID || '';
 
                 modalTitle.textContent = "Sửa Sản phẩm";
                 modalSubmitButton.textContent = "Lưu thay đổi";
@@ -381,34 +429,40 @@
                 modalOverlay.classList.add('open');
             } catch (error) {
                 console.error('Lỗi khi mở modal sửa:', error);
-                alert(error.message);
+                alert('Lỗi: ' + error.message);
             }
         }
 
-        // --- Đóng Modal ---
         function closeModal() {
             modalOverlay.classList.remove('open');
+            hideError(); // Sẽ chạy đúng
         }
 
-        // --- Xử lý Submit Form (AJAX) ---
+        // ==================== FORM SUBMIT ====================
+
         async function handleProductFormSubmit(event) {
             event.preventDefault();
+            hideError(); // Sẽ chạy đúng
+
             const mode = productForm.getAttribute('data-mode');
             const productId = document.getElementById('ProductID').value;
             const isCreating = (mode === 'create');
-            const url = isCreating ? '/CompanyDashboard/CreateProduct' : `/CompanyDashboard/EditProduct/${productId}`;
+            const url = isCreating
+                ? '/CompanyDashboard/CreateProduct'
+                : `/CompanyDashboard/EditProduct/${productId}`;
 
             const formData = {
-                ProductID: parseInt(productId),
-                ProductName: document.getElementById('ProductName').value,
-                ProductDescription: document.getElementById('ProductDescription').value,
-                ProductImage: document.getElementById('ProductImage').value,
-                ProductPrice: parseFloat(document.getElementById('ProductPrice').value),
-                ProductType: document.getElementById('ProductType').value,
-                CategoryID: parseInt(document.getElementById('CategoryID').value)
+                ProductID: parseInt(productId) || 0,
+                ProductName: document.getElementById('ProductName').value.trim(),
+                ProductDescription: document.getElementById('ProductDescription').value.trim() || '',
+                ProductImage: document.getElementById('ProductImage').value.trim() || '',
+                ProductPrice: parseFloat(document.getElementById('ProductPrice').value) || 0,
+                ProductType: document.getElementById('ProductType').value.trim() || '',
+                CategoryID: parseInt(document.getElementById('CategoryID').value) || 0
             };
 
-            clearValidationErrors();
+            console.log('Đang gửi request:', { url, method: 'POST', data: formData });
+
             modalSubmitButton.disabled = true;
             modalSubmitButton.textContent = 'Đang xử lý...';
 
@@ -417,60 +471,78 @@
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        // 'RequestVerificationToken': antiForgeryToken
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(formData)
                 });
 
-                if (!response.ok) {
-                    const errorResult = await response.json();
-                    throw errorResult;
-                }
                 const result = await response.json();
+                console.log('Response từ server:', result);
+
+                if (!response.ok || !result.success) {
+                    const errorMessage = result.message || 'Đã xảy ra lỗi không xác định';
+                    const errors = result.errors || [];
+                    throw { message: errorMessage, errors: errors };
+                }
+
+                // Thành công
+                console.log('Thao tác thành công!', result.data);
 
                 if (isCreating) {
-                    appendTableRow(result);
+                    appendTableRow(result.data);
                 } else {
-                    updateTableRow(result);
+                    updateTableRow(result.data);
                 }
+
                 closeModal();
+                alert(result.message || (isCreating ? 'Thêm sản phẩm thành công!' : 'Cập nhật sản phẩm thành công!'));
+
             } catch (error) {
                 console.error('Lỗi khi submit form:', error);
-                showValidationErrors(error);
+                showError(error.message || 'Đã xảy ra lỗi', error.errors);
             } finally {
                 modalSubmitButton.disabled = false;
                 modalSubmitButton.textContent = isCreating ? 'Tạo mới' : 'Lưu thay đổi';
             }
         }
 
-        // --- Xử lý Xóa Sản phẩm (AJAX) ---
-                async function deleteProduct(productId) {
-            if (!confirm(`Bạn có chắc muốn xóa sản phẩm ID ${productId}?
-        (Tất cả review liên quan cũng sẽ bị xóa!)`)) {
+        // ==================== DELETE FUNCTION ====================
+
+        async function deleteProduct(productId) {
+            if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
                 return;
             }
 
+            console.log('Đang xóa sản phẩm ID:', productId);
+
             try {
                 const response = await fetch(`/CompanyDashboard/DeleteProduct/${productId}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
                 });
 
-                if (!response.ok) {
-                    const result = await response.json();
+                const result = await response.json();
+                console.log('Response từ DeleteProduct:', result);
+
+                if (!response.ok || !result.success) {
                     throw new Error(result.message || 'Không thể xóa sản phẩm.');
                 }
 
                 removeTableRow(productId);
+                alert(result.message || 'Xóa sản phẩm thành công!');
             } catch (error) {
                 console.error('Lỗi khi xóa:', error);
-                alert(error.message || "Đã xảy ra lỗi khi xóa sản phẩm.");
+                alert('Lỗi: ' + error.message);
             }
         }
 
+        // ==================== TABLE MANIPULATION ====================
 
-        // --- Helper: Cập nhật UI ---
         function appendTableRow(product) {
+            console.log('Thêm row mới:', product);
             document.getElementById('no-products-row')?.remove();
             const tableBody = document.getElementById('product-table-body');
             const newRow = createRowHtml(product);
@@ -478,6 +550,7 @@
         }
 
         function updateTableRow(product) {
+            console.log('Cập nhật row:', product);
             const row = document.getElementById(`product-row-${product.productID}`);
             if (row) {
                 row.outerHTML = createRowHtml(product);
@@ -485,36 +558,43 @@
         }
 
         function removeTableRow(productId) {
+            console.log('Xóa row ID:', productId);
             document.getElementById(`product-row-${productId}`)?.remove();
-             const tableBody = document.getElementById('product-table-body');
-             if (tableBody.childElementCount === 0) {
-                 tableBody.innerHTML = '<tr id="no-products-row"><td colspan="6" class="text-center text-gray-500 py-4">Bạn chưa thêm sản phẩm/dịch vụ nào.</td></tr>';
-             }
+            const tableBody = document.getElementById('product-table-body');
+            if (tableBody.childElementCount === 0) {
+                // SỬA LỖI: colspan = 5
+                tableBody.innerHTML = '<tr id="no-products-row"><td colspan="5" class="text-center text-gray-500 py-4">Bạn chưa thêm sản phẩm/dịch vụ nào.</td></tr>';
+            }
         }
 
         function createRowHtml(product) {
+            // Xử lý tên Category
             let categoryName = 'N/A';
+            // Tìm trong danh sách categoriesList (từ ViewData)
             const category = categoriesList.find(c => c.categoryID === product.categoryID);
+
             if (category) {
                 categoryName = category.categoryName;
-            } else if (product.category) { // Nếu API trả về
-                 categoryName = product.category.categoryName;
+            } else if (product.category && product.category.categoryName) {
+                // Fallback nếu server trả về object category lồng nhau
+                categoryName = product.category.categoryName;
             }
 
-            const price = product.productPrice > 0 ? `${product.productPrice.toLocaleString('vi-VN')} ₫` : 'N/A';
-            const typeBadge = product.productType === 'Product'
-                ? '<span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">Sản phẩm</span>'
-                : '<span class.="bg-green-100 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">Dịch vụ</span>';
+            // Xử lý giá
+            const price = product.productPrice > 0
+                ? `${product.productPrice.toLocaleString('vi-VN')} ₫`
+                : 'Liên hệ';
 
-            const createdAt = new Date(product.createdAt).toLocaleDateString('vi-VN');
+            // Badge loại sản phẩm
+            const typeBadge = `<span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">${escapeHTML(product.productType || 'N/A')}</span>`;
 
+            // SỬA LỖI: Đảm bảo 5 cột (<td>) khớp với 5 cột (<th>)
             return `
                 <tr id="product-row-${product.productID}">
                     <td class="font-medium">${escapeHTML(product.productName)}</td>
                     <td>${escapeHTML(categoryName)}</td>
                     <td>${typeBadge}</td>
                     <td>${price}</td>
-                    <td>${createdAt}</td>
                     <td class="space-x-3">
                         <button type="button" onclick="openEditModal(${product.productID})" class="text-blue-600 hover:underline text-sm">Sửa</button>
                         <button type="button" onclick="deleteProduct(${product.productID})" class="text-red-600 hover:underline text-sm">Xóa</button>
@@ -523,56 +603,7 @@
             `;
         }
 
-        function escapeHTML(str) {
-            if (str === null || str === undefined) return '';
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-        }
-
-        // --- Helper: Xử lý Lỗi Validation (AJAX) ---
-        function clearValidationErrors() {
-            modalValidationSummary.innerHTML = '';
-            modalValidationSummary.style.display = 'none';
-        }
-
-        function showValidationErrors(errors) {
-            modalValidationSummary.style.display = 'block';
-            let ul = document.createElement('ul');
-
-            // Lỗi từ ModelState (thường là lỗi validation)
-            if (errors && errors.errors) {
-                for (const key in errors.errors) {
-                    errors.errors[key].forEach(err => {
-                        let li = document.createElement('li');
-                        li.textContent = err;
-                        ul.appendChild(li);
-                    });
-                }
-            }
-            // Lỗi ModelState chung (string.Empty)
-            else if (errors && errors[""]) {
-                 errors[""].forEach(err => {
-                        let li = document.createElement('li');
-                        li.textContent = err;
-                        ul.appendChild(li);
-                    });
-            }
-            // Lỗi chung (từ catch hoặc logic)
-            else if (errors && errors.Error) {
-                 errors.Error.forEach(err => {
-                        let li = document.createElement('li');
-                        li.textContent = err;
-                        ul.appendChild(li);
-                    });
-            }
-             else {
-                let li = document.createElement('li');
-                li.textContent = errors.message || "Đã xảy ra lỗi không xác định.";
-                ul.appendChild(li);
-            }
-
-            modalValidationSummary.appendChild(ul);
-        }
-
+        // ==================== INIT ====================
+        console.log('Script đã load, categories:', categoriesList);
     </script>
 }
-

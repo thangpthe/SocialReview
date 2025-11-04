@@ -24,19 +24,51 @@ namespace SocialReview.Controllers
             _context = context;
         }
 
-       
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string? productType, int? rating)
+        public async Task<IActionResult> Index(string? CurrentType, int? CurrentRating)
         {
-            
-            var products = await _productRepo.FilterAsync(productType, rating);
+            //var products = await _productRepo.FilterAsync(productType, rating);
+
+            //// Lấy danh sách các loại sản phẩm duy nhất từ database
+            //var typeOptions = await _context.Products
+            //    .Select(p => p.ProductType)
+            //    .Distinct()
+            //    .Where(t => !string.IsNullOrEmpty(t))
+            //    .OrderBy(t => t)
+            //    .ToListAsync();
+
+            //var viewModel = new ProductSearchViewModel
+            //{
+            //    Products = products,
+            //    CurrentType = productType,
+            //    CurrentRating = rating,
+            //    TypeOptions = typeOptions,
+            //    RatingOptions = new List<int> { 1, 2, 3, 4, 5 }
+            //};
+
+            //return View(viewModel);
+            Console.WriteLine($"Index called - ProductType: {CurrentType ?? "null"}, Rating: {CurrentRating?.ToString() ?? "null"}");
+
+            // Gọi FilterAsync với parameters
+            var products = await _productRepo.FilterAsync(CurrentType, CurrentRating);
+
+            // Lấy danh sách loại sản phẩm từ database
+            var typeOptions = await _context.Products
+                .Select(p => p.ProductType)
+                .Distinct()
+                .Where(t => !string.IsNullOrEmpty(t))
+                .OrderBy(t => t)
+                .ToListAsync();
+
             var viewModel = new ProductSearchViewModel
             {
                 Products = products,
-                CurrentType = productType,
-                CurrentRating = rating
-
+                CurrentType =CurrentType,
+                CurrentRating = CurrentRating,
+                TypeOptions = typeOptions,
+                RatingOptions = new List<int> { 1, 2, 3, 4, 5 }
             };
+
             return View(viewModel);
         }
         public async Task<IActionResult> Detail(int id)
