@@ -1,4 +1,4 @@
-﻿:root {
+﻿/*:root {
     --purple-700: #6A1B9A;
     --purple-600: #8E24AA;
     --purple-100: #E1BEE7;
@@ -44,10 +44,10 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
 
 .section-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem; /* text-2xl */
-    font-weight: 600;
-    margin-bottom: 1.5rem; /* mb-6 */
-    color: var(--purple-700);
+    font-size: 1.5rem;*/ /* text-2xl */
+    /*font-weight: 600;
+    margin-bottom: 1.5rem;*/ /* mb-6 */
+    /*color: var(--purple-700);
     border-bottom: 2px solid var(--purple-100);
     padding-bottom: 0.5rem;
 }
@@ -63,25 +63,1064 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
 
 .breadcrumb span {
     color: var(--text-gray);
-}
+}*/
 
 /* ===== 1. CSS CHO TRANG DETAIL ===== */
+/*.star-rating {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #FBBF24;*/ /* text-yellow-500 */
+/*}
+
+    .star-rating .fa-regular {
+        color: #D1D5DB;*/ /* text-gray-300 */
+    /*}
+
+.company-link-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;*/ /* gap-3 */
+    /*transition: all 0.2s ease;
+}
+
+.company-logo {
+    width: 2.5rem;*/ /* w-10 */
+    /*height: 2.5rem;*/ /* h-10 */
+    /*border-radius: 0.375rem;*/ /* rounded-md */
+    /*object-fit: contain;
+    border: 1px solid var(--border-color);
+}
+
+.company-link-card:hover .font-semibold {
+    color: var(--purple-600);
+    text-decoration: underline;
+}*/
+
+/* ===== 2. CSS CHO REVIEW CARD ===== */
+/*.avatar {
+    width: 2.5rem;*/ /* w-10 */
+    /*height: 2.5rem;*/ /* h-10 */
+    /*border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.avatar-icon-wrapper {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: var(--purple-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--purple-600);
+}
+
+.review-actions {
+    margin-top: 0.75rem;*/ /* mt-3 */
+    /*display: flex;
+    align-items: center;
+    gap: 1rem;*/ /* gap-4 */
+    /*font-size: 0.75rem;*/ /* text-xs */
+    /*color: var(--text-gray);
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+    .action-btn:hover {
+        color: var(--purple-600);
+    }
+
+    .action-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }*/
+    /* Màu khi đã reaction (JS sẽ toggle) */
+    /*.action-btn.text-purple-600 {
+        color: var(--purple-600);
+        font-weight: 600;
+    }*/
+
+
+/* ===== 3. CSS CHO KHU VỰC COMMENT (MỚI) ===== */
+
+/*.comment-section {
+    padding-left: 3.5rem;*/ /* 40px (avatar) + 1rem (gap) */
+    /*padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: -1px;*/ /* Để khớp với card */
+    /*background-color: #fdfcff;*/ /* Sáng hơn bg-light một chút */
+    /*border-radius: 0 0 12px 12px;
+}
+
+    .comment-section.hidden {
+        display: none;
+    }
+
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;*/ /* space-y-4 */
+    /*margin-bottom: 1rem;
+}
+
+.comment-card {
+    display: flex;
+    gap: 0.75rem;*/ /* gap-3 */
+    /*align-items: flex-start;
+}
+
+.comment-avatar {
+    width: 2rem;*/ /* w-8 */
+    /*height: 2rem;*/ /* h-8 */
+/*}
+
+    .comment-avatar.avatar-icon-wrapper {
+        width: 2rem;
+        height: 2rem;
+    }
+
+.comment-body {
+    flex-grow: 1;
+    background-color: var(--bg-light);*/ /* Khác với review card */
+    /*border: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;*/ /* p-3/4 */
+    /*border-radius: 8px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;*/ /* mb-1 */
+/*}
+
+.no-comments {
+    font-size: 0.875rem;*/ /* text-sm */
+    /*color: var(--text-gray);
+    padding: 0.5rem;
+}
+
+.comment-form {
+    display: flex;
+    gap: 0.5rem;*/ /* gap-2 */
+    /*margin-top: 1rem;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;*/ /* rounded-md */
+    /*padding: 0.5rem 0.75rem;*/ /* px-3 py-2 */
+    /*font-family: inherit;
+    font-size: 100%;
+}
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        outline: none;
+        border-color: var(--purple-600);
+        box-shadow: 0 0 0 1px var(--purple-600);
+    }
+
+.comment-form .form-input {
+    flex-grow: 1;
+    border-radius: 9999px;*/ /* rounded-full */
+    /*font-size: 0.875rem;*/ /* text-sm */
+    /*padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.btn-submit-comment {
+    flex-shrink: 0;
+    background-color: var(--purple-600);
+    color: white;
+    border: none;
+    width: 2.5rem;*/ /* w-10 */
+    /*height: 2.5rem;*/ /* h-10 */
+    /*border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    .btn-submit-comment:hover {
+        background-color: var(--purple-700);
+    }
+
+.comment-error-message, .form-error-message {
+    font-size: 0.875rem;*/ /* text-sm */
+    /*color: #EF4444;*/ /* text-red-500 */
+    /*margin-top: 0.5rem;
+}
+
+    .form-error-message.hidden,
+    .comment-error-message.hidden {
+        display: none;
+    }*/
+/* ===== PROFILE PAGE STYLES ===== */
+
+/*:root {
+    --purple-50: #faf5ff;
+    --purple-100: #f3e8ff;
+    --purple-200: #e9d5ff;
+    --purple-600: #9333ea;
+    --purple-700: #7e22ce;
+    --purple-800: #6b21a8;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --blue-600: #2563eb;
+    --blue-800: #1e40af;
+    --red-50: #fef2f2;
+    --red-200: #fecaca;
+    --red-600: #dc2626;
+    --red-700: #b91c1c;
+    --red-800: #991b1b;
+    --green-50: #f0fdf4;
+    --green-200: #bbf7d0;
+    --green-700-text: #15803d;
+    --yellow-500: #eab308;
+    --gray-100: #f3f4f6;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --white: #ffffff;
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}*/
+
+/* Container */
+/*.profile-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .profile-container {
+        padding: 2rem;
+    }
+}*/
+
+/* Page Title */
+/*.profile-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-family: 'Poppins', sans-serif;
+    color: var(--purple-700);
+}*/
+
+/* Alert Messages */
+/*.alert {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+    .alert i {
+        margin-right: 0.75rem;
+    }
+
+.alert-success {
+    background-color: var(--green-50);
+    border: 1px solid var(--green-200);
+    color: var(--green-700-text);
+}
+
+.alert-error {
+    background-color: var(--red-50);
+    border: 1px solid var(--red-200);
+    color: var(--red-700);
+}*/
+
+/* Card Base */
+/*.card {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}*/
+
+/* Profile Info Section */
+/*.profile-info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .profile-info-card {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: 'Poppins', sans-serif;
+}*/
+
+/* Avatar */
+/*.avatar-wrapper {
+    flex-shrink: 0;
+}
+
+.avatar-image {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--purple-200);
+}
+
+@media (min-width: 768px) {
+    .avatar-image {
+        width: 8rem;
+        height: 8rem;
+    }
+}
+
+.avatar-placeholder {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background-color: var(--purple-100);
+    color: var(--purple-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+@media (min-width: 768px) {
+    .avatar-placeholder {
+        width: 8rem;
+        height: 8rem;
+    }
+}*/
+
+/* Profile Details */
+/*.profile-details {
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .profile-details {
+        text-align: left;
+    }
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+}
+
+.profile-username {
+    color: var(--gray-600);
+}
+
+.profile-email {
+    color: var(--gray-500);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.profile-join-date {
+    color: var(--gray-400);
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.profile-actions {
+    margin-top: 1rem;
+}*/
+
+/* Buttons */
+/*.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border: none;
+}
+
+    .btn i {
+        margin-right: 0.25rem;
+    }
+
+.btn-primary {
+    background-color: var(--purple-600);
+    color: var(--white);
+}
+
+    .btn-primary:hover {
+        background-color: var(--purple-700);
+    }
+
+.btn-success {
+    background-color: var(--green-600);
+    color: var(--white);
+}
+
+    .btn-success:hover {
+        background-color: var(--green-700);
+    }
+
+.btn-secondary {
+    background-color: var(--gray-300);
+    color: var(--gray-700);
+}
+
+    .btn-secondary:hover {
+        background-color: var(--gray-400);
+    }
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}*/
+
+/* Reviews Section */
+/*.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}*/
+
+/* Review Item */
+/*.review-item {
+    border: 1px solid var(--gray-200);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+    .review-item:hover {
+        box-shadow: var(--shadow-sm);
+    }
+
+.review-content {
+    flex: 1;
+}*/
+
+/* Star Rating */
+/*.star-rating {
+    color: var(--yellow-500);
+    margin-bottom: 0.25rem;
+}
+
+    .star-rating i {
+        font-size: 0.875rem;
+    }*/
+
+/* Review Title */
+/*.review-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--purple-800);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 0.25rem;
+}
+
+    .review-title:hover {
+        text-decoration: underline;
+    }*/
+
+/* Review Product Info */
+/*.review-product-info {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.review-product-link {
+    font-weight: 500;
+    color: var(--gray-800);
+    text-decoration: none;
+}
+
+    .review-product-link:hover {
+        text-decoration: underline;
+    }*/
+
+/* Review Actions */
+/*.review-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-icon {
+    color: var(--blue-600);
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    background: none;
+    border: none;
+    padding: 0.25rem;
+}
+
+    .action-icon:hover {
+        color: var(--blue-800);
+    }
+
+    .action-icon.delete {
+        color: var(--red-600);
+    }
+
+        .action-icon.delete:hover {
+            color: var(--red-800);
+        }
+
+.delete-form {
+    display: inline;
+}*/
+
+/* Empty State */
+/*.empty-state {
+    color: var(--gray-500);
+    text-align: center;
+    padding: 1rem 0;
+}*/
+
+/* Form Styles */
+/*.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    color: var(--gray-700);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: var(--purple-600);
+        box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+    }
+
+.form-textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-error {
+    background-color: var(--red-50);
+    border: 1px solid var(--red-200);
+    color: var(--red-700);
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.field-error {
+    color: var(--red-600);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}*/
+
+/* Avatar Upload */
+/*.avatar-preview-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.avatar-preview {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--purple-200);
+    margin: 0 auto 1rem;
+}
+
+.avatar-preview-placeholder {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    background-color: var(--purple-100);
+    color: var(--purple-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 auto 1rem;
+}
+
+.file-upload-btn {
+    cursor: pointer;
+    background-color: var(--purple-600);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+}
+
+    .file-upload-btn:hover {
+        background-color: var(--purple-700);
+    }
+
+    .file-upload-btn i {
+        margin-right: 0.5rem;
+    }
+
+.file-input-hidden {
+    display: none;
+}*/
+
+/* Section Divider */
+/*.section-divider {
+    border-top: 1px solid var(--gray-200);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.section-divider-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--gray-700);
+}*/
+
+/* Button Groups */
+/*.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+    .button-group .btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+    }*/
+
+/* Back Link */
+/*.back-link {
+    color: var(--purple-600);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s ease;
+}
+
+    .back-link:hover {
+        color: var(--purple-800);
+    }
+
+    .back-link i {
+        margin-right: 0.5rem;
+    }*/
+
+/* Rating Stars Interactive */
+/*.rating-stars {
+    display: inline-flex;
+    gap: 0.25rem;
+    font-size: 1.875rem;
+}
+
+    .rating-stars i {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .rating-stars i.fas {
+            color: var(--yellow-500);
+        }
+
+        .rating-stars i.far {
+            color: var(--gray-300);
+        }
+
+.rating-text {
+    color: var(--gray-600);
+    margin-left: 0.5rem;
+}*/
+
+/* Image Upload Section */
+/*.image-upload-area {
+    border: 2px dashed var(--gray-300);
+    border-radius: 0.375rem;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+    .image-upload-area:hover {
+        border-color: var(--purple-600);
+    }
+
+.image-upload-icon {
+    font-size: 2.5rem;
+    color: var(--gray-400);
+    margin-bottom: 0.5rem;
+}
+
+.image-upload-text {
+    color: var(--gray-600);
+    margin-bottom: 0.5rem;
+}
+
+.image-upload-hint {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}*/
+
+/* Image Grid */
+/*.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+    .image-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.image-item {
+    position: relative;
+}
+
+    .image-item.marked-delete {
+        opacity: 0.5;
+    }
+
+.image-thumbnail {
+    width: 100%;
+    height: 8rem;
+    object-fit: cover;
+    border-radius: 0.375rem;
+}
+
+.image-delete-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: var(--red-600);
+    color: var(--white);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.image-item:hover .image-delete-btn {
+    opacity: 1;
+}
+
+.image-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background-color: var(--green-600);
+    color: var(--white);
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}*/
+
+/* Product Info Banner */
+/*.product-info-banner {
+    padding: 1rem;
+    background-color: var(--purple-50);
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.product-info-label {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.product-info-name {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--purple-700);
+}*/
+
+/* Responsive adjustments */
+/*@media (max-width: 767px) {
+    .reviews-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .review-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .review-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+}*/
+
+/* Utilities */
+/*.hidden {
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.max-w-3xl {
+    max-width: 48rem;
+}
+
+.max-w-4xl {
+    max-width: 56rem;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}*/
+
+/* ===== BIẾN MÀU & THIẾT LẬP CHUNG ===== */
+:root {
+    --purple-700: #6A1B9A;
+    --purple-600: #8E24AA;
+    --purple-100: #E1BEE7;
+    --purple-50: #F3E5F5;
+    --bg-light: #F9F6FB;
+    --text-dark: #212121;
+    --text-gray: #555;
+    --border-color: #e0e0e0;
+    --yellow-star: #FBBF24;
+    --gray-star: #D1D5DB;
+    --red-error: #EF4444;
+}
+
+h1, h2, h3, h4, h5, h6, .font-poppins {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ===== LAYOUT CHUNG CỦA TRANG ===== */
+.product-detail-container {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+    /* space-y-12 */
+    .product-detail-container > * + * {
+        margin-top: 3rem;
+    }
+
+@media (min-width: 768px) {
+    .product-detail-container {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+}
+
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 600;
+    margin-bottom: 1.5rem; /* mb-6 */
+    color: var(--purple-700);
+    border-bottom: 2px solid var(--purple-100);
+    padding-bottom: 0.5rem;
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* ===== 1. SECTION THÔNG TIN SẢN PHẨM ===== */
+/* Bố cục 2 cột */
+.product-header-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem; /* gap-8 */
+}
+
+@media (min-width: 1024px) {
+    .product-header-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem; /* lg:gap-12 */
+    }
+}
+
+/* Ảnh sản phẩm (Cột trái) */
+.product-image-wrapper {
+    aspect-ratio: 16 / 9; /* aspect-video */
+    overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+    .product-image-wrapper {
+        aspect-ratio: 1 / 1; /* lg:aspect-square */
+    }
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Chi tiết (Cột phải) */
+.product-info-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Tương đương space-y-4 */
+}
+
+.product-type-badge {
+    display: inline-block;
+    background-color: var(--purple-50);
+    color: var(--purple-700);
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 600; /* font-semibold */
+    padding: 0.125rem 0.625rem; /* px-2.5 py-0.5 */
+    border-radius: 9999px; /* rounded-full */
+    width: fit-content;
+}
+
+.product-info-details h1 {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+}
+
+@media (min-width: 768px) {
+    .product-info-details h1 {
+        font-size: 2.25rem; /* md:text-4xl */
+    }
+}
+
+.product-rating-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+}
+
+.rating-summary-text {
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-gray);
+}
+
 .star-rating {
     display: flex;
     align-items: center;
     gap: 2px;
-    color: #FBBF24; /* text-yellow-500 */
+    color: var(--yellow-star);
 }
 
     .star-rating .fa-regular {
-        color: #D1D5DB; /* text-gray-300 */
+        color: var(--gray-star);
     }
+
+.product-description {
+    color: var(--text-gray);
+    line-height: 1.65; /* leading-relaxed */
+    padding-top: 0.5rem; /* pt-2 */
+    /* space-y-3 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.product-company-section {
+    padding-top: 1rem; /* pt-4 */
+    border-top: 1px solid var(--border-color);
+}
 
 .company-link-card {
     display: flex;
     align-items: center;
     gap: 0.75rem; /* gap-3 */
     transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
 }
 
 .company-logo {
@@ -97,7 +1136,49 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
     text-decoration: underline;
 }
 
-/* ===== 2. CSS CHO REVIEW CARD ===== */
+.write-review-button-wrapper {
+    padding-top: 1.5rem; /* pt-6 */
+}
+
+.btn-primary {
+    display: inline-flex; /* inline-flex */
+    align-items: center; /* items-center */
+    gap: 0.5rem; /* gap-2 */
+    background-color: var(--purple-700);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+    .btn-primary:hover {
+        background-color: var(--purple-600);
+    }
+
+    .btn-primary:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+
+/* ===== 2. CSS CHO DANH SÁCH REVIEW ===== */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* space-y-6 */
+}
+
+.review-card {
+    padding: 1.25rem; /* p-5 */
+    display: flex;
+    gap: 1rem; /* gap-4 */
+    align-items: flex-start;
+}
+
 .avatar {
     width: 2.5rem; /* w-10 */
     height: 2.5rem; /* h-10 */
@@ -118,6 +1199,45 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
     color: var(--purple-600);
 }
 
+.review-card-content {
+    flex-grow: 1;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+
+.review-author {
+    font-weight: 600; /* font-semibold */
+    font-size: 0.875rem; /* text-sm */
+    text-decoration: none;
+    color: inherit;
+}
+
+    .review-author:hover {
+        text-decoration: underline;
+    }
+
+.review-date {
+    font-size: 0.75rem; /* text-xs */
+    color: #9ca3af; /* text-gray-400 */
+}
+
+.review-card-content h4 {
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 0.25rem;
+    font-size: 1rem; /* text-base */
+}
+
+.review-card-content p {
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-gray);
+    line-height: 1.65; /* leading-relaxed */
+}
+
 .review-actions {
     margin-top: 0.75rem; /* mt-3 */
     display: flex;
@@ -135,6 +1255,7 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
     transition: color 0.2s ease;
     display: inline-flex;
     align-items: center;
+    gap: 0.25rem; /* Thêm gap nhỏ cho icon */
 }
 
     .action-btn:hover {
@@ -145,22 +1266,21 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
         opacity: 0.5;
         cursor: not-allowed;
     }
-    /* Màu khi đã reaction (JS sẽ toggle) */
-    .action-btn.text-purple-600 {
+
+    .action-btn.text-purple-600 { /* JS sẽ toggle class này */
         color: var(--purple-600);
         font-weight: 600;
     }
 
 
-/* ===== 3. CSS CHO KHU VỰC COMMENT (MỚI) ===== */
-
+/* ===== 3. CSS CHO KHU VỰC COMMENT ===== */
 .comment-section {
     padding-left: 3.5rem; /* 40px (avatar) + 1rem (gap) */
     padding-top: 1rem;
     padding-bottom: 0.5rem;
     border-top: 1px solid var(--border-color);
     margin-top: -1px; /* Để khớp với card */
-    background-color: #fdfcff; /* Sáng hơn bg-light một chút */
+    background-color: #fdfcff;
     border-radius: 0 0 12px 12px;
 }
 
@@ -175,37 +1295,6 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
     margin-bottom: 1rem;
 }
 
-.comment-card {
-    display: flex;
-    gap: 0.75rem; /* gap-3 */
-    align-items: flex-start;
-}
-
-.comment-avatar {
-    width: 2rem; /* w-8 */
-    height: 2rem; /* h-8 */
-}
-
-    .comment-avatar.avatar-icon-wrapper {
-        width: 2rem;
-        height: 2rem;
-    }
-
-.comment-body {
-    flex-grow: 1;
-    background-color: var(--bg-light); /* Khác với review card */
-    border: 1px solid var(--border-color);
-    padding: 0.75rem 1rem; /* p-3/4 */
-    border-radius: 8px;
-}
-
-.comment-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.25rem; /* mb-1 */
-}
-
 .no-comments {
     font-size: 0.875rem; /* text-sm */
     color: var(--text-gray);
@@ -218,28 +1307,13 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
     margin-top: 1rem;
 }
 
-.form-input, .form-select, .form-textarea {
-    width: 100%;
-    border: 1px solid var(--border-color);
-    border-radius: 0.375rem; /* rounded-md */
-    padding: 0.5rem 0.75rem; /* px-3 py-2 */
-    font-family: inherit;
-    font-size: 100%;
-}
-
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-        outline: none;
-        border-color: var(--purple-600);
-        box-shadow: 0 0 0 1px var(--purple-600);
+    .comment-form .form-input {
+        flex-grow: 1;
+        border-radius: 9999px; /* rounded-full */
+        font-size: 0.875rem; /* text-sm */
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
-
-.comment-form .form-input {
-    flex-grow: 1;
-    border-radius: 9999px; /* rounded-full */
-    font-size: 0.875rem; /* text-sm */
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
 
 .btn-submit-comment {
     flex-shrink: 0;
@@ -260,13 +1334,91 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
         background-color: var(--purple-700);
     }
 
-.comment-error-message, .form-error-message {
+.comment-error-message {
     font-size: 0.875rem; /* text-sm */
-    color: #EF4444; /* text-red-500 */
+    color: var(--red-error);
     margin-top: 0.5rem;
 }
 
-    .form-error-message.hidden,
     .comment-error-message.hidden {
         display: none;
     }
+
+
+/* ===== 4. CSS CHO FORM VIẾT REVIEW ===== */
+.review-form-card {
+    padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .review-form-card {
+        padding: 2rem;
+    }
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space-y-4 */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Thêm gap cho label và input */
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem; /* rounded-md */
+    padding: 0.5rem 0.75rem; /* px-3 py-2 */
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        outline: none;
+        border-color: var(--purple-600);
+        box-shadow: 0 0 0 1px var(--purple-600);
+    }
+
+.form-textarea {
+    resize: vertical;
+}
+
+.form-error-message {
+    font-size: 0.875rem;
+    color: var(--red-error);
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+    .form-error-message.hidden {
+        display: none;
+    }
+
+.field-validation-error {
+    font-size: 0.875rem;
+    color: var(--red-error);
+}
+
+.form-actions {
+    text-align: right;
+}
+
+/* ===== UTILITIES (Nếu cần) ===== */
+.hidden {
+    display: none;
+}
+
+.font-semibold {
+    font-weight: 600;
+}

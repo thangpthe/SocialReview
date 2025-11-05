@@ -5,32 +5,27 @@
     ViewData["Title"] = Model.Product.ProductName; // Tốt cho SEO
 }
 @section Styles {
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
+    @* <script src="https://cdn.tailwindcss.com"></script> *@
     <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css">
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/product_detail.css"/>
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="stylesheet" href="~/css/product_detail.css" />
 }
 
-<main class="container py-10 md:py-16 space-y-12">
+<main class="container product-detail-container">
 
-    <!-- ===== SECTION: THÔNG TIN SẢN PHẨM ===== -->
-    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        <!-- Ảnh sản phẩm -->
-        <div class="card aspect-video lg:aspect-square">
-            <img src="@Model.Product.ProductImage" alt="@Model.Product.ProductName" class="w-full h-full object-cover">
+    <section class="product-header-grid">
+        <div class="card product-image-wrapper">
+            <img src="@Model.Product.ProductImage" alt="@Model.Product.ProductName" class="product-image">
         </div>
 
-        <!-- Chi tiết sản phẩm -->
-        <div class="space-y-4">
-            <span class="inline-block bg-[--purple-50] text-[--purple-700] text-xs font-semibold px-2.5 py-0.5 rounded-full">@Model.Product.ProductType</span>
-            <h1 class="font-poppins text-3xl md:text-4xl font-bold">@Model.Product.ProductName</h1>
+        <div class="product-info-details">
+            <span class="product-type-badge">@Model.Product.ProductType</span>
+            <h1 class="font-poppins">@Model.Product.ProductName</h1>
 
-            <!-- Hiển thị Rating động -->
-            <div class="flex items-center gap-2">
+            <div class="product-rating-summary">
                 @if (Model.TotalReviews > 0)
                 {
                     <div class="star-rating" title="@Model.AverageRating.ToString("F1") sao">
@@ -39,48 +34,36 @@
                             <i class="@(i <= Model.AverageRating ? "fa-solid fa-star" : "fa-regular fa-star")"></i>
                         }
                     </div>
-                    <span class="text-sm text-[--text-gray]">(@Model.AverageRating.ToString("F1")) / @Model.TotalReviews.ToString("N0") đánh giá</span>
+                    <span class="rating-summary-text">(@Model.AverageRating.ToString("F1")) / @Model.TotalReviews.ToString("N0") đánh giá</span>
                 }
-                else
-                {
-                    <span class="text-sm text-[--text-gray]">Chưa có đánh giá</span>
-                }
+                
             </div>
 
-            <div class="text-[--text-gray] leading-relaxed space-y-3 pt-2">
+            <div class="product-description">
                 <p>@Model.Product.ProductDescription</p>
             </div>
 
-            <!-- Hiển thị thông tin CÔNG TY -->
-            <div class="pt-4 border-t border-[--border-color]">
-                <p class="text-sm font-medium mb-2">Cung cấp bởi:</p>
+            <div class="product-company-section">
+                <p class="font-semibold" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Cung cấp bởi:</p>
                 @if (Model.Product.Company != null)
                 {
-                    <a asp-controller="Company" asp-action="Dashboard" asp-route-id="@Model.Product.CompanyID" class="company-link-card">
+                    <a asp-controller="Company" asp-action="Index" asp-route-id="@Model.Product.CompanyID" class="company-link-card">
                         <img src="@(Model.Product.Company.Logo ?? "https://placehold.co/40x40/ccc/999?text=C")" alt="Logo @Model.Product.Company.CompanyName" class="company-logo">
                         <div>
                             <p class="font-semibold">@Model.Product.Company.CompanyName</p>
                         </div>
                     </a>
                 }
-                @* else
-                {
-                    <span class="text-sm text-[--text-gray]">Không rõ nhà cung cấp</span>
-                } *@
             </div>
 
-            <div class="pt-6">
-                <a href="#write-review" class="btn-primary inline-flex items-center gap-2">
-                    <i class="fa-solid fa-pencil"></i> Viết Review
-                </a>
-            </div>
+           
         </div>
     </section>
 
-    <!-- ===== SECTION: ĐÁNH GIÁ CHI TIẾT ===== -->
     <section id="reviews">
         <h2 class="section-title">Đánh giá về @Model.Product.ProductName (@Model.TotalReviews)</h2>
-        <div class="reviews-list space-y-6">
+
+        <div class="reviews-list">
 
             @if (Model.Reviews != null && Model.Reviews.Any())
             {
@@ -90,7 +73,7 @@
                         @* Thẻ div này chứa 1 card review và khu vực comment của nó *@
 
                         @* 1. CARD REVIEW (Hiển thị Review) *@
-                        <div class="card p-5 flex gap-4 items-start">
+                        <div class="card review-card">
                             @* Avatar *@
                             @if (review.User != null && !string.IsNullOrEmpty(review.User.UserAvatar))
                             {
@@ -104,40 +87,38 @@
                             }
 
                             @* Nội dung review *@
-                            <div class="flex-grow">
-                                <div class="flex justify-between items-center mb-1">
-                                    <a class="font-semibold text-sm"asp-action="Index" asp-controller="User" asp-route-username="@review.User.UserName">@(review.User?.UserName ?? "Người dùng ẩn danh")</a>
-                                    <span class="text-xs text-gray-400">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
+                            <div class="review-card-content">
+                                <div class="review-header">
+                                    <a class="review-author" asp-action="Index" asp-controller="User" asp-route-username="@review.User.UserName">@(review.User?.UserName ?? "Người dùng ẩn danh")</a>
+                                    <span class="review-date">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
                                 </div>
-                                <div class="star-rating mb-2" title="@review.Rating.ToString("F1") sao">
+                                <div class="star-rating" title="@review.Rating.ToString("F1") sao" style="margin-bottom: 0.5rem;">
                                     @for (int i = 1; i <= 5; i++)
                                     {
                                         <i class="@(i <= review.Rating ? "fa-solid fa-star" : "fa-regular fa-star")"></i>
                                     }
                                 </div>
 
-                                <h4 class="font-semibold mb-1 text-base">@review.Title</h4>
-                                <p class="text-sm text-[--text-gray] leading-relaxed">@review.Content</p>
+                                <h4>@review.Title</h4>
+                                <p>@review.Content</p>
 
                                 <div class="review-actions">
-                                    <!-- NÚT REACTION (HỮU ÍCH) -->
                                     <button class="action-btn btn-toggle-reaction"
                                             data-review-id="@review.ReviewID"
                                             data-type="Helpful">
-                                        <i class="fa-regular fa-thumbs-up mr-1"></i>
+                                        <i class="fa-regular fa-thumbs-up"></i>
                                         Hữu ích <span>(@(review.Reactions?.Count(r => r.Type == "Helpful") ?? 0))</span>
                                     </button>
 
-                                    <!-- NÚT MỞ COMMENT -->
                                     <button class="action-btn btn-toggle-comment" data-review-id="@review.ReviewID">
-                                        <i class="fa-regular fa-comment mr-1"></i>
+                                        <i class="fa-regular fa-comment"></i>
                                         Bình luận <span>(@(review.Comments?.Count ?? 0))</span>
                                     </button>
                                     <button class="action-btn btn-toggle-reaction"
                                             data-review-id="@review.ReviewID"
-                                            data-type="Helpful">
+                                            data-type="Report">
                                         <i class="fa-solid fa-triangle-exclamation"></i>
-                                        Báo cáo 
+                                        Báo cáo
                                     </button>
                                 </div>
                             </div>
@@ -164,7 +145,6 @@
                             @* 2b. Form viết comment mới (Cho AJAX) *@
                             <form asp-controller="Comment" asp-action="Create" method="post"
                                   class="comment-form" data-review-id="@review.ReviewID">
-                                <!-- Token sẽ được lấy từ form chính -->
                                 <input type="hidden" name="ReviewID" value="@review.ReviewID" />
                                 <input type="text" name="Content" class="form-input" placeholder="Viết bình luận của bạn..." required />
                                 <button type="submit" class="btn-submit-comment">
@@ -179,21 +159,20 @@
             }
             else
             {
-                <div class="card p-5 text-center">
-                    <p class="text-[--text-gray]">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên!</p>
+                <div class="card" style="padding: 1.25rem; text-align: center;">
+                    <p style="color: var(--text-gray);">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên!</p>
                 </div>
             }
         </div>
     </section>
 
-    <!-- ===== SECTION: VIẾT REVIEW (Form AJAX) ===== -->
     <section id="write-review">
         <h2 class="section-title">Chia sẻ đánh giá của bạn</h2>
-        <div class="card p-6 md:p-8">
+        <div class="card review-form-card">
 
-            <form id="form-create-review" asp-controller="Product" asp-action="CreateReview" method="post" class="space-y-4">
-
-                <!-- QUAN TRỌNG: Thêm AntiForgeryToken cho AJAX -->
+            <form id="form-create-review"
+                  asp-controller="Product" asp-action="CreateReview" method="post"
+                  class="review-form">
                 @Html.AntiForgeryToken()
 
                 <div id="review-form-error" class="form-error-message hidden"></div>
@@ -225,7 +204,7 @@
                     <span asp-validation-for="NewReviewForm.Content" class="field-validation-error"></span>
                 </div>
 
-                <div class="text-right">
+                <div class="form-actions">
                     <button type="submit" id="btn-submit-review" class="btn-primary">Gửi đánh giá</button>
                 </div>
             </form>
@@ -238,4 +217,3 @@
 @section Scripts {
     <script src="~/js/product-detail.js" asp-append-version="true"></script>
 }
-

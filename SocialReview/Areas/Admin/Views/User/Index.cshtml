@@ -3,59 +3,81 @@
     ViewData["Title"] = "Danh sách người dùng";
     Layout = "_AdminLayout";
 }
-<section id="companies-content" class="space-y-8">
 
-    <div class="flex justify-between items-center">
-        <h3 class="font-poppins text-xl font-semibold">Danh sách người dùng</h3>
+<div class="admin-container">
+    <!-- Page Header -->
+    <div class="page-section-header">
+        <h3 class="page-section-title">Danh sách người dùng</h3>
         <a asp-action="Create" class="btn btn-green">
             <i class="fa-solid fa-plus"></i> Tạo mới
         </a>
     </div>
 
+    <!-- Table Container -->
     <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Vai trò</th>
-                    <th>Hành động </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    if(item.UserRole != "Admin")
+        <!-- Desktop Table View -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Vai trò</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>@item.Id</td>
-                            <td>@item.UserName</td>
-                            <td>
-                                @(item.UserRole == "User" ? "Cá nhân" : "Doanh nghiệp")
-                            </td>
-
-                            @* <td>
-                            @if (item.User != null && item.User.IsActive)
-                            {
-                                <span class="badge badge-green">Active</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge-gray">Inactive</span>
-                            }
-                        </td> *@
-                            <td class="space-x-2">
-                                <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
-                                <a class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
-                                <a class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
-                            </td>
-                        </tr>
+                        @if (item.UserRole != "Admin")
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.UserName</td>
+                                <td>
+                                    @(item.UserRole == "User" ? "Cá nhân" : "Doanh nghiệp")
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
+                                        <a class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
+                                        <a class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
-                   
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="mobile-cards">
+            @foreach (var item in Model)
+            {
+                @if (item.UserRole != "Admin")
+                {
+                    <div class="mobile-card">
+                        <div class="mobile-card-header">
+                            <div class="mobile-card-title">@item.UserName</div>
+                            <div class="mobile-card-id">#@item.Id</div>
+                        </div>
+                        <div class="mobile-card-body">
+                            <div class="mobile-card-row">
+                                <div class="mobile-card-label">Vai trò</div>
+                                <div class="mobile-card-value">
+                                    @(item.UserRole == "User" ? "Cá nhân" : "Doanh nghiệp")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-card-actions">
+                            <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i> Sửa</a>
+                            <a class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem</a>
+                            <a class="btn btn-red"><i class="fa-solid fa-trash"></i> Xóa</a>
+                        </div>
+                    </div>
                 }
-            </tbody>
-        </table>
+            }
+        </div>
     </div>
-</section>
-
-
+</div>

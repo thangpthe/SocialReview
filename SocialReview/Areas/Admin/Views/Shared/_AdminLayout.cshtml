@@ -5,99 +5,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Trustify Admin</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="icon" href="~/images/logo.ico" type="image/x-icon" />
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" />
+    @* <link rel="stylesheet" href="~/css/admin.css" /> *@
+    <link rel="stylesheet" href="~/css/admin-utilities.css" />
+    <link rel="stylesheet" href="~/css/admin-layout.css" />
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="flex min-h-screen">
+<body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar w-80 p-6 space-y-6 flex flex-col fixed h-full lg:relative lg:left-0 z-50" id="sidebar">
-        <h1 class="font-poppins text-2xl font-bold text-center text-white">Trustify <span class="text-sm font-normal block">Admin</span></h1>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">
+                Trustify
+                <span class="sidebar-subtitle">Admin</span>
+            </h1>
+        </div>
 
-        <nav class="flex-grow space-y-2">
-            <!-- Các link này sẽ điều hướng trang (không dùng JS) -->
-            <a asp-area="Admin" asp-controller="AdminDashboard" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-tachometer-alt w-5 text-center"></i>
+        <nav class="sidebar-nav">
+            <a asp-area="Admin" asp-controller="AdminDashboard" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-tachometer-alt"></i>
                 <span>Tổng quan</span>
             </a>
-            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-users w-5 text-center"></i>
+            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-users"></i>
                 <span>Quản lý User</span>
             </a>
-            <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-building w-5 text-center"></i>
+            <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-building"></i>
                 <span>Quản lý Doanh nghiệp</span>
             </a>
-            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-box w-5 text-center"></i>
+            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-box"></i>
                 <span>Quản lý Sản phẩm</span>
             </a>
-            <a asp-area="Admin" asp-controller="Review" asp-action="Reviews" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-box w-5 text-center"></i>
+            <a asp-area="Admin" asp-controller="Review" asp-action="Reviews" class="sidebar-link">
+                <i class="fa-solid fa-comment"></i>
                 <span>Quản lý Review</span>
             </a>
-            <a asp-area="Admin" asp-controller="Review" asp-action="Comments" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-box w-5 text-center"></i>
+            <a asp-area="Admin" asp-controller="Review" asp-action="Comments" class="sidebar-link">
+                <i class="fa-solid fa-comments"></i>
                 <span>Quản lý Comment</span>
             </a>
-            <a asp-area="Admin" asp-controller="Report" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-flag w-5 text-center"></i>
+            <a asp-area="Admin" asp-controller="Report" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-flag"></i>
                 <span>Xem Báo cáo</span>
             </a>
-            <a asp-area="Admin" asp-controller="Setting" asp-action="Index" class="sidebar-link flex items-center gap-3 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-cog w-5 text-center"></i>
+            <a asp-area="Admin" asp-controller="Setting" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-cog"></i>
                 <span>Cài đặt</span>
             </a>
         </nav>
 
-        <div>
-            @* Dùng form Tag Helper để đảm bảo AntiForgeryToken được gửi đi *@
+        <div class="sidebar-footer">
             <form asp-area="" asp-controller="Auth" asp-action="Logout" method="POST" id="logout-form">
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm hover:bg-red-500 hover:text-white">
-                    <i class="fa-solid fa-sign-out-alt w-5 text-center"></i>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="sidebar-link sidebar-link-logout">
+                    <i class="fa-solid fa-sign-out-alt"></i>
                     <span>Đăng xuất</span>
                 </a>
             </form>
         </div>
     </aside>
-    <!-- Overlay for mobile sidebar -->
-    <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-    <!-- Main Content Area -->
-    <main class="main-content flex-grow p-6 md:p-10 space-y-8">
-        <!-- Header & Sidebar Toggle -->
-        <div class="flex justify-between items-center">
-            @* Lấy tiêu đề từ ViewData["Title"] do các View con đặt *@
-            <h2 id="page-title" class="font-poppins text-2xl font-semibold">@ViewData["Title"]</h2>
-            <button class="sidebar-toggle lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100" onclick="toggleSidebar()">
-                <i class="fa-solid fa-bars text-xl"></i>
+    <div id="overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <main class="main-content">
+        <div class="main-content-header">
+            <h2 id="page-title">@ViewData["Title"]</h2>
+
+            <button class="sidebar-toggle-button" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
             </button>
         </div>
 
         @RenderBody()
-
-
     </main>
 
     <script>
-        // --- Sidebar Toggle for Mobile ---
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
         function toggleSidebar() {
             sidebar.classList.toggle('open');
-            overlay.classList.toggle('hidden');
+            overlay.classList.toggle('active');
         }
 
+        // Đóng sidebar khi click vào link (trên mobile)
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 1024) {
+                    setTimeout(() => {
+                        sidebar.classList.remove('open');
+                        overlay.classList.remove('active');
+                    }, 200);
+                }
+            });
+        });
 
-        // window.location.pathname với href của link)
+        // Đóng sidebar khi resize sang desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+        });
     </script>
 
-    @* Nơi để các trang con chèn script (nếu cần) *@
-    @await RenderSectionAsync("Scripts", required: false)
+    @* @await RenderSectionAsync("Scripts", required: false) *@
 </body>
 </html>

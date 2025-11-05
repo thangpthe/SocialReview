@@ -1,4 +1,4 @@
-﻿@model SocialReview.ViewModels.DashboardViewModel
+﻿@* @model SocialReview.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Tổng quan";
     Layout = "_AdminLayout";
@@ -28,3 +28,82 @@
     </div>
 </section>
 
+@model SocialReview.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Tổng quan";
+    Layout = "_AdminLayout";
+}
+
+
+
+<div class="admin-container">
+    <!-- SECTION: DASHBOARD HEADER -->
+    <div class="admin-header">
+        <div>
+            <h1 class="admin-title">Tổng quan hệ thống</h1>
+            <p class="admin-subtitle">Thống kê tổng quan về hệ thống</p>
+        </div>
+    </div>
+
+    <!-- SECTION: STATS CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-users fa-lg"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Tổng User</p>
+                <p class="stat-number">@Model.TotalUsers</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fa-solid fa-star fa-lg"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Tổng Review</p>
+                <p class="stat-number">@Model.TotalReviews</p>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+@model SocialReview.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Tổng quan";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-container">
+    <!-- SECTION: DASHBOARD HEADER -->
+    <div class="admin-header">
+        <div>
+            <h1 class="admin-title">Tổng quan hệ thống</h1>
+            <p class="admin-subtitle">Thống kê tổng quan về hệ thống</p>
+        </div>
+    </div>
+
+    <!-- SECTION: STATS CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-users fa-lg"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Tổng User</p>
+                <p class="stat-number">@Model.TotalUsers</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fa-solid fa-star fa-lg"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Tổng Review</p>
+                <p class="stat-number">@Model.TotalReviews</p>
+            </div>
+        </div>
+    </div>
+</div>

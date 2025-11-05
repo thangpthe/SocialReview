@@ -1,56 +1,278 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap');
+
+
+/* ===== BIẾN MÀU & THIẾT LẬP CHUNG ===== */
 :root {
-    --purple-700: #6A1B9A;
-    --purple-600: #8E24AA;
-    --purple-100: #E1BEE7;
-    --purple-50: #F3E5F5;
-    --bg-light: #F9F6FB;
-    --text-dark: #212121;
-    --text-gray: #555;
-    --border-color: #e0e0e0;
+    --text-gray: #6b7280; /* Tương đương text-[--text-gray] (Tailwind gray-500) */
+    --purple-600: #7c3aed; /* Tương đương text-[--purple-600] */
+    --purple-700: #6d28d9; /* Tương đương text-[--purple-700] */
+    --border-color: #e5e7eb; /* Tương đương border-[--border-color] (Tailwind gray-200) */
+    --page-bg: #f9fafb; /* Nền chung của trang (Tailwind gray-50) */
+    --card-bg: #ffffff; /* Nền của thẻ card */
+    --text-default: #111827; /* Màu chữ chính (Tailwind gray-900) */
+    --gray-100: #f3f4f6;
 }
 
 body {
+    /* Đảm bảo font được tải (nếu bạn bỏ comment link font) */
     font-family: 'Be Vietnam Pro', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
+    background-color: var(--page-bg);
+    color: var(--text-default);
+    line-height: 1.6;
 }
 
+/* Class tiện ích để dùng font Poppins */
+.font-poppins {
+    font-family: 'Poppins', sans-serif;
+}
 
+/* ===== MAIN LAYOUT & CONTAINER ===== */
 .container {
-    width: min(1200px, 95%);
+    width: 100%;
+    /* Giới hạn chiều rộng giống Tailwind */
+    max-width: 1140px;
     margin-left: auto;
     margin-right: auto;
+    /* padding cho mobile */
+    padding-left: 1rem;
+    padding-right: 1rem;
+    /* (py-10) */
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
 }
 
-.btn-primary {
-    background-color: var(--purple-700);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-
-    .btn-primary:hover {
-        background-color: var(--purple-600);
+    /* (space-y-12) Áp dụng margin-top cho mọi section trừ cái đầu tiên */
+    .container > * + * {
+        margin-top: 3rem;
     }
 
-.card {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    overflow: hidden; /* Important for images */
+/* (md:py-16) Tăng padding trên desktop */
+@media (min-width: 768px) {
+    .container {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
 }
 
+/* ===== COMPONENT: CARD ===== */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 0.75rem; /* Tương đương rounded-lg */
+    border: 1px solid var(--border-color);
+    /* (shadow-md) */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== SECTION: TIÊU ĐỀ CHUNG (H2) ===== */
 .section-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem; /* text-2xl */
+    font-size: 1.875rem; /* 30px */
     font-weight: 600;
-    margin-bottom: 1.5rem; /* mb-6 */
-    color: var(--purple-700);
-    border-bottom: 2px solid var(--purple-100);
-    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.75rem;
 }
 
+[cite_start] /* ===== SECTION: THÔNG TIN CHUNG [cite: 102] ===== */
+.company-header {
+    /* (p-6, flex, flex-col, gap-8, items-start) */
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+}
 
+.company-logo {
+    /* (flex-shrink-0, w-32, h-32, bg-gray-100, rounded-lg, flex, items-center, justify-center, overflow-hidden, border) */
+    flex-shrink: 0;
+    width: 8rem; /* w-32 */
+    height: 8rem; /* h-32 */
+    background-color: var(--gray-100);
+    border-radius: 0.5rem; /* rounded-lg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+    .company-logo img {
+        /* (object-contain, w-full, h-full) */
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+.company-info {
+    flex-grow: 1; /* (flex-grow) */
+}
+
+    .company-info h1 {
+        /* (font-poppins, text-3xl, font-bold, mb-2) */
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.875rem; /* text-3xl */
+        font-weight: 700;
+        margin-bottom: 0.5rem; /* mb-2 */
+    }
+
+    .company-info .industry {
+        /* (text-[--text-gray], text-lg, mb-4) */
+        color: var(--text-gray);
+        font-size: 1.125rem; /* text-lg */
+        margin-bottom: 1rem; /* mb-4 */
+    }
+
+    .company-info .description {
+        /* (mb-5, leading-relaxed) */
+        margin-bottom: 1.25rem; /* mb-5 */
+        line-height: 1.65; /* leading-relaxed */
+    }
+
+/* Responsive cho Section 1 */
+@media (min-width: 768px) {
+    .company-header {
+        /* (md:p-8, md:flex-row) */
+        padding: 2rem;
+        flex-direction: row;
+    }
+
+    .company-logo {
+        /* (md:w-40, md:h-40) */
+        width: 10rem;
+        height: 10rem;
+    }
+
+    .company-info h1 {
+        font-size: 2.25rem; /* (md:text-4xl) */
+    }
+}
+
+[cite_start] /* ===== SECTION: THÔNG TIN LIÊN HỆ [cite: 105-108] ===== */
+.contact-grid {
+    /* (p-6, grid, grid-cols-1, gap-6, text-sm) */
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    font-size: 0.875rem; /* text-sm */
+}
+
+.contact-item h4 {
+    /* (font-semibold, mb-1, text-[--purple-700]) */
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--purple-700);
+}
+
+.contact-item p {
+    color: var(--text-gray); /* (text-[--text-gray]) */
+}
+
+.contact-item a {
+    /* (text-[--purple-600]) */
+    color: var(--purple-600);
+    text-decoration: none;
+}
+
+    .contact-item a:hover {
+        text-decoration: underline; /* (hover:underline) */
+    }
+
+/* Responsive cho Section 2 */
+@media (min-width: 768px) {
+    .contact-grid {
+        /* (md:p-8, md:grid-cols-2) */
+        padding: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+[cite_start] /* ===== SECTION: SẢN PHẨM [cite: 108-113] ===== */
+.product-grid {
+    /* (grid, grid-cols-1, gap-6) */
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.product-card {
+    /* (Là 1 .card) */
+    overflow: hidden; /* Để bo góc ảnh */
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+    /* Hiệu ứng hover cho card sản phẩm */
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+    }
+
+    .product-card img {
+        /* (w-full, object-cover) */
+        width: 100%;
+        display: block; 
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        background-color: var(--gray-100);
+    }
+
+    .product-card .product-info {
+        padding: 1rem; /* (p-4) */
+    }
+
+        .product-card .product-info h4 {
+            /* (font-semibold, mb-1) */
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-card .product-info .type {
+            /* (text-xs, text-[--text-gray], mb-2) */
+            font-size: 0.75rem; /* text-xs */
+            color: var(--text-gray);
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+
+        .product-card .product-info .description {
+            /* (text-sm, text-[--text-gray], line-clamp-2) */
+            font-size: 0.875rem; /* text-sm */
+            color: var(--text-gray);
+            /* Kỹ thuật line-clamp */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .product-card .product-info .link {
+            /* (text-sm, text-[--purple-600], mt-2, inline-block) */
+            font-size: 0.875rem;
+            color: var(--purple-600);
+            margin-top: 0.5rem; /* mt-2 */
+            display: inline-block;
+            text-decoration: none;
+        }
+
+    .product-card:hover .link {
+        text-decoration: underline; /* (hover:underline) */
+    }
+
+.product-grid .empty-text {
+    color: var(--text-gray); /* (text-[--text-gray]) */
+}
+
+/* Responsive cho Grid sản phẩm */
+@media (min-width: 640px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* (sm:grid-cols-2) */
+    }
+}
+
+@media (min-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr); /* (lg:grid-cols-3) */
+    }
+}

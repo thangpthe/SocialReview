@@ -1,90 +1,79 @@
 ﻿@model SocialReview.ViewModels.CompanyViewModel
-@* @addTagHelper *@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ Doanh nghiệp - Trustify</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Fonts -->
+
+    <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css"/>
+
     @* <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet"> *@
-    <link href="~/css/company.css" rel="stylesheet"/>
+
+    <link href="~/css/company.css" rel="stylesheet" />
 </head>
 <body>
-    <main class="container py-10 md:py-16 space-y-12">
-        <!-- ===== SECTION: THÔNG TIN CHUNG DOANH NGHIỆP ===== -->
-        <section class="card p-6 md:p-8 flex flex-col md:flex-row items-start gap-8">
-            <!-- Logo -->
-            <div class="flex-shrink-0 w-32 h-32 md:w-40 md:h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-[--border-color]">
-                <img src="@Model.CompanyProfile.Logo" alt="@Model.CompanyProfile.CompanyName" class="object-contain w-full h-full">
+    <main class="container">
+
+        <section class="card company-header">
+            <div class="company-logo">
+                <img src="@Model.CompanyProfile.Logo" alt="@Model.CompanyProfile.CompanyName">
             </div>
 
-            <!-- Thông tin chính -->
-            <div class="flex-grow">
-                <h1 class="font-poppins text-3xl md:text-4xl font-bold mb-2">@Model.CompanyProfile.CompanyName</h1>
-                <p class="text-[--text-gray] text-lg mb-4">@Model.CompanyProfile.Industry</p>
-                <p class="mb-5 leading-relaxed">
+            <div class="company-info">
+                <h1 class="font-poppins">@Model.CompanyProfile.CompanyName</h1>
+                <p class="industry">@Model.CompanyProfile.Industry</p>
+                <p class="description">
                     @Model.CompanyProfile.CompanyDescription
                 </p>
-                
-                
             </div>
         </section>
 
-        <!-- ===== SECTION: THÔNG TIN LIÊN HỆ & ĐỊA CHỈ ===== -->
         <section>
             <h2 class="section-title">Thông tin liên hệ</h2>
-            <div class="card p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-               
-                <div>
-                    <h4 class="font-semibold mb-1 text-[--purple-700]">Email liên hệ</h4>
-                    <p class="text-[--text-gray]">@Model.CompanyProfile.ContactEmail</p>
+            <div class="card contact-grid">
+
+                <div class="contact-item">
+                    <h4>Email liên hệ</h4>
+                    <p>@Model.CompanyProfile.ContactEmail</p>
                 </div>
-                <div>
-                    <h4 class="font-semibold mb-1 text-[--purple-700]">Số điện thoại</h4>
-                    <p class="text-[--text-gray]">@Model.CompanyProfile.Phone</p>
+                <div class="contact-item">
+                    <h4>Số điện thoại</h4>
+                    <p>@Model.CompanyProfile.Phone</p>
                 </div>
-                <div>
-                    <h4 class="font-semibold mb-1 text-[--purple-700]">Website</h4>
-                    <a href="@Model.CompanyProfile.Website" target="_blank" class="text-[--purple-600] hover:underline">@Model.CompanyProfile.Website</a>
+                <div class="contact-item">
+                    <h4>Website</h4>
+                    <a href="@Model.CompanyProfile.Website" target="_blank">@Model.CompanyProfile.Website</a>
                 </div>
             </div>
         </section>
 
         <section>
             <h2 class="section-title">Sản phẩm / Dịch vụ nổi bật</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Product Card 1 -->
+            <div class="product-grid">
                 @if (Model.CompanyProducts != null && Model.CompanyProducts.Any())
                 {
                     @foreach (var product in Model.CompanyProducts)
                     {
-                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="card">
-                            <img src="@product.ProductImage" alt="@product.ProductName" class="w-full h-40 object-cover">
-                            <div class="p-4">
-                                <h4 class="font-semibold mb-1">@product.ProductName</h4>
-                                <p class="text-xs text-[--text-gray] mb-2">@product.ProductType</p>
-                                <p class="text-sm text-[--text-gray] line-clamp-2">@product.ProductDescription</p>
-                                <span class="text-sm text-[--purple-600] hover:underline mt-2 inline-block">Xem chi tiết &rarr;</span>
+                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="card product-card">
+                            <img src="@product.ProductImage" alt="@product.ProductName">
+                            <div class="product-info">
+                                <h4>@product.ProductName</h4>
+                                <p class="type">@product.ProductType</p>
+                                <p class="description">@product.ProductDescription</p>
+                                <span class="link">Xem chi tiết &rarr;</span>
                             </div>
                         </a>
                     }
                 }
                 else
                 {
-                    <p class="text-[--text-gray]">Doanh nghiệp này chưa có sản phẩm nào.</p>
+                    <p class="empty-text">Doanh nghiệp này chưa có sản phẩm nào.</p>
                 }
             </div>
         </section>
     </main>
-
-   
-
 </body>
 </html>

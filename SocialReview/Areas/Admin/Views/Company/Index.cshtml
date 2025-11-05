@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SocialReview.Models.Company>
+﻿@* @model IEnumerable<SocialReview.Models.Company>
 @{
     ViewData["Title"] = "Danh sách doanh nghiệp";
     Layout = "_AdminLayout";
@@ -52,4 +52,99 @@
     </div>
 </section>
 
+ *@
+@model IEnumerable<SocialReview.Models.Company>
+@{
+    ViewData["Title"] = "Danh sách doanh nghiệp";
+    Layout = "_AdminLayout";
+}
 
+<div class="admin-container">
+    <!-- Page Header -->
+    <div class="page-section-header">
+        <h3 class="page-section-title">Danh sách Doanh nghiệp</h3>
+        <a asp-action="Create" class="btn btn-green">
+            <i class="fa-solid fa-plus"></i> Tạo mới
+        </a>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        <!-- Desktop Table View -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Doanh nghiệp</th>
+                        <th>Mô tả</th>
+                        <th>Lĩnh vực</th>
+                        <th>Email</th>
+                        <th>SDT</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.CompanyID</td>
+                            <td>@item.CompanyName</td>
+                            <td>
+                                <div class="text-truncate-cell" title="@item.CompanyDescription">
+                                    @item.CompanyDescription
+                                </div>
+                            </td>
+                            <td>@item.Industry</td>
+                            <td>@item.ContactEmail</td>
+                            <td>@item.Phone</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
+                                    <a class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
+                                    <a class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="mobile-cards">
+            @foreach (var item in Model)
+            {
+                <div class="mobile-card">
+                    <div class="mobile-card-header">
+                        <div class="mobile-card-title">@item.CompanyName</div>
+                        <div class="mobile-card-id">#@item.CompanyID</div>
+                    </div>
+                    <div class="mobile-card-body">
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">Mô tả</div>
+                            <div class="mobile-card-value">@item.CompanyDescription</div>
+                        </div>
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">Lĩnh vực</div>
+                            <div class="mobile-card-value">@item.Industry</div>
+                        </div>
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">Email</div>
+                            <div class="mobile-card-value">@item.ContactEmail</div>
+                        </div>
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">SDT</div>
+                            <div class="mobile-card-value">@item.Phone</div>
+                        </div>
+                    </div>
+                    <div class="mobile-card-actions">
+                        <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i> Sửa</a>
+                        <a class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem</a>
+                        <a class="btn btn-red"><i class="fa-solid fa-trash"></i> Xóa</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

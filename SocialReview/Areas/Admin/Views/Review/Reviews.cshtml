@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SocialReview.Models.Review>
+﻿@* @model IEnumerable<SocialReview.Models.Review>
 @{
     ViewData["Title"] = "Quản lý Reviews";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -298,4 +298,180 @@
             }
         </tbody>
     </table>
+</div> *@
+
+@model IEnumerable<SocialReview.Models.Review>
+@{
+    ViewData["Title"] = "Quản lý Reviews";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-container">
+    <!-- Admin Header -->
+    <div class="admin-header">
+        <div>
+            <h1 class="admin-title">Quản lý Reviews</h1>
+            <p class="admin-subtitle">Xem và quản lý tất cả các đánh giá từ người dùng</p>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fa-solid fa-check-circle"></i>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-error">
+            <i class="fa-solid fa-exclamation-circle"></i>
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Stats Cards -->
+   
+
+    <!-- Reviews Table -->
+    <div class="table-container">
+        <!-- Desktop Table View -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Người dùng</th>
+                        <th>Sản phẩm</th>
+                        <th>Tiêu đề</th>
+                        <th>Nội dung</th>
+                        <th>Đánh giá</th>
+                        <th>Ngày tạo</th>
+                        <th>Comments</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var review in Model)
+                        {
+                            <tr>
+                                <td>@review.ReviewID</td>
+                                <td>@review.User?.UserName</td>
+                                <td>@review.Product?.ProductName</td>
+                                <td>@review.Title</td>
+                                <td>
+                                    <div class="review-content" title="@review.Content">
+                                        @review.Content
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="rating-stars">
+                                        @for (int i = 0; i < review.Rating; i++)
+                                        {
+                                            <span>★</span>
+                                        }
+                                    </span>
+                                </td>
+                                <td>@review.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                <td>@review.Comments?.Count() comments</td>
+                                <td>
+                                    <form asp-action="DeleteReview" method="post" class="inline-form"
+                                          onsubmit="return confirm('Bạn chắc chắn muốn xóa review này?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@review.ReviewID" />
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fa-solid fa-trash"></i> Xóa
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fa-solid fa-inbox"></i>
+                                </div>
+                                <div class="empty-state-text">Không có review nào</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="mobile-cards">
+            @if (Model.Any())
+            {
+                @foreach (var review in Model)
+                {
+                    <div class="mobile-card">
+                        <div class="mobile-card-header">
+                            <div class="mobile-card-title">@review.Title</div>
+                            <div class="mobile-card-id">#@review.ReviewID</div>
+                        </div>
+                        <div class="mobile-card-body">
+                            <div class="mobile-card-row">
+                                <div class="mobile-card-label">Người dùng</div>
+                                <div class="mobile-card-value">@review.User?.UserName</div>
+                            </div>
+                            <div class="mobile-card-row">
+                                <div class="mobile-card-label">Sản phẩm</div>
+                                <div class="mobile-card-value">@review.Product?.ProductName</div>
+                            </div>
+                            <div class="mobile-card-row">
+                                <div class="mobile-card-label">Nội dung</div>
+                                <div class="mobile-card-value">@review.Content</div>
+                            </div>
+                            <div class="mobile-card-row">
+                                <div class="mobile-card-label">Đánh giá</div>
+                                <div class="mobile-card-value">
+                                    <span class="rating-stars">
+                                        @for (int i = 0; i < review.Rating; i++)
+                                        {
+                                            <span>★</span>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mobile-card-row">
+                                <div class="mobile-card-label">Ngày tạo</div>
+                                <div class="mobile-card-value">@review.CreatedAt.ToString("dd/MM/yyyy")</div>
+                            </div>
+                            <div class="mobile-card-row">
+                                <div class="mobile-card-label">Comments</div>
+                                <div class="mobile-card-value">@review.Comments?.Count() comments</div>
+                            </div>
+                        </div>
+                        <div class="mobile-card-actions">
+                            <form asp-action="DeleteReview" method="post" class="inline-form"
+                                  onsubmit="return confirm('Bạn chắc chắn muốn xóa review này?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@review.ReviewID" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa-solid fa-trash"></i> Xóa
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fa-solid fa-inbox"></i>
+                    </div>
+                    <div class="empty-state-text">Không có review nào</div>
+                </div>
+            }
+        </div>
+    </div>
 </div>

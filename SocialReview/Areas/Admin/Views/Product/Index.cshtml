@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SocialReview.Models.Product>
+﻿@* @model IEnumerable<SocialReview.Models.Product>
 @{
     ViewData["Title"] = "Danh sách sản phẩm/dịch vụ";
     Layout = "_AdminLayout";
@@ -52,4 +52,103 @@
     </div>
 </section>
 
+ *@
+@model IEnumerable<SocialReview.Models.Product>
+@{
+    ViewData["Title"] = "Danh sách sản phẩm/dịch vụ";
+    Layout = "_AdminLayout";
+}
 
+<div class="admin-container">
+    <!-- Page Header -->
+    <div class="page-section-header">
+        <h3 class="page-section-title">Danh sách Sản phẩm/Dịch vụ</h3>
+        <a asp-action="Create" class="btn btn-green">
+            <i class="fa-solid fa-plus"></i> Tạo mới
+        </a>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        <!-- Desktop Table View -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên sản phẩm/Dịch vụ</th>
+                        <th>Mô tả</th>
+                        <th>Ảnh</th>
+                        <th>Giá</th>
+                        <th>Loại</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ProductID</td>
+                            <td>@item.ProductName</td>
+                            <td>
+                                <div class="text-truncate-cell" title="@item.ProductDescription">
+                                    @item.ProductDescription
+                                </div>
+                            </td>
+                            <td>
+                                <img src="@item.ProductImage" alt="@item.ProductName" class="img-thumbnail" />
+                            </td>
+                            <td>@item.ProductPrice.ToString("N0") đ</td>
+                            <td>@item.ProductType</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
+                                    <a class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
+                                    <a class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="mobile-cards">
+            @foreach (var item in Model)
+            {
+                <div class="mobile-card">
+                    <div class="mobile-card-header">
+                        <div class="mobile-card-title">@item.ProductName</div>
+                        <div class="mobile-card-id">#@item.ProductID</div>
+                    </div>
+                    <div class="mobile-card-body">
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">Ảnh</div>
+                            <div class="mobile-card-value">
+                                <img src="@item.ProductImage" alt="@item.ProductName" class="img-thumbnail" />
+                            </div>
+                        </div>
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">Mô tả</div>
+                            <div class="mobile-card-value">@item.ProductDescription</div>
+                        </div>
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">Giá</div>
+                            <div class="mobile-card-value">@item.ProductPrice.ToString("N0") đ</div>
+                        </div>
+                        <div class="mobile-card-row">
+                            <div class="mobile-card-label">Loại</div>
+                            <div class="mobile-card-value">@item.ProductType</div>
+                        </div>
+                    </div>
+                    <div class="mobile-card-actions">
+                        <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i> Sửa</a>
+                        <a class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem</a>
+                        <a class="btn btn-red"><i class="fa-solid fa-trash"></i> Xóa</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
