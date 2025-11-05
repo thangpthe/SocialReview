@@ -8,7 +8,6 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SocialReview.Controllers
 {
-    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepo;
@@ -19,7 +18,7 @@ namespace SocialReview.Controllers
             _userRepo = userRepo;
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string username)
         {
             //var username = _userManager.GetUserName(User);
             //var user = _userRepo.GetUserByUsername(username);
@@ -35,12 +34,13 @@ namespace SocialReview.Controllers
             //};
 
 
-            var username = _userManager.GetUserName(User);
             if (string.IsNullOrEmpty(username))
             {
-                // Nếu không có username (lỗi lạ), quay về trang chủ
+                // Nếu không có username, quay về trang chủ
                 return RedirectToAction("Index", "Home");
             }
+
+            // 5. SỬ DỤNG USERNAME TỪ THAM SỐ
             var user = await _userRepo.GetUserReview(username);
 
             if (user == null)
@@ -54,8 +54,6 @@ namespace SocialReview.Controllers
                 UserReviews = user.Reviews ?? new List<Review>()
             };
 
-
-            // Trả về View "Profile.cshtml" (tệp chúng ta đã làm)
             return View(viewModel);
         }
         public IActionResult Login()

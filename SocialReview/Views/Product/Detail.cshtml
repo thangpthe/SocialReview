@@ -106,7 +106,7 @@
                             @* Nội dung review *@
                             <div class="flex-grow">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="font-semibold text-sm">@(review.User?.UserName ?? "Người dùng ẩn danh")</span>
+                                    <a class="font-semibold text-sm"asp-action="Index" asp-controller="User" asp-route-username="@review.User.UserName">@(review.User?.UserName ?? "Người dùng ẩn danh")</a>
                                     <span class="text-xs text-gray-400">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
                                 </div>
                                 <div class="star-rating mb-2" title="@review.Rating.ToString("F1") sao">

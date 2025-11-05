@@ -89,8 +89,7 @@
         </div>
 
         @* 2b. Form viết comment mới (Cho AJAX) *@
-        <form asp-controller="Comment" asp-action="Create" method="post"
-              class="comment-form" data-review-id="@Model.ReviewID">
+        <form asp-controller="Comment" asp-action="Create" method="post"class="comment-form" data-review-id="@Model.ReviewID">
             <input type="hidden" name="ReviewID" value="@Model.ReviewID" />
             <input type="text" name="Content" class="form-input" placeholder="Viết bình luận của bạn..." required />
             <button type="submit" class="btn-submit-comment">

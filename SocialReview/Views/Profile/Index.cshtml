@@ -1,51 +1,65 @@
-﻿@* @model SocialReview.ViewModels.ProfileViewModel
+﻿@model SocialReview.ViewModels.ProfileViewModel
 @{
     ViewData["Title"] = "Trang cá nhân";
     // Layout = "_Layout"; // File này sẽ dùng layout chung của user
 }
 
-<!-- Bạn có thể thêm CSS riêng cho trang profile tại đây -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="container mx-auto mt-4">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">@TempData["SuccessMessage"]</span>
+        </div>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="container mx-auto mt-4">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">@TempData["ErrorMessage"]</span>
+        </div>
+    </div>
+}
 
 <div class="container mx-auto p-4 md:p-8">
 
     <h1 class="text-3xl font-bold mb-8 font-poppins text-purple-700">Trang quản lý cá nhân</h1>
 
     <!-- SECTION 1: THÔNG TIN HỒ SƠ -->
-    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <h2 class="text-2xl font-semibold mb-4 font-poppins">Thông tin của bạn</h2>
+    <div class="container mx-auto p-4 md:p-8">
 
-        <div class="flex flex-col md:flex-row items-center gap-6">
-            <!-- Avatar/Logo -->
-            <div class="flex-shrink-0">
-                @if (!string.IsNullOrEmpty(Model.UserAvatar))
-                {
-                    <img src="@Model.UserAvatar" alt="Avatar" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-purple-200">
-                }
-                else
-                {
-                    <div class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-5xl font-bold">
-                        @Model.FullName.Substring(0, 1)
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+
+                <div class="flex-shrink-0">
+                    @if (!string.IsNullOrEmpty(Model.UserAvatar))
+                    {
+                        <img id="profile-avatar-img" src="@Model.UserAvatar" alt="Avatar" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-purple-200">
+                    }
+                    else
+                    {
+                        <div id="profile-avatar-fallback" class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-5xl font-bold">
+                            @Model.FullName.Substring(0, 1)
+                        </div>
+                    }
+                </div>
+
+                <div class="text-center md:text-left">
+                    <h3 id="profile-fullname" class="text-2xl font-bold font-poppins">@Model.FullName</h3>
+                    <p class="text-gray-600">@Model.Username</p>
+                    <p class="text-gray-500 text-sm mt-1">@Model.Email</p>
+                    <div class="mt-4">
+                        <button id="btn-open-edit-modal" type="button"
+                                class="bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors">
+                            <i class="fas fa-pencil-alt mr-1"></i> Sửa hồ sơ
+                        </button>
                     </div>
-                }
-            </div>
-
-            <!-- Details -->
-            <div class="text-center md:text-left">
-                <h3 class="text-2xl font-bold font-poppins">@Model.FullName</h3>
-                <p class="text-gray-600">@Model.Username</p>
-                <p class="text-gray-500 text-sm mt-1">@Model.Email</p>
-                <p class="text-gray-400 text-xs mt-2">Tham gia từ: @Model.CreatedAt.ToString("dd/MM/yyyy")</p>
-
-                <div class="mt-4">
-                    <a asp-action="EditProfile" asp-controller="Profile"
-                       class="bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors">
-                        <i class="fas fa-pencil-alt mr-1"></i> Sửa hồ sơ
-                    </a>
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
     <!-- SECTION 2: QUẢN LÝ REVIEW -->
     <div class="bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
@@ -111,6 +125,130 @@
             }
         </div>
     </div>
-</div> *@
+</div>
+<div id="modal-placeholder"></div>
+@section Scripts {
+    <script>
+        // Chờ cho toàn bộ trang được tải
+        document.addEventListener('DOMContentLoaded', function () {
 
+            const modalPlaceholder = document.getElementById('modal-placeholder');
+            const openModalButton = document.getElementById('btn-open-edit-modal');
+            const getModalUrl = '@Url.Action("EditProfile", "Profile")';
 
+            // ===== 1. MỞ MODAL (DÙNG FETCH API) =====
+            openModalButton.addEventListener('click', function () {
+                fetch(getModalUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Lỗi khi tải form.');
+                        }
+                        return response.text(); // Lấy HTML về
+                    })
+                    .then(html => {
+                        modalPlaceholder.innerHTML = html; // Đổ HTML vào nơi chứa
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi mở modal:', error);
+                        alert('Không thể tải form sửa hồ sơ. Vui lòng thử lại.');
+                    });
+            });
+
+            // ===== 2. ĐÓNG MODAL (DÙNG EVENT DELEGATION) =====
+            // Chúng ta gắn listener vào 'modalPlaceholder' vì các nút bên trong
+            // (như #btn-close-modal) chưa tồn tại khi trang mới tải
+            modalPlaceholder.addEventListener('click', function(e) {
+
+                // Bấm nút Hủy hoặc nút (X)
+                if (e.target.id === 'btn-close-modal' || e.target.id === 'btn-cancel-modal') {
+                    modalPlaceholder.innerHTML = ''; // Xóa nội dung modal
+                }
+
+                // Bấm vào nền mờ
+                if (e.target.id === 'edit-profile-modal') {
+                     modalPlaceholder.innerHTML = '';
+                }
+            });
+
+            // ===== 3. GỬI FORM (DÙNG FETCH API) =====
+            modalPlaceholder.addEventListener('submit', function(e) {
+                // Chỉ xử lý sự kiện submit của form #edit-profile-form
+                if (e.target.id !== 'edit-profile-form') {
+                    return;
+                }
+
+                e.preventDefault(); // Ngăn form submit kiểu truyền thống
+                const form = e.target;
+
+                // Kiểm tra validation HTML5 cơ bản (ví dụ: required)
+                if (!form.checkValidity()) {
+                     form.reportValidity(); // Hiển thị thông báo lỗi của trình duyệt
+                     return;
+                }
+
+                // Gửi form bằng fetch
+                fetch(form.action, {
+                    method: form.method,
+                    body: new FormData(form) // Tự động gói dữ liệu form (bao gồm cả AntiForgeryToken)
+                })
+                .then(response => {
+                    if (response.ok) { // Mã 2xx -> Thành công (Controller trả về JSON)
+                        return response.json();
+                    } else {
+                        // Mã 4xx, 5xx -> Lỗi (Controller trả về HTML lỗi)
+                        // Chúng ta ném HTML lỗi này sang .catch()
+                        return response.text().then(html => { throw new Error(html); });
+                    }
+                })
+                .then(data => {
+                    // --- XỬ LÝ KHI THÀNH CÔNG (data là JSON) ---
+                    if (data.success) {
+
+                        // 1. Cập nhật tên trên trang
+                        document.getElementById('profile-fullname').textContent = data.newFullName;
+
+                        // 2. Cập nhật Avatar
+                        const avatarImg = document.getElementById('profile-avatar-img');
+                        const avatarFallback = document.getElementById('profile-avatar-fallback');
+                        const newImgHtml = `<img id="profile-avatar-img" src="${data.newAvatar}" alt="Avatar" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-purple-200">`;
+                        const newFallbackHtml = `<div id="profile-avatar-fallback" class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-5xl font-bold">${data.newInitial}</div>`;
+
+                        if (data.newAvatar) {
+                            if (avatarImg) {
+                                avatarImg.src = data.newAvatar; // Cập nhật ảnh
+                            } else {
+                                avatarFallback.outerHTML = newImgHtml; // Thay chữ bằng ảnh
+                            }
+                        } else {
+                            if (avatarFallback) {
+                                avatarFallback.textContent = data.newInitial; // Cập nhật chữ
+                            } else {
+                                avatarImg.outerHTML = newFallbackHtml; // Thay ảnh bằng chữ
+                            }
+                        }
+
+                        // 3. Đóng modal
+                        modalPlaceholder.innerHTML = '';
+
+                        // 4. Hiển thị thông báo thành công
+                        const successMsg = '<div class="container mx-auto mt-4 temp-message"><div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert"><span class="block sm:inline">Cập nhật hồ sơ thành công!</span></div></div>';
+                        // Chèn vào đầu .container
+                        document.querySelector('.container').insertAdjacentHTML('afterbegin', successMsg);
+
+                        // Tự động xóa thông báo sau 4 giây
+                        setTimeout(() => {
+                            const tempMsg = document.querySelector('.temp-message');
+                            if(tempMsg) tempMsg.remove();
+                        }, 4000);
+                    }
+                })
+                .catch(errorHtml => {
+                    // --- XỬ LÝ KHI THẤT BẠI (errorHtml là HTML của PartialView lỗi) ---
+                    // Đổ lại HTML (đã có sẵn thông báo lỗi) vào modal
+                    modalPlaceholder.innerHTML = errorHtml.message;
+                });
+            });
+
+        });
+    </script>
+}
