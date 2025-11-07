@@ -1,0 +1,173 @@
+﻿@model SocialReview.ViewModels.ProductCRUDViewModel
+@{
+    // Quyết định tiêu đề dựa trên việc Model có ProductID hay không
+    bool isCreating = Model.ProductID == 0;
+    ViewData["Title"] = isCreating ? "Thêm Sản phẩm mới" : "Chỉnh sửa Sản phẩm";
+    // Lấy danh sách Categories từ ViewData
+    var categories = ViewData["Categories"] as List<SocialReview.Models.Category> ?? new List<SocialReview.Models.Category>();
+    // Layout = null;
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!-- (CSS cho form) -->
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            box-shadow: 0 0 0 2px #E1BEE7;
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    .btn-primary {
+        background-color: #6A1B9A;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #8E24AA;
+        }
+
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .validation-summary-errors ul {
+        color: #dc3545;
+        list-style: disc;
+        padding-left: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .current-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid #eee;
+        margin-top: 0.5rem;
+    }
+</style>
+
+<div class="form-container">
+    <h1 class="text-3xl font-bold mb-6 font-poppins text-purple-700">@ViewData["Title"]</h1>
+
+    <!-- Form với 'enctype' cho file upload -->
+    <form asp-action="@(isCreating ? "CreateProduct" : "EditProduct")" method="post" enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+        <!-- Nếu là Edit, cần ProductID -->
+        @if (!isCreating)
+        {
+            <input type="hidden" asp-for="ProductID" />
+        }
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Tên Sản phẩm -->
+            <div class="form-group md:col-span-2">
+                <label asp-for="ProductName" class="form-label">Tên sản phẩm</label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="field-validation-error"></span>
+            </div>
+
+            <!-- Danh mục -->
+            <div class="form-group">
+                <label asp-for="CategoryID" class="form-label">Danh mục</label>
+                <select asp-for="CategoryID" class="form-control"
+                        asp-items="@(new SelectList(categories, "CategoryID", "CategoryName"))">
+                    <option value="">-- Chọn danh mục --</option>
+                </select>
+                <span asp-validation-for="CategoryID" class="field-validation-error"></span>
+            </div>
+
+            <!-- Loại -->
+            <div class="form-group">
+                <label asp-for="ProductType" class="form-label">Loại sản phẩm</label>
+                <input asp-for="ProductType" class="form-control" />
+                <span asp-validation-for="ProductType" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <!-- Giá -->
+        <div class="form-group">
+            <label asp-for="ProductPrice" class="form-label">Giá sản phẩm</label>
+            <input asp-for="ProductPrice" type="number" class="form-control" />
+            <span asp-validation-for="ProductPrice" class="field-validation-error"></span>
+        </div>
+
+        <!-- Ảnh (Upload) -->
+        <div class="form-group">
+            <label asp-for="ImageFile" class="form-label">Ảnh sản phẩm</label>
+            <input asp-for="ImageFile" type="file" accept="image/png, image/jpeg" class="form-control" />
+            <span asp-validation-for="ImageFile" class="field-validation-error"></span>
+        </div>
+
+        <!-- Hiển thị ảnh cũ (nếu có) -->
+        @if (!isCreating && !string.IsNullOrEmpty(Model.ProductImage))
+        {
+            <div class="form-group">
+                <label asp-for="ProductImage" class="form-label"></label>
+                <img src="@Model.ProductImage" alt="Ảnh hiện tại" class="current-image"
+                     onerror="this.onerror=null; this.src='https://placehold.co/150x150/eee/333?text=?';">
+            </div>
+        }
+
+        <!-- Mô tả -->
+        <div class="form-group">
+            <label asp-for="ProductDescription" class="form-label">Mô tả</label>
+            <textarea asp-for="ProductDescription" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="ProductDescription" class="field-validation-error"></span>
+        </div>
+
+        <!-- Nút Submit -->
+        <div class="text-right mt-8">
+            <a asp-action="Index" class="text-gray-600 mr-4 text-sm font-medium">Hủy bỏ</a>
+            <button type="submit" class="btn-primary">
+                @(isCreating ? "Lưu Sản phẩm" : "Lưu thay đổi")
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

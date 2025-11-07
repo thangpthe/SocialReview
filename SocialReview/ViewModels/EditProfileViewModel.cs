@@ -12,7 +12,8 @@ namespace SocialReview.ViewModels
         [Display(Name = "URL Ảnh đại diện (Avatar)")]
         [Url(ErrorMessage = "URL ảnh đại diện không hợp lệ")]
         public string? UserAvatar { get; set; }
-
+        [Display(Name = "Chọn ảnh đại diện mới")]
+        public IFormFile? AvatarFile { get; set; }
         // Hiển thị email nhưng không cho sửa
         [Display(Name = "Email")]
         public string Email { get; set; }

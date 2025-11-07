@@ -28,6 +28,10 @@ namespace SocialReview.Models
         public string ProductType { get; set; }
 
         public DateTime? CreatedAt { get; set; }
+
+        //[Required]
+        //[StringLength(255)]
+        public string? Slug { get; set; }
         public Company Company { get; set; }
         public Category Category{ get; set; }
         public virtual ICollection<Review> Reviews { get; set; }

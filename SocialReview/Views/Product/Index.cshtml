@@ -344,7 +344,7 @@
         <div class="products-grid">
             @foreach (var product in Model.Products)
             {
-                <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="product-card">
+                <a asp-controller="Product" asp-action="Detail" asp-route-slug="@product.Slug" class="product-card">
                     <img src="@product.ProductImage" alt="@product.ProductName" class="product-image">
                     <div class="product-body">
                         <span class="product-type">@product.ProductType</span>

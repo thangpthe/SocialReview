@@ -5,7 +5,7 @@
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<!-- (Thêm CSS nếu cần) -->
+@* <!-- (Thêm CSS nếu cần) -->
 <style>
     .form-container {
         max-width: 800px;
@@ -152,6 +152,172 @@
 </div>
 
 <!-- Thêm script validation (nếu bạn chưa có) -->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@
+
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            box-shadow: 0 0 0 2px #E1BEE7;
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    .btn-primary {
+        background-color: #6A1B9A;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #8E24AA;
+        }
+
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .validation-summary-errors ul {
+        color: #dc3545;
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .current-logo {
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid #eee;
+        margin-top: 0.5rem;
+    }
+</style>
+
+<div class="form-container">
+    <h1 class="text-3xl font-bold mb-6 font-poppins text-purple-700">@ViewData["Title"]</h1>
+    <p class="text-gray-600 mb-6">Đây là thông tin công khai. Hãy đảm bảo thông tin chính xác và chuyên nghiệp.</p>
+
+    <!-- CẬP NHẬT QUAN TRỌNG: Thêm 'enctype' để cho phép upload file -->
+    <form asp-action="@(ViewData["IsCreating"] != null && (bool)ViewData["IsCreating"] ? "CreateProfile" : "EditProfile")"
+          method="post" enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Tên Doanh nghiệp (Giữ nguyên) -->
+            <div class="form-group md:col-span-2">
+                <label asp-for="CompanyName" class="form-label"></label>
+                <input asp-for="CompanyName" class="form-control" />
+                <span asp-validation-for="CompanyName" class="field-validation-error"></span>
+            </div>
+
+            <!-- CẬP NHẬT: Hiển thị Logo hiện tại -->
+            @if (!string.IsNullOrEmpty(Model.Logo))
+            {
+                <div class="form-group">
+                    <label asp-for="Logo" class="form-label"></label>
+                    <img src="@Model.Logo" alt="Logo hiện tại" class="current-logo"
+                         onerror="this.onerror=null; this.src='https://placehold.co/100x100/eee/333?text=?';">
+                </div>
+            }
+
+            <!-- CẬP NHẬT: Input tải file Logo -->
+            <div class="form-group @(string.IsNullOrEmpty(Model.Logo) ? "md:col-span-2" : "")">
+                <label asp-for="LogoFile" class="form-label"></label>
+                <input asp-for="LogoFile" type="file" accept="image/png, image/jpeg" class="form-control" />
+                <span asp-validation-for="LogoFile" class="field-validation-error"></span>
+            </div>
+
+            <!-- (Các trường Industry, Website, Description, Phone, ContactEmail giữ nguyên) -->
+            <!-- Ngành -->
+            <div class="form-group">
+                <label asp-for="Industry" class="form-label"></label>
+                <input asp-for="Industry" class="form-control" placeholder="Ví dụ: Công nghệ thông tin" />
+                <span asp-validation-for="Industry" class="field-validation-error"></span>
+            </div>
+
+            <!-- Website -->
+            <div class="form-group">
+                <label asp-for="Website" class="form-label"></label>
+                <input asp-for="Website" class="form-control" placeholder="https://..." />
+                <span asp-validation-for="Website" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <!-- Mô tả -->
+        <div class="form-group">
+            <label asp-for="CompanyDescription" class="form-label"></label>
+            <textarea asp-for="CompanyDescription" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="CompanyDescription" class="field-validation-error"></span>
+        </div>
+
+        <hr class="my-6" />
+        <h2 class="text-xl font-semibold mb-4 font-poppins">Thông tin liên hệ</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Số điện thoại -->
+            <div class="form-group">
+                <label asp-for="Phone" class="form-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="field-validation-error"></span>
+            </div>
+
+            <!-- Email liên hệ -->
+            <div class="form-group">
+                <label asp-for="ContactEmail" class="form-label"></label>
+                <input asp-for="ContactEmail" class="form-control" placeholder="Email" />
+                <span asp-validation-for="ContactEmail" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <!-- Nút Submit -->
+        <div class="text-right mt-8">
+            <a asp-action="Index" class="text-gray-600 mr-4 text-sm font-medium">Hủy bỏ</a>
+            <button type="submit" class="btn-primary">Lưu thay đổi</button>
+        </div>
+    </form>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

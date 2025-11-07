@@ -2,10 +2,9 @@
 
 namespace SocialReview.ViewModels
 {
-    // Model này chỉ chứa các trường Company được phép sửa
     public class CompanyEditViewModel
     {
-        // Chúng ta không cần CompanyID hay UserID ở đây vì không sửa chúng
+        
 
         [Required(ErrorMessage = "Tên công ty là bắt buộc")]
         [StringLength(200, ErrorMessage = "Tên công ty tối đa 200 ký tự")]
@@ -14,6 +13,8 @@ namespace SocialReview.ViewModels
         [StringLength(255, ErrorMessage = "Đường dẫn ảnh không quá 255 ký tự")]
         [Display(Name = "Link Logo")]
         public string? Logo { get; set; }
+        [Display(Name = "Tải lên logo mới")]
+        public IFormFile? LogoFile { get; set; }
 
         [Display(Name = "Mô tả Doanh nghiệp")]
         public string? CompanyDescription { get; set; }

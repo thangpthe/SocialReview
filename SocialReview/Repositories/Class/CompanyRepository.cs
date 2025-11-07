@@ -57,5 +57,7 @@ namespace SocialReview.Repositories.Class
             _context.Companies.Update(company);
             await _context.SaveChangesAsync();
         }
+
+        
     }
 }

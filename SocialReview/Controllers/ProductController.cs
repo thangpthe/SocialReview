@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SocialReview.Data;
 using SocialReview.Models;
 using SocialReview.Repositories.Interface;
+using SocialReview.Services;
 using SocialReview.ViewModels;
 
 namespace SocialReview.Controllers
@@ -14,15 +15,22 @@ namespace SocialReview.Controllers
         private readonly IProductRepository _productRepo;
         private readonly IReviewRepository _reviewRepo;
         private readonly UserManager<User> _userManager;
+        private readonly ISlugService _slugService;
         private readonly ApplicationDbContext _context;
 
-        public ProductController(IProductRepository productRepo,IReviewRepository reviewRepo,UserManager<User> userManager,ApplicationDbContext context) // Thêm DbContext
+        public ProductController(IProductRepository productRepo,IReviewRepository reviewRepo,UserManager<User> userManager,ApplicationDbContext context,ISlugService slugService) // Thêm DbContext
         {
             _reviewRepo = reviewRepo;
             _productRepo = productRepo;
             _userManager = userManager;
             _context = context;
+            _slugService = slugService;
         }
+
+        // (Hàm này có thể đặt trong Controller hoặc một Service riêng)
+        
+
+        
 
         [AllowAnonymous]
         public async Task<IActionResult> Index(string? CurrentType, int? CurrentRating)
@@ -71,19 +79,46 @@ namespace SocialReview.Controllers
 
             return View(viewModel);
         }
-        public async Task<IActionResult> Detail(int id)
+        //public async Task<IActionResult> Detail(int id)
+        //{
+        //    var product = await _productRepo.GetProductDetailById(id);
+        //    if (product == null) { return NotFound(); }
+
+        //    var viewModel = new ProductDetailViewModel
+        //    {
+        //        Product = product,
+
+        //        Reviews = product.Reviews ?? new List<Review>(),
+
+        //        // Các thông tin khác...
+        //        NewReviewForm = new CreateReviewViewModel { ProductId = id },
+        //        TotalReviews = product.Reviews?.Count() ?? 0,
+        //        AverageRating = (product.Reviews != null && product.Reviews.Any())
+        //                        ? product.Reviews.Average(r => r.Rating)
+        //                        : 0
+        //    };
+
+        //    return View(viewModel);
+        //}
+
+        public async Task<IActionResult> Detail(string slug) // <-- Thay 'int id' bằng 'string slug'
         {
-            var product = await _productRepo.GetProductDetailById(id);
+            if (string.IsNullOrEmpty(slug))
+            {
+                return BadRequest();
+            }
+
+            // Gọi phương thức repository MỚI
+            var product = await _productRepo.GetProductDetailBySlugAsync(slug);
+
             if (product == null) { return NotFound(); }
 
+            // Toàn bộ logic ViewModel còn lại giữ nguyên
             var viewModel = new ProductDetailViewModel
             {
                 Product = product,
-
                 Reviews = product.Reviews ?? new List<Review>(),
-
-                // Các thông tin khác...
-                NewReviewForm = new CreateReviewViewModel { ProductId = id },
+                NewReviewForm = new CreateReviewViewModel { ProductId = product.ProductID }, // Vẫn dùng ID ở đây
                 TotalReviews = product.Reviews?.Count() ?? 0,
                 AverageRating = (product.Reviews != null && product.Reviews.Any())
                                 ? product.Reviews.Average(r => r.Rating)

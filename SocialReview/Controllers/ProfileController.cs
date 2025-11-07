@@ -11,17 +11,19 @@ using System.Linq;
 
 namespace SocialReview.Controllers
 {
-    // 4. BẮT BUỘC [Authorize] (Chỉ user đã đăng nhập mới vào được)
+    
     [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserManager<User> _userManager;
-        private readonly ApplicationDbContext _context; // Hoặc IReviewRepository...
+        private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProfileController(UserManager<User> userManager, ApplicationDbContext context)
+        public ProfileController(UserManager<User> userManager, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         private int GetCurrentUserId()
@@ -272,7 +274,7 @@ namespace SocialReview.Controllers
             var user = await _userManager.FindByIdAsync(currentUserId.ToString());
             if (user == null)
             {
-                return NotFound("Không tìm thấy người dùng.");
+                return Json(new { success = false, message = "Không tìm thấy người dùng." });
             }
 
             var viewModel = new EditProfileViewModel
@@ -307,7 +309,47 @@ namespace SocialReview.Controllers
             }
 
             user.FullName = model.FullName;
-            user.UserAvatar = model.UserAvatar;
+            if (model.AvatarFile != null && model.AvatarFile.Length > 0)
+            {
+                // 1. Tạo đường dẫn thư mục (ví dụ: wwwroot/images/avatars)
+                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "images", "avatars");
+                // 2. Tạo thư mục nếu chưa tồn tại
+                Directory.CreateDirectory(uploadDir);
+
+                // 3. Tạo tên file độc nhất (dùng UserId và GUID để tránh trùng lặp)
+                string fileExtension = Path.GetExtension(model.AvatarFile.FileName);
+                string uniqueFileName = $"{user.Id}_{Guid.NewGuid()}{fileExtension}";
+
+                // 4. Đường dẫn lưu file vật lý
+                string filePath = Path.Combine(uploadDir, uniqueFileName);
+
+                // 5. Lưu file vào server
+                try
+                {
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.AvatarFile.CopyToAsync(fileStream);
+                    }
+
+                    // 6. Cập nhật URL mới cho user
+                    // (Đây là đường dẫn web mà trình duyệt có thể truy cập)
+                    user.UserAvatar = $"/images/avatars/{uniqueFileName}";
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi nếu không lưu được file
+                    ModelState.AddModelError("AvatarFile", "Lỗi khi tải lên tệp: " + ex.Message);
+                    Response.StatusCode = 400;
+                    return PartialView("_EditProfilePartial", model);
+                }
+
+                // (Tùy chọn: Bạn có thể thêm logic ở đây để xóa file avatar cũ
+                // nếu nó không phải là ảnh mặc định)
+            }
+            // Nếu model.AvatarFile == null (người dùng không tải ảnh mới),
+            // chúng ta không làm gì cả, user.UserAvatar sẽ giữ nguyên giá trị cũ.
+
+            // === KẾT THÚC THAY ĐỔI LOGIC AVATAR ===
 
             var result = await _userManager.UpdateAsync(user);
 
@@ -318,8 +360,7 @@ namespace SocialReview.Controllers
                 {
                     success = true,
                     newFullName = user.FullName,
-                    newAvatar = user.UserAvatar,
-
+                    newAvatar = user.UserAvatar, // Trả về URL mới (hoặc cũ)
                     newInitial = string.IsNullOrEmpty(user.FullName) ? "" : user.FullName.Substring(0, 1)
                 });
             }

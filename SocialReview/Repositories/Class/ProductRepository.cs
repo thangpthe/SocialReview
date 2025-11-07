@@ -144,5 +144,16 @@ namespace SocialReview.Repositories.Class
 
             return results;
         }
+        public async Task<Product> GetProductDetailBySlugAsync(string slug)
+        {
+            
+
+            return await _context.Products
+                .Include(p => p.Company) 
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.User)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Slug == slug); // <-- THAY ĐỔI CHÍNH
+        }
     }
     }

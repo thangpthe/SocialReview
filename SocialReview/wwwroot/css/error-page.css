@@ -1,0 +1,88 @@
+﻿/* Biến màu (giả định từ các file CSS khác của bạn) */
+:root {
+    --purple-700: #6A1B9A;
+    --purple-600: #8E24AA;
+    --danger-color: #EF4444;
+    --danger-bg: #FEE2E2;
+    --warning-color: #F59E0B; /* Vàng */
+    --warning-bg: #FFFBEB; /* Vàng nhạt */
+    --text-dark: #212121;
+    --text-gray: #555;
+    --bg-white: #ffffff;
+}
+
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    min-height: 60vh; /* Chiều cao tối thiểu */
+}
+
+.error-card {
+    background-color: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.error-icon {
+    font-size: 3rem; /* 48px */
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+}
+
+    /* Màu cho lỗi 404 (Không tìm thấy) */
+    .error-icon.error-404 {
+        background-color: var(--warning-bg);
+        color: var(--warning-color);
+    }
+
+    /* Màu cho lỗi 403 (Cấm) */
+    .error-icon.error-403 {
+        background-color: var(--danger-bg);
+        color: var(--danger-color);
+    }
+
+
+.error-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.75rem; /* ~text-2xl */
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.error-message {
+    color: var(--text-gray);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Style cho nút (tái sử dụng từ các file css khác nếu có) */
+.error-card .btn-primary {
+    background-color: var(--purple-700);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .error-card .btn-primary:hover {
+        background-color: var(--purple-600);
+    }

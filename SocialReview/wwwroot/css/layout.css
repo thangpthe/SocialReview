@@ -197,3 +197,164 @@ footer {
         align-self: flex-end;
     }
 }
+
+/* ========================================
+   CSS CHO USER DROPDOWN (HEADER) - V2
+   ======================================== */
+
+/* 1. Container chính, dùng để định vị menu con */
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* 2. Nút kích hoạt (dòng "Xin chào, User!") */
+.user-menu-trigger {
+    /* Kiểu dáng chung */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem; /* 8px */
+    padding: 0.625rem 0.75rem; /* 10px 12px */
+    /* Text */
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151; /* gray-700 (giống form-label) */
+    /* Tương tác */
+    background-color: transparent;
+    border: none;
+    border-radius: 8px; /* 8px (giống form-control) */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    /* Hiệu ứng khi hover nút */
+    .user-menu-trigger:hover {
+        background-color: #F9FAFB; /* gray-50 */
+    }
+
+    /* Icon chevron nhỏ */
+    .user-menu-trigger .fa-chevron-down {
+        font-size: 0.75rem; /* 12px */
+        color: #6B7280; /* gray-500 */
+        transition: transform 0.2s ease-in-out;
+    }
+
+/* Xoay icon khi hover */
+.user-menu-container:hover .user-menu-trigger .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* 3. Khung menu con (dropdown) */
+.user-menu-dropdown {
+    /* Ẩn mặc định */
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    /* Định vị tuyệt đối */
+    position: absolute;
+    right: 0;
+    top: 100%; /* Hiện ngay bên dưới nút trigger */
+    margin-top: 0.5rem; /* 8px */
+    /* Kiểu dáng */
+    background-color: white;
+    min-width: 240px;
+    border-radius: 12px; /* 12px (giống form-container) */
+    /* Dùng shadow giống form-container */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #F3F4F6; /* gray-100 */
+    z-index: 100;
+    padding: 0.5rem 0; /* 8px 0 */
+}
+
+/* 4. Hiển thị menu khi hover vào container */
+.user-menu-container:hover .user-menu-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* 5. Kiểu dáng các mục <a> bên trong dropdown */
+.user-menu-dropdown a {
+    /* Layout */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* 12px */
+    /* Kích thước */
+    width: 100%;
+    padding: 0.75rem 1rem; /* 12px 16px */
+    /* Text */
+    font-size: 0.9rem; /* 14.4px */
+    font-weight: 500;
+    color: #374151; /* gray-700 */
+    text-decoration: none;
+    white-space: nowrap;
+    /* Tương tác */
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    .user-menu-dropdown a:hover {
+        background-color: #F9FAFB; /* gray-50 */
+        color: #6A1B9A; /* Màu tím chính */
+    }
+
+    /* Icon bên trong mục <a> */
+    .user-menu-dropdown a .fa-fw {
+        width: 1.25em; /* Căn chỉnh icon */
+        color: #9CA3AF; /* gray-400 */
+        transition: color 0.2s ease;
+    }
+
+    /* Đổi màu icon khi hover */
+    .user-menu-dropdown a:hover .fa-fw {
+        color: #6A1B9A;
+    }
+
+/* 6. Thanh phân cách */
+.dropdown-divider {
+    border: 0;
+    height: 1px;
+    background-color: #F3F4F6; /* gray-100 */
+    margin: 0.5rem 0; /* 8px 0 */
+}
+
+/* 7. Kiểu dáng cho nút Đăng xuất (để giống <a>) */
+.user-menu-dropdown .dropdown-item-logout {
+    /* Reset Button */
+    background: none;
+    border: none;
+    font: inherit; /* Dùng font của layout */
+    cursor: pointer;
+    /* Layout (giống <a>) */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* 12px */
+    width: 100%;
+    padding: 0.75rem 1rem; /* 12px 16px */
+    text-align: left;
+    /* Text (giống <a> nhưng màu đỏ) */
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #E11D48; /* Màu đỏ (rose-600) */
+    white-space: nowrap;
+    /* Tương tác */
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Icon nút đăng xuất */
+.dropdown-item-logout .fa-fw {
+    width: 1.25em;
+    color: #F472B6; /* Màu hồng (rose-400) */
+    transition: color 0.2s ease;
+}
+
+/* Hiệu ứng hover cho nút Đăng xuất */
+.dropdown-item-logout:hover {
+    background-color: #FFF1F2; /* red-50 */
+    color: #BE123C; /* red-700 */
+}
+
+    .dropdown-item-logout:hover .fa-fw {
+        color: #BE123C;
+    }

@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "404 - Không tìm thấy";
+    Layout = "_Layout"; // Dùng layout chung
+}
+
+@* Gửi link CSS của trang lỗi lên Layout *@
+@section Styles {
+    <link rel="stylesheet" href="~/css/error_page.css" />
+}
+
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-icon error-404">
+            <i class="fa-solid fa-map-location-dot"></i>
+        </div>
+        <h1 class="error-title">404 - Trang không tìm thấy</h1>
+        <p class="error-message">
+            Rất tiếc, chúng tôi không thể tìm thấy trang bạn yêu cầu.
+            Có vẻ như đường dẫn đã bị hỏng hoặc trang đã bị xóa.
+        </p>
+        <a asp-controller="Home" asp-action="Index" class="btn-primary">
+            <i class="fa-solid fa-house"></i>
+            Quay về Trang chủ
+        </a>
+    </div>
+</div>

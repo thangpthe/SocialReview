@@ -86,6 +86,80 @@
                 .home-banner .btn-primary:hover {
                     background-color: #6A1B9A; /* --purple-700 */
                 }
+
+        .review-section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1d3557;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #F3E5F5;
+            padding-bottom: 0.5rem;
+        }
+
+        .review-list {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 cột */
+            gap: 1.5rem;
+        }
+
+        .review-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .review-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #eee;
+            flex-shrink: 0; /* Ngăn avatar bị co lại */
+        }
+
+        .review-content {
+            width: 100%;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-user-info {
+            font-weight: 600;
+            color: #1d3557;
+        }
+
+            .review-user-info span {
+                font-size: 0.9rem;
+                font-weight: 400;
+                color: #555;
+                margin-left: 0.5rem;
+            }
+
+        .review-rating {
+            font-size: 1.1rem;
+            color: #FFB700; /* Màu vàng sao */
+        }
+
+        .review-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-body {
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.6;
+        }
     </style>
 }
 
@@ -133,5 +207,47 @@
             </div>
         </div>
     }
+
+
+    <h2 class="review-section-title">Đánh giá gần đây</h2>
+
+    @if (Model.RecentReviews != null && Model.RecentReviews.Any())
+    {
+        <div class="review-list">
+            @foreach (var review in Model.RecentReviews)
+            {
+                <div class="review-card">
+                    <!-- Avatar người dùng -->
+                    <img src="@(string.IsNullOrEmpty(review.User?.UserAvatar) ? "https://placehold.co/50x50/eee/333?text=?" : review.User.UserAvatar)"
+                         alt="Avatar"
+                         class="review-avatar"
+                         onerror="this.onerror=null; this.src='https://placehold.co/50x50/eee/333?text=?';">
+
+                    <div class="review-content">
+                        <div class="review-header">
+                            <div class="review-user-info">
+                                @(review.User?.FullName ?? "Người dùng ẩn danh")
+                                <span>@review.CreatedAt.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="review-rating">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fa-solid fa-star @(i <= review.Rating ? "" : "fa-regular")"></i>
+                                }
+                            </div>
+                        </div>
+                        <h4 class="review-title">@review.Title</h4>
+                        <p class="review-body">@review.Content</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Chưa có bài đánh giá nào.</p>
+    }
+    <!-- === KẾT THÚC PHẦN REVIEW MỚI === -->
+
 </div>
 
