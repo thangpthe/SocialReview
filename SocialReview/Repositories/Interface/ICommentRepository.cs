@@ -7,5 +7,8 @@ namespace SocialReview.Repositories.Interface
     {
         Task AddAsync(Comment comment);
         Task<Comment?> GetByIdWithUserAsync(int id);
+        Task<Comment?> GetByIdAsync(int id);
+        Task UpdateAsync(Comment comment);
+        Task DeleteAsync(Comment comment);
     }
 }

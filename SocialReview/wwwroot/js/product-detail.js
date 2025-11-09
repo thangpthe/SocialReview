@@ -1,272 +1,18 @@
-﻿//// Chạy khi tài liệu (HTML) đã tải xong
-//document.addEventListener("DOMContentLoaded", function () {
-
-//    // Lấy token Chống giả mạo (bắt buộc)
-//    // Token này được render bởi @Html.AntiForgeryToken() trong form
-//    const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
-
-//    // Nếu không tìm thấy token, báo lỗi và dừng lại
-//    if (!tokenInput) {
-//        console.error("LỖI BẢO MẬT: Không tìm thấy __RequestVerificationToken. Hãy thêm @Html.AntiForgeryToken() vào form 'form-create-review'.");
-//        return;
-//    }
-//    const token = tokenInput.value;
-
-
-//    // --- XỬ LÝ FORM VIẾT REVIEW (AJAX) ---
-//    const reviewForm = document.getElementById('form-create-review');
-//    const reviewFormError = document.getElementById('review-form-error');
-//    const submitReviewButton = document.getElementById('btn-submit-review');
-
-//    if (reviewForm) {
-//        reviewForm.addEventListener('submit', function (e) {
-//            // 1. Ngăn form gửi đi theo cách truyền thống (tải lại trang)
-//            e.preventDefault();
-
-//            const originalButtonText = submitReviewButton.innerHTML;
-//            submitReviewButton.innerHTML = "Đang gửi...";
-//            submitReviewButton.disabled = true;
-//            reviewFormError.classList.add('hidden'); // Ẩn lỗi cũ
-
-//            // 3. Gửi dữ liệu bằng fetch (AJAX)
-//            fetch(reviewForm.action, {
-//                method: 'POST',
-//                body: new FormData(reviewForm), // Gửi dữ liệu form
-//                headers: {
-//                    // 4. Gửi token trong header
-//                    'RequestVerificationToken': token
-//                }
-//            })
-//                .then(response => {
-//                    // 5a. Nếu thành công (Server trả về 200)
-//                    if (response.ok) {
-//                        return response.text(); // Lấy "mẩu HTML" (PartialView)
-//                    }
-
-//                    // 5b. Nếu thất bại (Server trả về 400 - BadRequest)
-//                    // Cố gắng đọc JSON, nhưng chuẩn bị cho trường hợp thất bại
-//                    return response.json().catch(() => {
-//                        // Nếu server trả về lỗi 500 (HTML) hoặc lỗi không phải JSON
-//                        throw new Error("Lỗi máy chủ, không thể gửi đánh giá.");
-//                    }).then(errorData => {
-//                        // Ném lỗi (catch bên dưới sẽ bắt)
-//                        throw new Error(errorData.errors.join(', '));
-//                    });
-//                })
-//                .then(html => {
-//                    // 6. Thành công! Chèn "mẩu HTML" (review mới) vào danh sách
-//                    const reviewsList = document.querySelector('.reviews-list');
-
-//                    // Xóa "Chưa có đánh giá nào" (nếu có)
-//                    const noReviewsMsg = reviewsList.querySelector('.card.p-5.text-center');
-//                    if (noReviewsMsg) {
-//                        noReviewsMsg.remove();
-//                    }
-
-//                    // Thêm review mới vào đầu danh sách
-//                    reviewsList.insertAdjacentHTML('afterbegin', html);
-
-//                    // Xóa nội dung form
-//                    reviewForm.reset();
-//                })
-//                .catch(error => {
-//                    // 7. Thất bại! Hiển thị lỗi
-//                    // --- SỬA LỖI ---
-//                    console.error("Lỗi AJAX (Viết Review):", error.message); // 1. Log lỗi kỹ thuật cho lập trình viên
-//                    reviewFormError.textContent = "Đã xảy ra lỗi. Vui lòng thử lại sau."; // 2. Hiển thị lỗi thân thiện
-//                    reviewFormError.classList.remove('hidden');
-//                })
-//                .finally(() => {
-//                    // 8. Luôn luôn: Khôi phục nút bấm
-//                    submitReviewButton.innerHTML = originalButtonText;
-//                    submitReviewButton.disabled = false;
-//                });
-//        });
-//    }
-
-
-//    // --- XỬ LÝ TƯƠNG TÁC (DELEGATION) CHO REVIEW VÀ COMMENT ---
-//    const reviewsSection = document.getElementById('reviews');
-//    if (reviewsSection) {
-//        reviewsSection.addEventListener('click', function (e) {
-
-//            // 1. XỬ LÝ BẬT/TẮT KHU VỤC COMMENT
-//            const toggleButton = e.target.closest('.btn-toggle-comment');
-//            if (toggleButton) {
-//                e.preventDefault();
-//                const reviewId = toggleButton.dataset.reviewId;
-//                const commentSection = document.getElementById(`comment-section-${reviewId}`);
-//                if (commentSection) {
-//                    commentSection.classList.toggle('hidden');
-//                }
-//            }
-
-//            // 2. XỬ LÝ GỬI COMMENT
-//            const submitCommentButton = e.target.closest('.btn-submit-comment');
-//            if (submitCommentButton) {
-//                e.preventDefault();
-//                const commentForm = submitCommentButton.closest('.comment-form');
-//                handleCommentSubmit(commentForm, token); // Truyền token
-//            }
-
-//            // 3. XỬ LÝ GỬI REACTION (HỮU ÍCH)
-//            const reactionButton = e.target.closest('.btn-toggle-reaction');
-//            if (reactionButton) {
-//                e.preventDefault();
-//                handleReactionToggle(reactionButton, token); // Truyền token
-//            }
-//        });
-//    }
-
-//    // --- HÀM XỬ LÝ FORM VIẾT COMMENT (AJAX) ---
-//    function handleCommentSubmit(commentForm, antiForgeryToken) {
-
-//        const reviewId = commentForm.dataset.reviewId;
-//        const errorDiv = document.getElementById(`comment-error-${reviewId}`);
-//        const commentList = document.getElementById(`comment-list-${reviewId}`);
-//        const commentInput = commentForm.querySelector('input[name="Content"]');
-
-//        // (Kiểm tra xem input có rỗng không)
-//        if (!commentInput.value) {
-//            errorDiv.textContent = "Vui lòng nhập nội dung bình luận.";
-//            errorDiv.classList.remove('hidden');
-//            return;
-//        }
-
-//        errorDiv.classList.add('hidden'); // Ẩn lỗi cũ
-
-//        fetch(commentForm.action, {
-//            method: 'POST',
-//            body: new FormData(commentForm),
-//            headers: {
-//                'RequestVerificationToken': antiForgeryToken
-//            }
-//        })
-//            .then(response => {
-//                if (response.ok) {
-//                    return response.text(); // Lấy "mẩu HTML"
-//                }
-//                // Cố gắng đọc JSON, nhưng chuẩn bị cho trường hợp thất bại
-//                return response.json().catch(() => {
-//                    throw new Error("Lỗi máy chủ, không thể gửi bình luận.");
-//                }).then(errorData => {
-//                    throw new Error(errorData.errors.join(', '));
-//                });
-//            })
-//            .then(html => {
-//                // Thành công!
-//                // Xóa "Chưa có bình luận" (nếu có)
-//                const noCommentsMsg = commentList.querySelector('.no-comments');
-//                if (noCommentsMsg) {
-//                    noCommentsMsg.remove();
-//                }
-
-//                // Thêm bình luận mới vào danh sách
-//                commentList.insertAdjacentHTML('beforeend', html);
-
-//                // Xóa nội dung input
-//                commentInput.value = '';
-//            })
-//            .catch(error => {
-//                // Thất bại!
-//                // --- SỬA LỖI (Dòng bạn đã chỉ ra) ---
-//                console.error("Lỗi AJAX (Gửi Comment):", error.message); // 1. Log lỗi kỹ thuật
-//                errorDiv.textContent = "Đã xảy ra lỗi khi gửi bình luận."; // 2. Hiển thị lỗi thân thiện
-//                errorDiv.classList.remove('hidden');
-//            });
-//    }
-
-
-//    // --- HÀM MỚI: XỬ LÝ REACTION (HỮU ÍCH) ---
-//    function handleReactionToggle(reactionButton, antiForgeryToken) {
-//        const reviewId = reactionButton.dataset.reviewId;
-//        const reactionType = reactionButton.dataset.type || "Helpful";
-
-//        // Tắt nút bấm
-//        reactionButton.disabled = true;
-
-//        // Chuẩn bị dữ liệu form
-//        const formData = new FormData();
-//        formData.append('reviewId', reviewId);
-//        formData.append('reactionType', reactionType);
-
-//        // --- SỬA LỖI: Xóa dòng 'formData.append('__RequestVerificationToken'...)' ---
-
-
-//        fetch('/api/reaction/toggle', { // Gọi API mới
-//            method: 'POST',
-//            body: formData,
-
-//            // --- SỬA LỖI: Thêm khối 'headers' (giống hệt hàm Comment) ---
-//            headers: {
-//                'RequestVerificationToken': antiForgeryToken
-//            }
-//        })
-//            .then(response => {
-//                if (response.ok) {
-//                    return response.json(); // Lấy dữ liệu JSON (newCount)
-//                }
-//                if (response.status === 401) { // Lỗi chưa đăng nhập
-//                    throw new Error('Bạn cần đăng nhập để thực hiện việc này.');
-//                }
-//                throw new Error('Lỗi máy chủ khi reaction.');
-//            })
-//            .then(data => {
-//                // Thành công! Cập nhật số lượng
-//                const countSpan = reactionButton.querySelector('span');
-//                if (countSpan) {
-//                    countSpan.textContent = `(${data.newCount})`;
-//                }
-//                // TODO: Đổi màu nút nếu người dùng hiện tại đã Like
-//                reactionButton.classList.toggle('text-purple-600');
-//            })
-//            .catch(error => {
-//                // --- SỬA LỖI ---
-//                console.error('Lỗi AJAX Reaction:', error.message); // 1. Log lỗi
-//                alert("Đã xảy ra lỗi: " + error.message); // 2. Hiển thị lỗi (thân thiện hơn một chút)
-//                // (Chúng ta dùng alert ở đây vì không có div lỗi riêng cho nút reaction)
-//            })
-//            .finally(() => {
-//                // Bật lại nút bấm
-//                reactionButton.disabled = false;
-//            });
-//    }
-
-//});
-
-/**
- * product_detail.js
- * * Xử lý toàn bộ logic AJAX (JavaScript thuần) cho:
- * 1. Gửi Đánh giá (Review) mới.
- * 2. Bật/Tắt và Gửi Bình luận (Comment) mới.
- * 3. Gửi Phản ứng (Reaction - Hữu ích).
- *
- * Đã được tái cấu trúc (refactored) để tách riêng các hàm.
- */
-
-// --- BIẾN TOÀN CỤC (GLOBAL HELPERS) ---
-
-// Lấy token bảo mật từ thẻ meta (được render bởi _Layout.cshtml)
-// Cập nhật: Lấy từ form logout, giả sử nó luôn có
+﻿// Biến global để lấy Token (nếu người dùng đã đăng nhập)
 const antiForgeryTokenEl = document.querySelector('form[action="/Auth/Logout"] input[name="__RequestVerificationToken"]');
 const antiForgeryToken = antiForgeryTokenEl ? antiForgeryTokenEl.value : null;
 
-// Kiểm tra xem người dùng đã đăng nhập hay chưa (đọc từ thẻ body)
+// Biến global để kiểm tra trạng thái đăng nhập
 const isAuthenticated = document.body.dataset.isAuthenticated === 'true';
 
-/**
- * Hàm kiểm tra bảo vệ:
- * Nếu chưa đăng nhập, chuyển hướng đến trang Login.
- * @returns {boolean} - Trả về 'true' nếu đã đăng nhập (an toàn), 'false' nếu đã chuyển hướng (không an toàn).
- */
+// --- HÀM 1: KIỂM TRA BẢO VỆ CHUNG ---
 function checkAuthentication() {
+    // ... (Giữ nguyên code)
     if (!isAuthenticated) {
-        // Nếu chưa đăng nhập, chuyển hướng đến trang Login
         window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(window.location.pathname);
         return false;
     }
     if (!antiForgeryToken) {
-        // Lỗi nghiêm trọng: Trang (Layout) không render token
         console.error("LỖI BẢO MẬT: Không tìm thấy __RequestVerificationToken.");
         alert("Lỗi bảo mật, không thể thực hiện. Vui lòng tải lại trang.");
         return false;
@@ -274,94 +20,86 @@ function checkAuthentication() {
     return true;
 }
 
-/**
- * Hiển thị lỗi chung (generic) trên một ô lỗi
- * @param {HTMLElement} errorElement - Thẻ div để hiển thị lỗi.
- * @param {string} technicalError - Lỗi kỹ thuật (để log).
- * @param {string} userMessage - Lỗi thân thiện (để hiển thị).
- */
+// --- HÀM 2: HIỂN THỊ LỖI ---
 function displayError(errorElement, technicalError, userMessage) {
+    // ... (Giữ nguyên code)
     if (errorElement) {
-        console.error(technicalError); // 1. Log lỗi kỹ thuật cho lập trình viên
-        errorElement.textContent = userMessage; // 2. Hiển thị lỗi thân thiện
+        console.error(technicalError); // Log lỗi kỹ thuật
+        errorElement.textContent = userMessage; // Hiển thị lỗi thân thiện
         errorElement.classList.remove('hidden');
     } else {
-        // Fallback nếu không tìm thấy ô lỗi
         console.error(technicalError);
-        alert(userMessage);
+        alert(userMessage); // Fallback
     }
 }
 
-// --- HÀM 1: XỬ LÝ GỬI REVIEW MỚI ---
+// --- HÀM 3: GỬI REVIEW MỚI ---
 async function handleReviewSubmit(e) {
-    // 1. Ngăn form gửi đi theo cách truyền thống
+    // ... (Giữ nguyên code)
     e.preventDefault();
-    // 2. Kiểm tra bảo vệ
     if (!checkAuthentication()) return;
 
     const reviewForm = e.target;
     const reviewFormError = document.getElementById('review-form-error');
     const submitReviewButton = document.getElementById('btn-submit-review');
 
-    if (!submitReviewButton || !reviewFormError) return; // Thoát nếu thiếu phần tử
+    if (!submitReviewButton || !reviewFormError) return;
 
     const originalButtonText = submitReviewButton.innerHTML;
     submitReviewButton.innerHTML = "Đang gửi...";
     submitReviewButton.disabled = true;
-    reviewFormError.classList.add('hidden'); // Ẩn lỗi cũ
+    reviewFormError.classList.add('hidden');
 
     try {
-        // 3. Gửi dữ liệu bằng fetch (AJAX)
         const response = await fetch(reviewForm.action, {
             method: 'POST',
-            body: new FormData(reviewForm), // Gửi dữ liệu form
-            headers: {
-                'RequestVerificationToken': antiForgeryToken
-            }
+            body: new FormData(reviewForm),
+            headers: { 'RequestVerificationToken': antiForgeryToken }
         });
 
-        // 4a. Nếu thất bại (lỗi 400 - validation, 500 - server)
         if (!response.ok) {
             const errorData = await response.json().catch(() => {
-                // Nếu server trả về lỗi 500 (HTML) hoặc lỗi không phải JSON
                 throw new Error("Lỗi máy chủ, không thể gửi đánh giá.");
             });
-            throw new Error(errorData.errors.join(', '));
+            throw new Error(errorData.errors ? errorData.errors.join(', ') : "Lỗi không xác định.");
         }
 
-        // 4b. Nếu thành công (lỗi 200)
-        const html = await response.text(); // Lấy "mẩu HTML" (PartialView)
-
-        // 5. Chèn "mẩu HTML" (review mới) vào danh sách
+        const html = await response.text();
         const reviewsList = document.querySelector('.reviews-list');
 
         if (reviewsList) {
-            // Xóa "Chưa có đánh giá nào" (nếu có)
-            const noReviewsMsg = reviewsList.querySelector('.card.p-5.text-center');
+            const noReviewsMsg = reviewsList.querySelector('.card[style*="text-align: center"]');
             if (noReviewsMsg) {
                 noReviewsMsg.remove();
             }
 
-            // Thêm review mới vào đầu danh sách
             reviewsList.insertAdjacentHTML('afterbegin', html);
+            reviewForm.reset(); // Xóa form
 
-            // Xóa nội dung form
-            reviewForm.reset();
+            // (MỚI) Cập nhật số đếm review
+            const reviewCountEl = document.querySelector('#reviews .section-title');
+            if (reviewCountEl) {
+                // Trích xuất số đếm cũ và + 1
+                const countMatch = reviewCountEl.textContent.match(/\((\d+)\)/);
+                let currentCount = countMatch ? parseInt(countMatch[1]) : 0;
+                currentCount++;
+                reviewCountEl.textContent = reviewCountEl.textContent.replace(/\(\d+\)/, `(${currentCount})`);
+            }
+            // (MỚI) Xóa ảnh preview
+            document.getElementById('image-preview-container').innerHTML = '';
         }
 
     } catch (error) {
-        // 6. Thất bại! Hiển thị lỗi
         displayError(reviewFormError, `Lỗi AJAX (Viết Review): ${error.message}`, "Đã xảy ra lỗi. Vui lòng thử lại sau.");
     } finally {
-        // 7. Luôn luôn: Khôi phục nút bấm
         submitReviewButton.innerHTML = originalButtonText;
         submitReviewButton.disabled = false;
     }
 }
 
-// --- HÀM 2: XỬ LÝ GỬI COMMENT MỚI ---
+// --- HÀM 4: GỬI COMMENT MỚI ---
 async function handleCommentSubmit(commentForm) {
-    // 1. Kiểm tra bảo vệ
+    // ... (Giữ nguyên code)
     if (!checkAuthentication()) return;
 
     const reviewId = commentForm.dataset.reviewId;
@@ -369,29 +107,24 @@ async function handleCommentSubmit(commentForm) {
     const commentList = document.getElementById(`comment-list-${reviewId}`);
     const commentInput = commentForm.querySelector('input[name="Content"]');
 
-    if (!errorDiv || !commentList || !commentInput) return; // Thoát nếu thiếu
+    if (!errorDiv || !commentList || !commentInput) return;
 
-    // (Kiểm tra xem input có rỗng không)
-    if (!commentInput.value) {
+    if (!commentInput.value.trim()) {
         displayError(errorDiv, "Comment input is empty.", "Vui lòng nhập nội dung bình luận.");
         return;
     }
 
-    errorDiv.classList.add('hidden'); // Ẩn lỗi cũ
+    errorDiv.classList.add('hidden');
     const submitButton = commentForm.querySelector('.btn-submit-comment');
     if (submitButton) submitButton.disabled = true;
 
     try {
-        // 2. Gửi AJAX
         const response = await fetch(commentForm.action, {
             method: 'POST',
             body: new FormData(commentForm),
-            headers: {
-                'RequestVerificationToken': antiForgeryToken
-            }
+            headers: { 'RequestVerificationToken': antiForgeryToken }
         });
 
-        // 3a. Thất bại
         if (!response.ok) {
             const errorData = await response.json().catch(() => {
                 throw new Error("Lỗi máy chủ, không thể gửi bình luận.");
@@ -399,8 +132,7 @@ async function handleCommentSubmit(commentForm) {
             throw new Error(errorData.errors.join(', '));
         }
 
-        // 3b. Thành công
-        const html = await response.text(); // Lấy "mẩu HTML"
+        const html = await response.text();
 
         // Xóa "Chưa có bình luận" (nếu có)
         const noCommentsMsg = commentList.querySelector('.no-comments');
@@ -408,75 +140,419 @@ async function handleCommentSubmit(commentForm) {
             noCommentsMsg.remove();
         }
 
-        // Thêm bình luận mới vào danh sách
         commentList.insertAdjacentHTML('beforeend', html);
+        commentInput.value = ''; // Xóa input
 
-        // Xóa nội dung input
-        commentInput.value = '';
+        // (MỚI) Cập nhật số đếm bình luận
+        const reviewWrapper = commentForm.closest('.review-card-wrapper');
+        const commentButton = reviewWrapper.querySelector(`.btn-toggle-comment[data-review-id="${reviewId}"]`);
+        const countSpan = commentButton.querySelector('span');
+
+        let currentCount = parseInt(countSpan.textContent.replace(/[()]/g, '')) || 0;
+        currentCount++;
+        countSpan.textContent = `(${currentCount})`;
 
     } catch (error) {
-        // 4. Hiển thị lỗi
         displayError(errorDiv, `Lỗi AJAX (Gửi Comment): ${error.message}`, "Đã xảy ra lỗi khi gửi bình luận.");
     } finally {
         if (submitButton) submitButton.disabled = false;
     }
 }
 
-// --- HÀM 3: XỬ LÝ REACTION (HỮU ÍCH) ---
-async function handleReactionToggle(reactionButton) {
-    // 1. Kiểm tra bảo vệ
+// --- HÀM 5: REACTION CHO REVIEW (HỮU ÍCH / BÁO CÁO) ---
+async function handleReviewReactionToggle(reactionButton) {
+    // ... (Giữ nguyên code)
     if (!checkAuthentication()) return;
 
     const reviewId = reactionButton.dataset.reviewId;
     const reactionType = reactionButton.dataset.type || "Helpful";
 
-    reactionButton.disabled = true; // Tắt nút bấm
+    reactionButton.disabled = true;
 
-    // 2. Chuẩn bị dữ liệu
     const formData = new FormData();
     formData.append('reviewId', reviewId);
     formData.append('reactionType', reactionType);
 
     try {
-        // 3. Gửi AJAX
-        const response = await fetch('/api/reaction/toggle', { // Gọi API
+        const response = await fetch('/api/reaction/toggle', {
             method: 'POST',
             body: formData,
-            headers: {
-                'RequestVerificationToken': antiForgeryToken
-            }
+            headers: { 'RequestVerificationToken': antiForgeryToken }
         });
 
         if (!response.ok) {
             throw new Error('Lỗi máy chủ khi reaction.');
         }
 
-        const data = await response.json(); // Lấy dữ liệu JSON (newCount, userHasReacted)
+        const data = await response.json();
 
-        // 4. Thành công! Cập nhật số lượng
+        if (reactionType === 'Report') {
+            alert('Đã báo cáo đánh giá. Cảm ơn bạn!');
+            reactionButton.textContent = 'Đã báo cáo';
+            return;
+        }
+
         const countSpan = reactionButton.querySelector('span');
         if (countSpan) {
             countSpan.textContent = `(${data.newCount})`;
         }
 
-        // Đổi màu nút nếu người dùng hiện tại đã Like
-        if (data.userHasReacted) {
-            reactionButton.classList.add('active'); // Thêm class 'active' (cần CSS)
-        } else {
-            reactionButton.classList.remove('active'); // Bỏ class 'active'
-        }
+        reactionButton.classList.toggle('active', data.userHasReacted);
 
     } catch (error) {
-        // 5. Thất bại
-        console.error('Lỗi AJAX Reaction:', error.message); // 1. Log lỗi
-        alert("Đã xảy ra lỗi: " + error.message); // 2. Hiển thị lỗi
+        console.error('Lỗi AJAX Reaction:', error.message);
+        alert("Đã xảy ra lỗi: " + error.message);
     } finally {
-        reactionButton.disabled = false; // Bật lại nút bấm
+        if (reactionType !== 'Report') {
+            reactionButton.disabled = false;
+        }
+    }
+}
+
+// --- HÀM 6: REACTION CHO COMMENT (THÍCH / BÁO CÁO) ---
+async function handleCommentReactionClick(button) {
+    // ... (Giữ nguyên code)
+    if (!checkAuthentication()) return;
+
+    const commentId = button.dataset.commentId;
+    const reactionType = button.dataset.type;
+
+    button.disabled = true;
+
+    const formData = new FormData();
+    formData.append('commentId', commentId);
+    formData.append('reactionType', reactionType);
+
+    try {
+        const response = await fetch('/api/CommentReaction/toggle', {
+            method: 'POST',
+            body: formData,
+            headers: { 'RequestVerificationToken': antiForgeryToken }
+        });
+
+        if (!response.ok) throw new Error('Lỗi reaction.');
+        const data = await response.json();
+
+        if (reactionType === 'Like') {
+            button.querySelector('.like-count').textContent = data.newCount;
+            button.classList.toggle('reacted', data.userHasReacted);
+        } else if (reactionType === 'Report') {
+            alert('Đã báo cáo bình luận. Cảm ơn bạn!');
+            button.textContent = 'Đã báo cáo';
+        }
+    } catch (err) {
+        alert(err.message);
+    } finally {
+        if (reactionType !== 'Report') {
+            button.disabled = false;
+        }
+    }
+}
+
+// --- HÀM 7: XỬ LÝ SỬA REVIEW (NỘI TUYẾN) ---
+async function handleEditReviewClick(editButton) {
+    // ... (Giữ nguyên code)
+    const reviewCardWrapper = editButton.closest('.review-card-wrapper');
+    const reviewCardContent = reviewCardWrapper.querySelector('.review-card-content');
+    const reviewId = editButton.dataset.reviewId;
+
+    if (reviewCardContent.dataset.isEditing === 'true') return;
+    reviewCardContent.dataset.isEditing = 'true';
+
+    editButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+    try {
+        const response = await fetch(`/Product/GetReviewDetails?id=${reviewId}`);
+        if (!response.ok) throw new Error('Không thể lấy dữ liệu.');
+        const data = await response.json();
+
+        reviewCardContent.dataset.originalHtml = reviewCardContent.innerHTML;
+        const formHtml = createEditFormHtml(data);
+        reviewCardContent.innerHTML = formHtml;
+
+        reviewCardContent.querySelector('.form-edit-inline')
+            .addEventListener('submit', handleSaveReviewSubmit);
+
+    } catch (err) {
+        alert('Lỗi: ' + err.message);
+        editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Sửa';
+        reviewCardContent.dataset.isEditing = 'false';
+    }
+}
+
+// --- HÀM 8: LƯU REVIEW (SAU KHI SỬA) ---
+async function handleSaveReviewSubmit(e) {
+    // ... (Giữ nguyên code)
+    e.preventDefault();
+    const form = e.target;
+    const reviewCardContent = form.closest('.review-card-content');
+    const reviewId = form.querySelector('input[name="ReviewID"]').value;
+
+    const submitButton = form.querySelector('.btn-save-inline');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Đang lưu...';
+
+    const formData = new FormData(form);
+    const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+
+    try {
+        const response = await fetch('/Product/UpdateReview', {
+            method: 'POST',
+            body: formData,
+            headers: { 'RequestVerificationToken': token }
+        });
+
+        if (!response.ok) throw new Error('Lỗi khi cập nhật.');
+        const data = await response.json();
+
+        // Tạo HTML tĩnh MỚI (dựa trên data trả về và HTML cũ)
+        const originalHtml = reviewCardContent.dataset.originalHtml;
+        const newStaticHtml = createStaticReviewHtml(data, originalHtml);
+
+        reviewCardContent.innerHTML = newStaticHtml;
+        reviewCardContent.dataset.isEditing = 'false';
+        delete reviewCardContent.dataset.originalHtml;
+
+    } catch (err) {
+        alert('Lỗi: ' + err.message);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Lưu';
+    }
+}
+
+// --- HÀM 9: HỦY SỬA REVIEW ---
+function handleCancelReviewClick(cancelButton) {
+    // ... (Giữ nguyên code)
+    const reviewCardContent = cancelButton.closest('.review-card-content');
+    const originalHtml = reviewCardContent.dataset.originalHtml;
+
+    if (originalHtml) {
+        reviewCardContent.innerHTML = originalHtml;
+        reviewCardContent.dataset.isEditing = 'false';
+        delete reviewCardContent.dataset.originalHtml;
+    }
+}
+
+// --- HÀM 10: XỬ LÝ SỬA COMMENT (NỘI TUYẾN) ---
+async function handleEditCommentClick(button) {
+    // ... (Giữ nguyên code)
+    const commentCard = button.closest('.comment-card');
+    const commentBody = commentCard.querySelector('.comment-body');
+    const commentId = button.dataset.commentId;
+
+    if (commentBody.classList.contains('is-editing')) return; // Đã sửa
+    commentBody.classList.add('is-editing');
+
+    try {
+        const response = await fetch(`/Comment/GetComment?id=${commentId}`);
+        if (!response.ok) throw new Error('Không lấy được comment');
+        const data = await response.json();
+
+        // Lưu HTML gốc vào data-attribute
+        commentBody.dataset.originalHtml = commentBody.innerHTML;
+
+        commentBody.innerHTML = `
+            <form class="form-edit-comment-inline">
+                <textarea class="form-textarea-inline" required>${escapeHTML(data.content)}</textarea>
+                <div class="comment-actions">
+                    <button type="button" class="action-btn-xs btn-cancel-comment">Hủy</button>
+                    <button type="submit" class="action-btn-xs btn-save-comment">Lưu</button>
+                </div>
+            </form>
+        `;
+
+        // Gắn listener cho form mới (submit)
+        commentBody.querySelector('.form-edit-comment-inline').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await saveCommentEdit(commentId, commentBody);
+        });
+
+        // Gắn listener cho nút Hủy
+        commentBody.querySelector('.btn-cancel-comment').addEventListener('click', () => {
+            const originalHtml = commentBody.dataset.originalHtml;
+            if (originalHtml) {
+                commentBody.innerHTML = originalHtml;
+                commentBody.classList.remove('is-editing');
+            }
+        });
+
+    } catch (err) {
+        alert(err.message);
+        commentBody.classList.remove('is-editing');
+    }
+}
+
+// --- HÀM 11: LƯU COMMENT (SAU KHI SỬA) ---
+async function saveCommentEdit(commentId, commentBody) {
+    // ... (Giữ nguyên code)
+    const textarea = commentBody.querySelector('.form-textarea-inline');
+    const content = textarea.value;
+
+    const formData = new FormData();
+    formData.append('CommentID', commentId);
+    formData.append('Content', content);
+    formData.append('__RequestVerificationToken', antiForgeryToken);
+
+    try {
+        const response = await fetch('/Comment/Update', {
+            method: 'POST',
+            body: formData,
+            headers: { 'RequestVerificationToken': antiForgeryToken }
+        });
+
+        if (!response.ok) throw new Error('Lỗi khi lưu.');
+        const data = await response.json();
+
+        // Khôi phục HTML gốc và cập nhật nội dung
+        const originalHtml = commentBody.dataset.originalHtml;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(originalHtml, 'text/html');
+        doc.querySelector('.comment-content').textContent = data.newContent; // Cập nhật nội dung mới
+
+        commentBody.innerHTML = doc.body.innerHTML; // Lấy lại nội dung
+        commentBody.classList.remove('is-editing');
+
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+// === THÊM HÀM 12 MỚI ===
+// --- HÀM 12: XỬ LÝ XÓA COMMENT ---
+async function handleDeleteCommentClick(button) {
+    if (!checkAuthentication()) return;
+
+    const commentId = button.dataset.commentId;
+
+    //if (!confirm("Bạn có chắc chắn muốn xóa bình luận này không? Thao tác này không thể hoàn tác.")) {
+    //    return;
+    //}
+
+    // === BẮT ĐẦU SỬA LỖI ===
+    // 1. LẤY TẤT CẢ PHẦN TỬ CẦN THIẾT TRƯỚC
+    const commentCard = button.closest('.comment-card');
+    const reviewWrapper = button.closest('.review-card-wrapper');
+
+    if (!commentCard || !reviewWrapper) {
+        console.error('Lỗi DOM: Không tìm thấy thẻ cha khi xóa bình luận.');
+        return;
+    }
+
+    const commentButton = reviewWrapper.querySelector('.btn-toggle-comment');
+    const countSpan = commentButton ? commentButton.querySelector('span') : null;
+    // === KẾT THÚC SỬA LỖI ===
+
+    const formData = new FormData();
+    formData.append('id', commentId);
+
+    try {
+        const response = await fetch('/Comment/Delete', {
+            method: 'POST',
+            body: formData,
+            headers: { 'RequestVerificationToken': antiForgeryToken }
+        });
+
+        if (!response.ok) {
+            throw new Error('Lỗi khi xóa bình luận.');
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            // 2. Xóa khỏi giao diện
+            commentCard.remove(); // <-- Bây giờ mới xóa
+
+            // 3. Cập nhật (giảm) số đếm bình luận
+            if (countSpan) {
+                let currentCount = parseInt(countSpan.textContent.replace(/[()]/g, '')) || 0;
+                currentCount = Math.max(0, currentCount - 1); // Tránh số âm
+                countSpan.textContent = `(${currentCount})`;
+            }
+        }
+
+    } catch (err) {
+        console.error(err.message);
     }
 }
 
 
-// --- HÀM 4: CÀI ĐẶT CÁC EVENT LISTENER ---
+// --- HÀM 13: CÁC HÀM TRỢ GIÚP (HELPERS) ---
+// ... (Giữ nguyên code)
+// Helper: Tạo HTML cho form Sửa Review
+function createEditFormHtml(data) {
+    return `
+        <form class="form-edit-inline" data-review-id="${data.reviewID}">
+            <input type="hidden" name="__RequestVerificationToken" value="${antiForgeryToken}" />
+            <input type="hidden" name="ReviewID" value="${data.reviewID}" />
+            
+            <div class="form-group">
+                <label class="form-label">Đánh giá *</label>
+                <select name="Rating" class="form-select" required>
+                    <option value="5" ${data.rating == 5 ? 'selected' : ''}>5 sao - Rất hài lòng</option>
+                    <option value="4" ${data.rating == 4 ? 'selected' : ''}>4 sao - Hài lòng</option>
+                    <option value="3" ${data.rating == 3 ? 'selected' : ''}>3 sao - Bình thường</option>
+                    <option value="2" ${data.rating == 2 ? 'selected' : ''}>2 sao - Không hài lòng</option>
+                    <option value="1" ${data.rating == 1 ? 'selected' : ''}>1 sao - Rất tệ</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tiêu đề *</label>
+                <input name="Title" class="form-input" required value="${escapeHTML(data.title)}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nội dung *</label>
+                <textarea name="Content" class="form-textarea" rows="4" required>${escapeHTML(data.content)}</textarea>
+            </div>
+            
+            <div class="review-actions-edit">
+                <button type="button" class="action-btn btn-cancel-inline">Hủy</button>
+                <button type="submit" class="action-btn btn-save-inline">Lưu</button>
+            </div>
+        </form>
+    `;
+}
+
+// Helper: Tạo lại HTML Tĩnh (sau khi lưu)
+function createStaticReviewHtml(data, originalHtml) {
+    const parser = new DOMParser();
+    const oldDoc = parser.parseFromString(originalHtml, 'text/html');
+    const headerHtml = oldDoc.querySelector('.review-header') ? oldDoc.querySelector('.review-header').outerHTML : '';
+    const actionsHtml = oldDoc.querySelector('.review-actions') ? oldDoc.querySelector('.review-actions').outerHTML : '';
+    const reviewImageHtml = oldDoc.querySelector('.review-image-gallery') ? oldDoc.querySelector('.review-image-gallery').outerHTML : '';
+
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        starsHtml += `<i class="${i <= data.newRating ? 'fa-solid fa-star' : 'fa-regular fa-star'}"></i>`;
+    }
+
+    return `
+        ${headerHtml}
+        <div class="star-rating" title="${data.newRating} sao" style="margin-bottom: 0.5rem;">
+            ${starsHtml}
+        </div>
+        <h4>${escapeHTML(data.newTitle)}</h4>
+        <p>${escapeHTML(data.newContent)}</p>
+        ${reviewImageHtml}
+        ${actionsHtml}
+    `;
+}
+
+// Helper: Chống XSS (Cross-Site Scripting)
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, function (m) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[m];
+    });
+}
+
+
+// --- HÀM 14: CÀI ĐẶT CÁC EVENT LISTENER CHÍNH ---
+// (Đổi tên hàm 13 cũ thành 14)
 function setupEventListeners() {
 
     // 1. Gắn Listener cho Form Viết Review (nếu nó tồn tại)
@@ -485,11 +561,35 @@ function setupEventListeners() {
         reviewForm.addEventListener('submit', handleReviewSubmit);
     }
 
-    // 2. Gắn Listener "cha" cho toàn bộ trang (Event Delegation)
-    // (Dùng 'document' để bắt sự kiện ở cả Trang chủ và Trang chi tiết)
+    // 2. Gắn Listener cho Xem trước ảnh (nếu tồn tại)
+    const imageUpload = document.getElementById('review-image-upload');
+    const previewContainer = document.getElementById('image-preview-container');
+
+    if (imageUpload && previewContainer) {
+        // ... (Giữ nguyên code)
+        imageUpload.addEventListener('change', function () {
+            previewContainer.innerHTML = ''; // Xóa preview cũ
+            if (this.files) {
+                Array.from(this.files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.classList.add('image-preview-item');
+                            previewContainer.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    }
+
+    // 3. Gắn Listener "cha" cho toàn bộ trang (Event Delegation)
     document.addEventListener('click', function (e) {
 
-        // 2a. XỬ LÝ BẬT/TẮT KHU VỤC COMMENT
+        // 3a. BẬT/TẮT KHU VỤC COMMENT
         const toggleButton = e.target.closest('.btn-toggle-comment');
         if (toggleButton) {
             e.preventDefault();
@@ -498,35 +598,70 @@ function setupEventListeners() {
             if (commentSection) {
                 commentSection.classList.toggle('hidden');
             }
-            return; // Dừng lại
+            return;
         }
 
-        // 2b. XỬ LÝ GỬI COMMENT
+        // 3b. GỬI COMMENT
         const submitCommentButton = e.target.closest('.btn-submit-comment');
         if (submitCommentButton) {
             e.preventDefault();
             const commentForm = submitCommentButton.closest('.comment-form');
-
-            // --- SỬA LỖI (THÊM CÂU LỆNH BẢO VỆ) ---
-            // Kiểm tra xem commentForm có tồn tại không trước khi gọi
             if (commentForm) {
-                handleCommentSubmit(commentForm); // Token đã ở global
-            } else {
-                console.error("Lỗi HTML: Nút .btn-submit-comment không nằm trong .comment-form");
+                handleCommentSubmit(commentForm);
             }
-            return; // Dừng lại
+            return;
         }
 
-        // 2c. XỬ LÝ GỬI REACTION (HỮU ÍCH)
-        const reactionButton = e.target.closest('.btn-toggle-reaction');
-        if (reactionButton) {
+        // 3c. REACTION CHO REVIEW (HỮU ÍCH / BÁO CÁO)
+        const reviewReactionButton = e.target.closest('.btn-toggle-reaction');
+        if (reviewReactionButton) {
             e.preventDefault();
-            handleReactionToggle(reactionButton); // Token đã ở global
-            return; // Dừng lại
+            handleReviewReactionToggle(reviewReactionButton);
+            return;
+        }
+
+        // 3d. SỬA REVIEW (Bấm nút "Sửa")
+        const editReviewButton = e.target.closest('.btn-edit-review');
+        if (editReviewButton) {
+            e.preventDefault();
+            handleEditReviewClick(editReviewButton);
+            return;
+        }
+
+        // 3e. HỦY SỬA REVIEW (Bấm nút "Hủy")
+        const cancelReviewButton = e.target.closest('.btn-cancel-inline');
+        if (cancelReviewButton) {
+            e.preventDefault();
+            handleCancelReviewClick(cancelReviewButton);
+            return;
+        }
+
+        // 3f. SỬA COMMENT (Bấm nút "Sửa")
+        const editCommentButton = e.target.closest('.btn-edit-comment');
+        if (editCommentButton) {
+            e.preventDefault();
+            handleEditCommentClick(editCommentButton);
+            return;
+        }
+
+        // 3g. REACTION CHO COMMENT (THÍCH / BÁO CÁO)
+        const commentReactionButton = e.target.closest('.btn-react-comment');
+        if (commentReactionButton) {
+            e.preventDefault();
+            handleCommentReactionClick(commentReactionButton);
+            return;
+        }
+
+        // === THÊM KHỐI 3h MỚI ===
+        // 3h. XÓA COMMENT (Bấm nút "Xóa")
+        const deleteCommentButton = e.target.closest('.btn-delete-comment');
+        if (deleteCommentButton) {
+            e.preventDefault();
+            handleDeleteCommentClick(deleteCommentButton);
+            return;
         }
     });
 }
 
 // --- ĐIỂM BẮT ĐẦU: Chạy hàm cài đặt khi trang tải xong ---
 document.addEventListener("DOMContentLoaded", setupEventListeners);
-

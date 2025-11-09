@@ -25,5 +25,23 @@ namespace SocialReview.Repositories.Class
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(c => c.CommentID == id);
         }
+
+        public async Task UpdateAsync(Comment comment)
+        {
+            _context.Comments.Update(comment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Comment?> GetByIdAsync(int id)
+        {
+            // Hàm này chỉ lấy, không cần include User
+            return await _context.Comments.FindAsync(id);
+        }
+
+        public async Task DeleteAsync(Comment comment)
+        {
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+        }
     }
 }

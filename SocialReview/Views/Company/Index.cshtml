@@ -57,7 +57,7 @@
                 {
                     @foreach (var product in Model.CompanyProducts)
                     {
-                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="card product-card">
+                        <a asp-controller="Product" asp-action="Detail" asp-route-slug="@product.Slug" class="card product-card">
                             <img src="@product.ProductImage" alt="@product.ProductName">
                             <div class="product-info">
                                 <h4>@product.ProductName</h4>

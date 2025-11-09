@@ -1422,3 +1422,261 @@ h1, h2, h3, h4, h5, h6, .font-poppins {
 .font-semibold {
     font-weight: 600;
 }
+
+.review-image-gallery {
+    display: grid;
+    /* Tạo các cột tự động:
+      - auto-fill: Tự động lấp đầy không gian.
+      - minmax(80px, 1fr): Mỗi cột rộng TỐI THIỂU 80px,
+        nhưng có thể giãn ra (1fr) để lấp đầy không gian.
+    */
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem; /* 8px - Khoảng cách giữa các ảnh */
+
+    margin-top: 1rem; /* 16px - Khoảng cách với nội dung review */
+    margin-bottom: 0.5rem; /* 8px - Khoảng cách với nút actions */
+}
+
+/* 2. Ảnh thumbnail (bên trong thẻ <a>) */
+.review-thumbnail {
+    /* Kích thước */
+    width: 100%;
+    height: 80px; /* Chiều cao cố định */
+    /* Hiển thị */
+    object-fit: cover; /* QUAN TRỌNG: Ngăn ảnh bị méo/co dãn */
+    border-radius: 8px; /* Bo góc */
+    border: 1px solid #E5E7EB; /* Viền xám nhạt */
+    /* Tương tác */
+    cursor: pointer;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* 3. Hiệu ứng khi di chuột vào thẻ <a> */
+.review-image-gallery a:hover .review-thumbnail {
+    opacity: 0.8;
+    border-color: #D1D5DB;
+}
+
+/* ========================================
+   CSS CHO FORM SỬA NỘI TUYẾN (INLINE EDIT)
+   ======================================== */
+
+/* Container của form */
+.form-edit-inline {
+    background-color: #F9FAFB; /* Nền xám nhạt */
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+    margin-top: 0.5rem;
+}
+
+    /* Các trường input trong form nội tuyến */
+    .form-edit-inline .form-group {
+        margin-bottom: 0.75rem;
+    }
+
+    .form-edit-inline .form-label {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+        color: #6B7280;
+    }
+
+    .form-edit-inline .form-input,
+    .form-edit-inline .form-select,
+    .form-edit-inline .form-textarea {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        background-color: white;
+    }
+
+/* Khu vực nút hành động (Lưu/Hủy) */
+.review-actions-edit {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #E5E7EB;
+}
+
+    /* Nút chung cho form sửa */
+    .review-actions-edit .action-btn {
+        padding: 0.4rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+
+    /* Nút "Lưu" */
+    .review-actions-edit .btn-save-inline {
+        background-color: #6A1B9A; /* Màu tím chính */
+        color: white;
+    }
+
+        .review-actions-edit .btn-save-inline:hover {
+            background-color: #581c87; /* Tím đậm hơn */
+        }
+
+        .review-actions-edit .btn-save-inline:disabled {
+            background-color: #9CA3AF;
+            cursor: not-allowed;
+        }
+
+    /* Nút "Hủy" */
+    .review-actions-edit .btn-cancel-inline {
+        background-color: white;
+        color: #374151;
+        border-color: #D1D5DB;
+    }
+
+        .review-actions-edit .btn-cancel-inline:hover {
+            background-color: #F3F4F6;
+            border-color: #9CA3AF;
+        }
+
+
+
+/* ========================================
+   CSS CHO COMMENT ACTIONS
+   ======================================== */
+
+/* Khu vực action bên dưới comment */
+.comment-actions {
+    display: flex;
+    gap: 0.75rem; /* 12px */
+    margin-top: 0.5rem; /* 8px */
+    padding-top: 0.5rem;
+    border-top: 1px solid #f3f4f6; /* Viền mỏng */
+}
+
+/* Nút bấm nhỏ (Like, Sửa, Báo cáo) */
+.action-btn-xs {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.8rem; /* 12.8px */
+    font-weight: 600;
+    color: #6b7280; /* gray-500 */
+    transition: color 0.2s ease;
+}
+
+    .action-btn-xs:hover {
+        color: #111827; /* gray-900 */
+    }
+
+    /* Nút đã "reacted" (ví dụ: đã Like) */
+    .action-btn-xs.reacted {
+        color: #6A1B9A; /* Màu tím chính */
+        font-weight: 700;
+    }
+
+        .action-btn-xs.reacted .fa-thumbs-up {
+            font-weight: 900; /* Solid */
+        }
+
+/* Form Sửa nội tuyến */
+.form-edit-comment-inline {
+    margin-top: -0.25rem;
+}
+
+/* Textarea khi sửa */
+.form-textarea-inline {
+    width: 100%;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    min-height: 60px;
+    margin-bottom: 0.5rem;
+}
+
+    .form-textarea-inline:focus {
+        outline: none;
+        border-color: #6A1B9A;
+        box-shadow: 0 0 0 2px #E1BEE7;
+    }
+
+/* Nút Lưu/Hủy trong form sửa */
+.form-edit-comment-inline .comment-actions {
+    border-top: none;
+    padding-top: 0;
+    justify-content: flex-end; /* Căn phải */
+}
+
+/* ========================================
+   CSS CHO COMMENT ACTIONS
+   ======================================== */
+
+/* Khu vực action bên dưới comment */
+.comment-actions {
+    display: flex;
+    gap: 0.75rem; /* 12px */
+    margin-top: 0.5rem; /* 8px */
+    padding-top: 0.5rem;
+    border-top: 1px solid #f3f4f6; /* Viền mỏng */
+}
+
+/* Nút bấm nhỏ (Like, Sửa, Báo cáo) */
+.action-btn-xs {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.8rem; /* 12.8px */
+    font-weight: 600;
+    color: #6b7280; /* gray-500 */
+    transition: color 0.2s ease;
+}
+
+    .action-btn-xs:hover {
+        color: #111827; /* gray-900 */
+    }
+
+    /* Nút đã "reacted" (ví dụ: đã Like) */
+    .action-btn-xs.reacted {
+        color: #6A1B9A; /* Màu tím chính */
+        font-weight: 700;
+    }
+
+        .action-btn-xs.reacted .fa-thumbs-up {
+            font-weight: 900; /* Solid */
+        }
+
+/* Form Sửa nội tuyến */
+.form-edit-comment-inline {
+    margin-top: -0.25rem;
+}
+
+/* Textarea khi sửa */
+.form-textarea-inline {
+    width: 100%;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    min-height: 60px;
+    margin-bottom: 0.5rem;
+}
+
+    .form-textarea-inline:focus {
+        outline: none;
+        border-color: #6A1B9A;
+        box-shadow: 0 0 0 2px #E1BEE7;
+    }
+
+/* Nút Lưu/Hủy trong form sửa */
+.form-edit-comment-inline .comment-actions {
+    border-top: none;
+    padding-top: 0;
+    justify-content: flex-end; /* Căn phải */
+}

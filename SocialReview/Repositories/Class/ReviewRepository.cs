@@ -19,6 +19,17 @@ namespace SocialReview.Repositories.Class
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Review?> GetByIdAsync(int id)
+        {
+            return await _context.Reviews
+                .AsNoTracking() // Tối ưu hóa (chỉ đọc)
+                .Include(r => r.User) // Tải User (để lấy Tên, Avatar)
+                .Include(r => r.Product) // Tải Product (để lấy Tên Sản phẩm)
+                .Include(r => r.Comments) // Tải Comments (để đếm)
+                .Include(r => r.Reactions) // Tải Reactions (để đếm)
+                .FirstOrDefaultAsync(r => r.ReviewID == id);
+        }
+
         public async Task<IEnumerable<Review>> GetLatestReviewsAsync(int count)
         {
             // Đây là một truy vấn "sâu" (deep)
@@ -32,6 +43,14 @@ namespace SocialReview.Repositories.Class
                 .Include(r => r.Comments) // Tải Comments (để đếm)
                 .Include(r => r.Reactions) // Tải Reactions (để đếm)
                 .ToListAsync();
+        }
+
+        public async Task UpdateAsync(Review reviewToUpdate)
+        {
+            _context.Reviews.Update(reviewToUpdate);
+
+            // Lưu thay đổi vào DB
+            await _context.SaveChangesAsync();
         }
     }
 }

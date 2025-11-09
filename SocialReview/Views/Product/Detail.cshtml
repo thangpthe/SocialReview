@@ -1,15 +1,16 @@
-﻿@model SocialReview.ViewModels.ProductDetailViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@model SocialReview.ViewModels.ProductDetailViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject UserManager<User> UserManager
 @{
     Layout = "_Layout";
-    ViewData["Title"] = Model.Product.ProductName; // Tốt cho SEO
+    ViewData["Title"] = Model.Product.ProductName; 
+    var currentUserId = UserManager.GetUserId(User);
 }
 @section Styles {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/css/site.css" />
     <link rel="stylesheet" href="~/css/product_detail.css" />
 }
@@ -101,6 +102,14 @@
 
                                 <h4>@review.Title</h4>
                                 <p>@review.Content</p>
+                                @if (!string.IsNullOrEmpty(review.Image))
+                                {
+                                    <div class="review-image-gallery">
+                                        <a href="@review.Image" target="_blank">
+                                            <img src="@review.Image" alt="Ảnh đánh giá" class="review-thumbnail" />
+                                        </a>
+                                    </div>
+                                }
 
                                 <div class="review-actions">
                                     <button class="action-btn btn-toggle-reaction"
@@ -109,7 +118,13 @@
                                         <i class="fa-regular fa-thumbs-up"></i>
                                         Hữu ích <span>(@(review.Reactions?.Count(r => r.Type == "Helpful") ?? 0))</span>
                                     </button>
-
+                                    @if (currentUserId == review.UserId.ToString())
+                                    {
+                                        <button class="action-btn btn-edit-review"
+                                                data-review-id="@review.ReviewID">
+                                            <i class="fa-solid fa-pen-to-square"></i> Sửa
+                                        </button>
+                                    }
                                     <button class="action-btn btn-toggle-comment" data-review-id="@review.ReviewID">
                                         <i class="fa-regular fa-comment"></i>
                                         Bình luận <span>(@(review.Comments?.Count ?? 0))</span>
@@ -172,7 +187,7 @@
 
             <form id="form-create-review"
                   asp-controller="Product" asp-action="CreateReview" method="post"
-                  class="review-form">
+                  class="review-form" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
 
                 <div id="review-form-error" class="form-error-message hidden"></div>
@@ -181,7 +196,7 @@
 
                 <div class="form-group">
                     <label asp-for="NewReviewForm.Title" class="form-label">Tiêu đề đánh giá *</label>
-                    <input asp-for="NewReviewForm.Title" class="form-input" placeholder="Ví dụ: Dịch vụ tuyệt vời!" required>
+                    <input asp-for="NewReviewForm.Title" class="form-input" placeholder="" required>
                     <span asp-validation-for="NewReviewForm.Title" class="field-validation-error"></span>
                 </div>
 
@@ -204,6 +219,17 @@
                     <span asp-validation-for="NewReviewForm.Content" class="field-validation-error"></span>
                 </div>
 
+                <div class="form-group">
+                    <label asp-for="NewReviewForm.ImageFile" class="form-label">Thêm ảnh (Tùy chọn)</label>
+                    @* Đặt tên asp-for khớp với ViewModel: NewReviewForm.ImageFiles *@
+                    <input type="file" asp-for="NewReviewForm.ImageFile" class="form-input"
+                           accept="image/png, image/jpeg" 
+                           id="review-image-upload" />
+
+                    @* (Tùy chọn) Thêm khu vực xem trước ảnh *@
+                    <div id="image-preview-container" class="image-preview-container"></div>
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" id="btn-submit-review" class="btn-primary">Gửi đánh giá</button>
                 </div>
@@ -212,6 +238,7 @@
     </section>
 
 </main>
+
 
 
 @section Scripts {

@@ -7,5 +7,7 @@ namespace SocialReview.Repositories.Interface
         Task AddAsync(Review review);
 
         Task<IEnumerable<Review>> GetLatestReviewsAsync(int count);
+        Task<Review?> GetByIdAsync(int id);
+        Task UpdateAsync(Review reviewToUpdate);
     }
 }

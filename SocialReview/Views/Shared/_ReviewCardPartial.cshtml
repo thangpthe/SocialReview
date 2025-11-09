@@ -36,8 +36,7 @@
                 }
             </div>
 
-            @* Hiển thị "Về sản phẩm: ..." CHỈ KHI Ở TRANG CHỦ *@
-            @* (Kiểm tra xem ViewContext có phải là trang Product/Detail không) *@
+           
             @if (ViewContext.RouteData.Values["controller"]?.ToString() != "Product")
             {
                 <p class="product-name-link">

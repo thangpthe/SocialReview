@@ -23,6 +23,7 @@ namespace SocialReview.Models
 
         // Navigation
         public Review Review { get; set; }
+        public virtual ICollection<CommentReaction> Reactions { get; set; }
 
 
 

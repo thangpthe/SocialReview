@@ -56,5 +56,75 @@ namespace SocialReview.Controllers
         {
             return View();
         }
+
+        // ... (Constructor)
+
+        // [HttpPost] Create (giữ nguyên)
+        // ...
+
+        // === THÊM 2 ACTION SAU ĐỂ SỬA ===
+
+        [HttpGet]
+        public async Task<IActionResult> GetComment(int id)
+        {
+            var comment = await _commentRepo.GetByIdAsync(id); // Dùng hàm mới
+            if (comment == null) return NotFound();
+
+            // KIỂM TRA QUYỀN SỞ HỮU
+            if (comment.UserId.ToString() != _userManager.GetUserId(User))
+            {
+                return Forbid();
+            }
+
+            return Ok(new { content = comment.CommentContent });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update([FromForm] int CommentID, [FromForm] string Content)
+        {
+            if (string.IsNullOrWhiteSpace(Content))
+            {
+                return BadRequest(new { errors = new[] { "Nội dung không được rỗng." } });
+            }
+
+            var commentToUpdate = await _commentRepo.GetByIdAsync(CommentID);
+            if (commentToUpdate == null) return NotFound();
+
+            // KIỂM TRA QUYỀN SỞ HỮU
+            if (commentToUpdate.UserId.ToString() != _userManager.GetUserId(User))
+            {
+                return Forbid();
+            }
+
+            commentToUpdate.CommentContent = Content;
+            await _commentRepo.UpdateAsync(commentToUpdate);
+
+            return Ok(new { success = true, newContent = commentToUpdate.CommentContent });
+        }
+
+       
+
+        // === THÊM ACTION MỚI ĐỂ XÓA ===
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete([FromForm] int id)
+        {
+            var commentToDelete = await _commentRepo.GetByIdAsync(id);
+            if (commentToDelete == null)
+            {
+                return NotFound();
+            }
+
+            // KIỂM TRA QUYỀN SỞ HỮU
+            if (commentToDelete.UserId.ToString() != _userManager.GetUserId(User))
+            {
+                return Forbid(); // Lỗi 403
+            }
+
+            await _commentRepo.DeleteAsync(commentToDelete);
+
+            return Ok(new { success = true, message = "Đã xóa bình luận." });
+        }
     }
 }

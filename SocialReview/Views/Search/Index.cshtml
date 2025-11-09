@@ -43,7 +43,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach (var product in Model)
                 {
-                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="card product-card-link">
+                    <a asp-controller="Product" asp-action="Detail" asp-route-slug="@product.Slug" class="card product-card-link">
                         <img src="@product.ProductImage" alt="@product.ProductName" class="w-full h-40 object-cover">
                         <div class="p-4">
                             <h4 class="font-semibold mb-1">@product.ProductName</h4>

@@ -18,7 +18,7 @@ namespace SocialReview.Data
         public DbSet<Report> Reports { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
 
-
+        public DbSet<CommentReaction> CommentReactions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -70,6 +70,18 @@ namespace SocialReview.Data
                 .WithMany(c=>c.Reactions)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CommentReaction>()
+                .HasOne(cr => cr.User) 
+                .WithMany()          
+                .HasForeignKey(cr => cr.UserId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<CommentReaction>()
+                .HasOne(cr => cr.Comment) 
+                .WithMany(c => c.Reactions) 
+                .HasForeignKey(cr => cr.CommentID)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

@@ -29,6 +29,8 @@ builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IAdminReviewRepository, AdminReviewRepository>();
+//builder.Services.AddScoped<IComme, ReportRepository>();
+builder.Services.AddScoped<ICommentReactionRepository, CommentReactionRepository>();
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
     options.SignIn.RequireConfirmedEmail = false;

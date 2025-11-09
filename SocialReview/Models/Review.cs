@@ -32,7 +32,7 @@ namespace SocialReview.Models
         [Range(1, 5)]
         public int Rating { get; set; }
 
-        [StringLength(255)]
+        [StringLength(1000)]
         public string? Image { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
