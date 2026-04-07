@@ -1,0 +1,79 @@
+﻿@model SocialReview.ViewModels.CompanyViewModel
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ Doanh nghiệp - Trustify</title>
+
+    <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css"/>
+
+    @* <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet"> *@
+
+    <link href="~/css/company.css" rel="stylesheet" />
+</head>
+<body>
+    <main class="container">
+
+        <section class="card company-header">
+            <div class="company-logo">
+                <img src="@Model.CompanyProfile.Logo" alt="@Model.CompanyProfile.CompanyName">
+            </div>
+
+            <div class="company-info">
+                <h1 class="font-poppins">@Model.CompanyProfile.CompanyName</h1>
+                <p class="industry">@Model.CompanyProfile.Industry</p>
+                <p class="description">
+                    @Model.CompanyProfile.CompanyDescription
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Thông tin liên hệ</h2>
+            <div class="card contact-grid">
+
+                <div class="contact-item">
+                    <h4>Email liên hệ</h4>
+                    <p>@Model.CompanyProfile.ContactEmail</p>
+                </div>
+                <div class="contact-item">
+                    <h4>Số điện thoại</h4>
+                    <p>@Model.CompanyProfile.Phone</p>
+                </div>
+                <div class="contact-item">
+                    <h4>Website</h4>
+                    <a href="@Model.CompanyProfile.Website" target="_blank">@Model.CompanyProfile.Website</a>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Sản phẩm / Dịch vụ nổi bật</h2>
+            <div class="product-grid">
+                @if (Model.CompanyProducts != null && Model.CompanyProducts.Any())
+                {
+                    @foreach (var product in Model.CompanyProducts)
+                    {
+                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="card product-card">
+                            <img src="@product.ProductImage" alt="@product.ProductName">
+                            <div class="product-info">
+                                <h4>@product.ProductName</h4>
+                                <p class="type">@product.ProductType</p>
+                                <p class="description">@product.ProductDescription</p>
+                                <span class="link">Xem chi tiết &rarr;</span>
+                            </div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <p class="empty-text">Doanh nghiệp này chưa có sản phẩm nào.</p>
+                }
+            </div>
+        </section>
+    </main>
+</body>
+</html>

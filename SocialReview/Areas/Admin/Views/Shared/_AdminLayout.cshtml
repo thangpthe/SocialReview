@@ -1,0 +1,92 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>@ViewData["Title"] - Trustify Admin</title>
+
+    <link rel="icon" href="~/images/logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" />
+
+    <!-- CSS chính -->
+    <link rel="stylesheet" href="~/css/admin-layout.css" />
+    <link rel="stylesheet" href="~/css/admin-utilities.css" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">
+                Trustify
+                <span class="sidebar-subtitle">Admin</span>
+            </h1>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a asp-area="Admin" asp-controller="AdminDashboard" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-tachometer-alt"></i> <span>Tổng quan</span>
+            </a>
+            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-users"></i> <span>Quản lý User</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-building"></i> <span>Quản lý Doanh nghiệp</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-box"></i> <span>Quản lý Sản phẩm</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Review" asp-action="Reviews" class="sidebar-link">
+                <i class="fa-solid fa-comment"></i> <span>Quản lý Review</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Review" asp-action="Comments" class="sidebar-link">
+                <i class="fa-solid fa-comments"></i> <span>Quản lý Comment</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Report" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-flag"></i> <span>Xem Báo cáo</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Setting" asp-action="Index" class="sidebar-link">
+                <i class="fa-solid fa-cog"></i> <span>Cài đặt</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <form asp-area="" asp-controller="Auth" asp-action="Logout" method="POST" id="logout-form">
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="sidebar-link sidebar-link-logout">
+                    <i class="fa-solid fa-sign-out-alt"></i> <span>Đăng xuất</span>
+                </a>
+            </form>
+        </div>
+    </aside>
+
+    <div id="overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <main class="main-content">
+        <div class="main-content-header">
+            <h2 id="page-title">@ViewData["Title"]</h2>
+            <button class="sidebar-toggle-button" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        @RenderBody()
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+        // Tự động đóng sidebar trên mobile khi click link
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) toggleSidebar();
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

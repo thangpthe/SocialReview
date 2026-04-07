@@ -1,0 +1,18 @@
+﻿@model SocialReview.Models.Product
+
+<!--
+    File này định nghĩa HTML cho MỘT HÀNG trong bảng sản phẩm.
+    Nó được dùng bởi cả 'Index.cshtml' (khi tải trang)
+    và 'createRowHtml' (trong JavaScript AJAX).
+-->
+<tr id="product-row-@Model.ProductID">
+    <td class="font-medium">@Model.ProductName</td>
+    <td>@Model.ProductPrice</td>
+    @* <td>@Model.CreatedAt.ToString("dd/MM/yyyy")</td> *@
+    <td class="space-x-3">
+        <!-- Nút Sửa (AJAX) -->
+        <button type="button" onclick="openEditModal(@Model.ProductID)" class="text-blue-600 hover:underline text-sm">Sửa</button>
+        <!-- Nút Xóa (AJAX) -->
+        <button type="button" onclick="deleteProduct(@Model.ProductID)" class="text-red-600 hover:underline text-sm">Xóa</button>
+    </td>
+</tr>

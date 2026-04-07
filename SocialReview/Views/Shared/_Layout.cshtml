@@ -1,0 +1,99 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Trustify</title>
+
+    <!-- SEO Meta -->
+    <meta name="description" content="Trustify - Nền tảng đánh giá sản phẩm và dịch vụ trung thực giúp bạn đưa ra quyết định thông minh." />
+    <meta name="keywords" content="Trustify, review, đánh giá, sản phẩm, dịch vụ, công ty" />
+    <meta name="author" content="Trustify Team" />
+
+    <link rel="icon" href="~/images/logo.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" rel="stylesheet">
+    @* <script src="https://cdn.tailwindcss.com"></script> *@
+
+    @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="/css/site.css"/>
+    <!-- Custom CSS SAU (để override Tailwind) -->
+    <link rel="stylesheet" href="~/css/layout.css" />
+</head>
+<body data-is-authenticated="@(User.Identity.IsAuthenticated.ToString().ToLower())">
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="nav-left">
+                    <a class="brand" asp-controller="Home" asp-action="Index">Trustify</a>
+                    <form class="search-bar" asp-controller="Search" asp-action="Index" method="get">
+                        <input type="text" name="query" placeholder="Tìm kiếm sản phẩm, dịch vụ..." />
+                        <!-- Bọc icon trong button submit -->
+                        <button type="submit" class="search-submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="nav-right">
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Company"))
+                        {
+                            <a class="nav-greeting" asp-controller="Company" asp-action="Index">
+                                Xin chào, <strong>@User.Identity.Name</strong>!
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="nav-greeting" asp-controller="Profile" asp-action="Index">
+                                <!-- Trỏ đến trang Profile (Views/User/Profile.cshtml) -->
+                                Xin chào, <strong>@User.Identity.Name</strong>!
+                            </a>
+                        }
+                        <form asp-controller="Auth" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-logout">Đăng xuất</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn-login" asp-controller="Auth" asp-action="Login">Đăng nhập</a>
+                        <a class="btn-signup" asp-controller="Auth" asp-action="Register">Đăng ký</a>
+                    }
+
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main role="main" class="container">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year Trustify. All rights reserved.</p>
+            <nav>
+                <ul>
+                    <!-- Bạn sẽ cần tạo các Action/View cho các trang này (ví dụ: trong HomeController) -->
+                    <li><a asp-controller="Home" asp-action="About">Giới thiệu</a></li>
+                    <li><a asp-controller="Home" asp-action="Privacy">Chính sách Bảo mật</a></li>
+                    <li><a asp-controller="Home" asp-action="Terms">Điều khoản Dịch vụ</a></li>
+                    <li><a asp-controller="Home" asp-action="Contact">Liên hệ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    @* <script src="~/js/product-detail.js" asp-append-version="true"></script> *@
+
+    <!-- 4. Chỗ cho các trang con (như Product/Detail) thêm script (nếu cần) -->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,291 @@
+﻿@model SocialReview.ViewModels.EditReviewViewModel
+@{
+    ViewData["Title"] = "Chỉnh sửa review";
+}
+
+<style>
+    .edit-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .back-link {
+        color: #8b5cf6;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        font-weight: 500;
+    }
+
+        .back-link:hover {
+            color: #7c3aed;
+        }
+
+    .edit-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #8b5cf6;
+        margin-bottom: 2rem;
+    }
+
+    .product-info {
+        background: #f3f4f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid #8b5cf6;
+    }
+
+    .product-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 0.25rem;
+    }
+
+    .product-name {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-input, .form-textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.3s;
+    }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 150px;
+        font-family: inherit;
+    }
+
+    .error-message {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .rating-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .rating-stars {
+        display: flex;
+        gap: 0.25rem;
+    }
+
+        .rating-stars i {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .rating-stars i.far {
+                color: #d1d5db;
+            }
+
+            .rating-stars i.fas {
+                color: #fbbf24;
+            }
+
+            .rating-stars i:hover {
+                transform: scale(1.2);
+            }
+
+    .rating-text {
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 0.875rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: #8b5cf6;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+    .validation-summary {
+        background: #fee2e2;
+        border: 1px solid #fca5a5;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        color: #991b1b;
+    }
+
+    media (max-width: 640px) {
+        .button-group{
+        flex-direction: column;
+    }
+
+    .rating-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    }
+</style>
+
+<div class="edit-container">
+    <a asp-action="Index" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Quay lại trang cá nhân
+    </a>
+
+    <div class="edit-card">
+        <h1 class="page-title">✏️ Chỉnh sửa review</h1>
+
+        <!-- Product Info -->
+        <div class="product-info">
+            <div class="product-label">Sản phẩm đang đánh giá:</div>
+            <div class="product-name">@Model.ProductName</div>
+        </div>
+
+        <!-- Form -->
+        <form asp-action="EditReview" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReviewID" />
+            <input type="hidden" asp-for="ProductID" />
+
+            <!-- Validation Summary -->
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <!-- Title -->
+            <div class="form-group">
+                <label asp-for="Title" class="form-label">Tiêu đề</label>
+                <input asp-for="Title" class="form-input" placeholder="VD: Sản phẩm tuyệt vời!">
+                <span asp-validation-for="Title" class="error-message"></span>
+            </div>
+
+            <!-- Rating -->
+            <div class="form-group">
+                <label class="form-label">Điểm đánh giá</label>
+                <div class="rating-container">
+                    <div class="rating-stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="fa-star cursor-pointer @(i <= Model.Rating ? "fas" : "far")"
+                               data-rating="@i"
+                               onclick="setRating(@i)"></i>
+                        }
+                    </div>
+                    <span id="ratingText" class="rating-text">(@Model.Rating/5 sao)</span>
+                </div>
+                <input type="hidden" asp-for="Rating" id="ratingInput" />
+                <span asp-validation-for="Rating" class="error-message"></span>
+            </div>
+
+            <!-- Content -->
+            <div class="form-group">
+                <label asp-for="Content" class="form-label">Nội dung đánh giá</label>
+                <textarea asp-for="Content" class="form-textarea"
+                          placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea>
+                <span asp-validation-for="Content" class="error-message"></span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Lưu thay đổi
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Rating functionality
+        function setRating(rating) {
+            document.getElementById('ratingInput').value = rating;
+            document.getElementById('ratingText').textContent = '(' + rating + '/5 sao)';
+
+            const stars = document.querySelectorAll('.rating-stars i');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+    </script>
+}

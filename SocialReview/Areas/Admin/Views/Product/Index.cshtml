@@ -1,0 +1,113 @@
+﻿@model IEnumerable<SocialReview.Models.Product>
+@{
+    ViewData["Title"] = "Danh sách Sản phẩm/Dịch vụ";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-container">
+    <div class="page-section-header">
+        <h1 class="page-section-title">Danh sách Sản phẩm/Dịch vụ</h1>
+        <a asp-action="Create" class="btn btn-green"><i class="fa-solid fa-plus"></i> Tạo mới</a>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên sản phẩm</th>
+                    <th class="max-w-sm">Mô tả</th>
+                    <th>Ảnh</th>
+                    <th>Giá</th>
+                    <th>Loại</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="row-@item.ProductID">
+                        <td>@item.ProductID</td>
+                        <td>@item.ProductName</td>
+                        <td>
+                            <div class="text-truncate-cell" title="@item.ProductDescription">@item.ProductDescription</div>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ProductImage))
+                            {
+                                <img src="@item.ProductImage" alt="@item.ProductName" class="img-thumbnail" style="max-width:60px;height:auto;">
+                            }
+                        </td>
+                        <td>@item.ProductPrice.ToString("N0") ₫</td>
+                        <td>@item.ProductType</td>
+                        <td>
+                            <div class="status-cell">
+                                <label class="switch">
+                                    <input type="checkbox" class="product-status-toggle"
+                                           data-id="@item.ProductID"
+                                           @(item.Disabled != true ? "checked" : "")>
+                                    <span class="slider round"></span>
+                                </label>
+                                <span id="status-text-@item.ProductID" class="ms-2">
+                                    @(item.Disabled != true ? "Hoạt động" : "Đã ẩn")
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a asp-action="EditProduct" asp-route-id="@item.ProductID" class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
+                                <a asp-action="Details" asp-route-id="@item.ProductID" class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.ProductID" class="btn btn-red" onclick="return confirm('Xóa sản phẩm này?');"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.product-status-toggle').forEach(toggle => {
+                toggle.addEventListener('change', function () {
+                    const productId = this.dataset.id;
+                    const isEnabled = this.checked;
+                    const statusText = document.getElementById(`status-text-${productId}`);
+                    const originalState = !isEnabled;
+
+                    this.disabled = true;
+
+                    fetch(`/Admin/Product/ToggleStatus/${productId}`, { method: 'POST' })
+                        .then(r => r.json())
+                        .then(result => {
+                            if (result.success) {
+                                statusText.textContent = result.newIsDisabledState ? "Đã ẩn" : "Hoạt động";
+                                showAlert('success', `Đã cập nhật sản phẩm #${productId}`);
+                            } else {
+                                this.checked = originalState;
+                                statusText.textContent = originalState ? "Hoạt động" : "Đã ẩn";
+                                showAlert('danger', result.message || 'Lỗi server');
+                            }
+                        })
+                        .catch(() => {
+                            this.checked = originalState;
+                            statusText.textContent = originalState ? "Hoạt động" : "Đã ẩn";
+                            showAlert('danger', 'Lỗi kết nối');
+                        })
+                        .finally(() => this.disabled = false);
+                });
+            });
+
+            function showAlert(type, msg) {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = msg;
+                document.querySelector('.admin-container').prepend(alert);
+                setTimeout(() => alert.remove(), 3000);
+            }
+        });
+    </script>
+}

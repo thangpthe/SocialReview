@@ -1,0 +1,81 @@
+﻿@model SocialReview.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký - Trustify</title>
+
+    <!-- Font + CSS -->
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+    <section class="auth-section">
+        <div class="auth-container">
+            <h2>Tạo tài khoản</h2>
+            <p>Tham gia <strong>Trustify</strong> và bắt đầu chia sẻ review của bạn</p>
+
+            <form method="post" class="auth-form" asp-action="Register">
+
+                <!-- Hiển thị lỗi chung từ Identity -->
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                <!-- SỬA: Thêm input cho FullName -->
+                <div class="form-group">
+                    <label asp-for="FullName">Họ và Tên</label>
+                    <input asp-for="FullName" type="text" required placeholder="Nhập họ và tên " />
+                    <span asp-validation-for="FullName" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Username">Tên tài khoản</label>
+                    <!-- SỬA: Dùng asp-for="Username" -->
+                    <input asp-for="Username" type="text" required placeholder="Nhập tên tài khoản" />
+                    <span asp-validation-for="Username" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="UserEmail">Email</label>
+                    <!-- SỬA: Dùng asp-for="UserEmail" -->
+                    <input asp-for="UserEmail" type="email" required placeholder="Nhập email" />
+                    <span asp-validation-for="UserEmail" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="UserRole">Bạn là</label>
+                    <!-- SỬA: Dùng asp-for="UserRole" và thêm value -->
+                    <select asp-for="UserRole" required>
+                        <option value="">-- Chọn vai trò --</option>
+                        <option value="User">Cá nhân</option>
+                        <option value="Company">Doanh nghiệp</option>
+                    </select>
+                    <span asp-validation-for="UserRole" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password">Mật khẩu</label>
+                    <input asp-for="Password" type="password" required placeholder="Nhập mật khẩu (ít nhất 6 ký tự)" />
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword">Xác nhận mật khẩu</label>
+                    <input asp-for="ConfirmPassword" type="password" required placeholder="Nhập lại mật khẩu" />
+                    <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+                </div>
+
+                <button type="submit" class="btn-primary">Đăng ký</button>
+
+                <div class="auth-links">
+                    <p>Đã có tài khoản? <a asp-action="Login" asp-controller="Auth">Đăng nhập</a></p>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

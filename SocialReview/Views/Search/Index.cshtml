@@ -1,0 +1,66 @@
+﻿@model IEnumerable<SocialReview.Models.Product>
+@{
+    Layout = "_Layout";
+    var searchQuery = ViewData["SearchQuery"] as string;
+    ViewData["Title"] = $"Kết quả cho '{searchQuery}'";
+}
+
+@section Styles {
+    <!-- Dùng chung CSS với trang Dashboard Doanh nghiệp để hiển thị card -->
+    <link rel="stylesheet" href="~/css/company_dashboard.css" />
+    <style>
+        /* CSS Bổ sung cho card sản phẩm (nếu chưa có) */
+        a.product-card-link,
+        a.product-card-link:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a.product-card-link {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            a.product-card-link:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+                a.product-card-link:hover .product-card-link-detail {
+                    text-decoration: underline;
+                    color: var(--purple-600);
+                }
+    </style>
+}
+
+<main class="container py-10 md:py-16 space-y-12">
+    <section>
+        <h2 class="section-title">
+            Tìm thấy @Model.Count() kết quả cho "@searchQuery"
+        </h2>
+
+        @if (Model.Any())
+        {
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach (var product in Model)
+                {
+                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="card product-card-link">
+                        <img src="@product.ProductImage" alt="@product.ProductName" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-1">@product.ProductName</h4>
+                            <p class="text-xs text-[--text-gray] mb-2">@product.ProductType</p>
+                            <p class="text-sm text-[--text-gray] line-clamp-2">@product.ProductDescription</p>
+                            <span class="text-sm text-[--purple-600] product-card-link-detail mt-2 inline-block">Xem chi tiết &rarr;</span>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card p-6 text-center">
+                <p class="text-[--text-gray]">Rất tiếc, không tìm thấy sản phẩm nào khớp với từ khóa của bạn.</p>
+            </div>
+        }
+    </section>
+</main>
+

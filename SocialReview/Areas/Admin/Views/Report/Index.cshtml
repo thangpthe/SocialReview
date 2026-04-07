@@ -1,0 +1,134 @@
+﻿@model SocialReview.ViewModels.ReportViewModel
+@{
+    ViewData["Title"] = "Báo cáo & Xuất Excel";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-container">
+    <div class="admin-header">
+        <div>
+            <h1 class="admin-title">Báo cáo & Xuất Excel</h1>
+            <p class="admin-subtitle">Chọn loại báo cáo bạn muốn xuất file Excel (.xlsx)</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+
+        <!-- Card 1: Doanh nghiệp -->
+        <div class="report-card">
+            <div class="report-icon purple"><i class="fa-solid fa-building fa-3xl"></i></div>
+            <h3 class="report-title">Danh sách Doanh nghiệp</h3>
+            <p class="report-desc">@Model.TotalCompanies doanh nghiệp</p>
+            <a asp-action="ExportCompanies" class="btn btn-green w-full mt-4 flex justify-center items-center gap-2">
+                <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </a>
+        </div>
+
+        <!-- Card 2: Sản phẩm -->
+        <div class="report-card">
+            <div class="report-icon orange"><i class="fa-solid fa-box fa-3xl"></i></div>
+            <h3 class="report-title">Danh sách Sản phẩm / Dịch vụ</h3>
+            <p class="report-desc">@Model.TotalProducts sản phẩm</p>
+            <a asp-action="ExportProducts" class="btn btn-green w-full mt-4 flex justify-center items-center gap-2">
+                <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </a>
+        </div>
+
+        <!-- Card 3: Review -->
+        <div class="report-card">
+            <div class="report-icon green"><i class="fa-solid fa-star fa-3xl"></i></div>
+            <h3 class="report-title">Danh sách Review</h3>
+            <p class="report-desc">@Model.TotalReviews review</p>
+            <a asp-action="ExportReviews" class="btn btn-green w-full mt-4 flex justify-center items-center gap-2">
+                <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </a>
+        </div>
+
+        <!-- Card 4: Người dùng -->
+        <div class="report-card">
+            <div class="report-icon blue"><i class="fa-solid fa-users fa-3xl"></i></div>
+            <h3 class="report-title">Danh sách Người dùng</h3>
+            <p class="report-desc">@Model.TotalUsers người dùng</p>
+            <a asp-action="ExportUsers" class="btn btn-green w-full mt-4 flex justify-center items-center gap-2">
+                <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </a>
+        </div>
+
+        <!-- Card 5: Comment -->
+        <div class="report-card">
+            <div class="report-icon pink"><i class="fa-solid fa-comments fa-3xl"></i></div>
+            <h3 class="report-title">Danh sách Comment</h3>
+            <p class="report-desc">@Model.TotalComments bình luận</p>
+            <a asp-action="ExportComments" class="btn btn-green w-full mt-4 flex justify-center items-center gap-2">
+                <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-12 text-center text-gray-400 text-sm">
+        File Excel sẽ được tải về ngay lập tức • Định dạng .xlsx
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .report-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+            .report-card:hover {
+                transform: translateY(-4px);
+            }
+
+        .report-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .purple {
+            background: #f3e8ff;
+            color: #6A1B9A;
+        }
+
+        .orange {
+            background: #fff7ed;
+            color: #c2410f;
+        }
+
+        .green {
+            background: #d1fae5;
+            color: #10b981;
+        }
+
+        .blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .pink {
+            background: #fdf2f8;
+            color: #be185d;
+        }
+
+        .report-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .report-desc {
+            color: #6b7280;
+        }
+    </style>
+}

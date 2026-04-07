@@ -1,0 +1,151 @@
+﻿/* admin-layout.css */
+:root {
+    --primary: #6A1B9A;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', system-ui, sans-serif;
+    background: #f8f9fa;
+}
+
+/* ====================== SIDEBAR ====================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+    .sidebar.open {
+        left: 0;
+    }
+
+.sidebar-header {
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+}
+
+.sidebar-subtitle {
+    font-size: 0.9rem;
+    color: #888;
+    display: block;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: #374151;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+        background: #f3e8ff;
+        color: var(--primary);
+    }
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid #eee;
+}
+
+/* Overlay */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    z-index: 999;
+}
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+/* ====================== MAIN CONTENT ====================== */
+.main-content {
+    margin-left: 0;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+    .sidebar {
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 280px;
+    }
+}
+
+.main-content-header {
+    background: #fff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#page-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.sidebar-toggle-button {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+@media (max-width: 1023px) {
+    .sidebar-toggle-button {
+        display: block;
+    }
+}
+
+/* Admin container chung */
+.admin-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}

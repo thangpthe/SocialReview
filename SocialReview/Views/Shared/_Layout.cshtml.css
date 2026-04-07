@@ -1,0 +1,138 @@
+﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a {
+  color: #0077cc;
+  text-decoration:none;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F9F6FB;
+    color: #212121;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+    color: #6A1B9A;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+.nav-link {
+    color: #424242;
+    font-weight: 500;
+    margin: 0 8px;
+}
+
+    .nav-link:hover {
+        color: #6A1B9A;
+    }
+
+.btn-login {
+    color: #6A1B9A;
+    border: 1px solid #6A1B9A;
+    background-color: transparent;
+    padding: 6px 14px;
+    border-radius: 6px;
+    width: max-content;
+    font-weight: 500;
+}
+
+.btn-signup {
+    background-color: #6A1B9A;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+/* Main content */
+main {
+    min-height: 70vh;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+/* Footer */
+footer {
+    background-color: #6A1B9A;
+    color: #fff;
+    padding: 50px 0 20px 0;
+    font-size: 0.95rem;
+}
+
+    footer h5 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    footer a {
+        color: #E1BEE7;
+        text-decoration: none;
+    }
+
+        footer a:hover {
+            color: white;
+        }
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    margin-top: 20px;
+    padding-top: 15px;
+    font-size: 0.9rem;
+    color: #E1BEE7;
+}

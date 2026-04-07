@@ -1,0 +1,55 @@
+﻿
+@model SocialReview.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = null;
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Trustify</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/css/auth.css" />
+    
+</head>
+<body>
+    <section class="auth-section">
+        <div class="auth-container">
+            <h2>Đăng nhập</h2>
+            <p>Chào mừng đến với <strong>Trustify</strong></p>
+
+            <form method="post" class="auth-form" asp-action="Login">
+
+               
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                
+                <div class="form-group">
+                    <label asp-for="Username">Tên tài khoản</label>
+                    <input asp-for="Username" type="text" required placeholder="Nhập tên tài khoản" />
+                    <span asp-validation-for="Username" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password">Mật khẩu</label>
+                    <input asp-for="Password" type="password" required placeholder="Nhập mật khẩu" />
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
+                </div>
+
+                <button type="submit" class="btn-primary">Đăng nhập</button>
+
+                <div class="auth-links">
+                    <a asp-action="ForgotPassword" asp-controller="Account">Quên mật khẩu?</a>
+                    <p>Chưa có tài khoản? <a asp-action="Register" asp-controller="Auth">Đăng ký</a></p>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
+

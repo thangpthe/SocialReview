@@ -1,0 +1,105 @@
+﻿@model SocialReview.ViewModels.UserInfoViewModel
+@{
+    ViewData["Title"] = "Người dùng";
+    Layout = "_Layout";
+
+}
+
+@section Styles {
+   <link rel="stylesheet" href="~/css/user-profile.css"/>
+}
+
+<div class="container">
+    <div class="profile-header">
+        @* @if (Model.UserProfile != null && !string.IsNullOrEmpty(Model.UserProfile.UserAvatar))
+        {
+            <!-- 1. Nếu CÓ Avatar, hiển thị <img> -->
+            <img src="@Model.UserProfile.UserAvatar"
+                 class="avatar"
+                 alt="Avatar của @Model.UserProfile.FullName">
+        }
+        else
+        {
+            <!-- 2. Nếu KHÔNG CÓ Avatar, hiển thị icon (Font Awesome) -->
+            <div class"avatar-icon-wrapper"
+                 title="@(Model.UserProfile?.FullName ?? "Người dùng")">
+                <i class="fa-solid fa-user"></i>
+            </div>
+        } *@
+        
+        <div class="profile-info">
+            <!-- SEO: H1 là tiêu đề chính của trang -->
+            <h1>@Model.UserProfile.FullName</h1>
+            @* <p class="bio">Đam mê thử nghiệm sản phẩm mới và giúp người khác đưa ra quyết định sáng suốt.</p> *@
+        </div>
+
+        <div class="profile-stats">
+            <div class="stat-item">
+                <div class="stat-value"></div>
+                <div class="stat-label"></div>
+            </div>
+            
+        </div>
+
+        @* <div class="profile-action">
+            <a href="#" class="btn btn-edit">
+                <i class="fas fa-edit"></i> Chỉnh sửa Hồ sơ
+            </a>
+        </div> *@
+    </div>
+
+    @* <nav class="profile-tabs">
+        <a href="#" class="tab-link active">Bài đánh giá đã đăng</a>
+    </nav> *@
+
+    <main class="profile-content">
+        
+        <!-- SEO: <section> nhóm nội dung liên quan -->
+        <section class="review-section">
+            
+            <div class="section-header">
+                <!-- SEO: H2 cho tiêu đề mục -->
+                <h2>Các bài đánh giá</h2>
+            </div>
+
+            @if (Model.UserReviews != null && Model.UserReviews.Any())
+            {
+                <div class="review-grid">
+                    @* ===== SỬA LỖI: BẮT ĐẦU VÒNG LẶP ĐỘNG ===== *@
+                    @foreach (var review in Model.UserReviews)
+                    {
+                        <a class="review-card" asp-controller="Product" asp-action="Detail" asp-route-id="@review.ProductID" class="review-title-link">
+                            <img src="@(review.Product?.ProductImage ?? "https://placehold.co/400x200/eee/ccc?text=No+Image")"
+                                 alt="Ảnh của sản phẩm @(review.Product?.ProductName ?? "Sản phẩm")" class="review-image">
+
+                            <div class="review-body">
+                                
+                                <p class="product-name">@(review.Product?.ProductName ?? "Sản phẩm đã bị xóa")</p>
+                                <div class="review-meta">
+                                    <span class="date">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                    @* <span class="helpful">🔥 0 found helpful</span> *@
+                                </div>
+                                <div class="rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= review.Rating ? "" : "empty")"></i>
+                                    }
+                                    <span class="rating-text">@review.Rating.ToString("F1")</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                  
+                </div>
+            }
+            else
+            {
+                <div class="card-no-reviews" style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <p style="color: var(--text-gray);">Người dùng này chưa viết bài đánh giá nào.</p>
+                </div>
+            }
+        </section> <!-- .review-section -->
+
+    </main> <!-- .profile-content -->
+
+</div> <!-- .container -->

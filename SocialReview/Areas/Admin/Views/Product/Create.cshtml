@@ -1,0 +1,153 @@
+﻿@model SocialReview.Models.Product
+@{
+    ViewData["Title"] = "Tạo mới Sản phẩm";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-container">
+    <div class="form-container">
+        <h1 class="form-title">Tạo mới Sản phẩm / Dịch vụ</h1>
+        <p class="form-subtitle">Thông tin sẽ được hiển thị công khai cho người dùng.</p>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data" id="product-form">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Cột trái: Thông tin chính -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="form-group">
+                        <label asp-for="ProductName" class="form-label">Tên sản phẩm / Dịch vụ <span class="text-red-500">*</span></label>
+                        <input asp-for="ProductName" class="form-control" placeholder="Ví dụ: Khóa học Digital Marketing 2026" required />
+                        <span asp-validation-for="ProductName" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ProductDescription" class="form-label">Mô tả chi tiết</label>
+                        <textarea asp-for="ProductDescription" class="form-control" rows="6"
+                                  placeholder="Nhập mô tả chi tiết sản phẩm..."></textarea>
+                        <div class="text-xs text-gray-500 mt-1 text-right">
+                            <span id="desc-count">0</span>/2000 ký tự
+                        </div>
+                        <span asp-validation-for="ProductDescription" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label asp-for="ProductPrice" class="form-label">Giá (VNĐ)</label>
+                            <div class="relative">
+                                <input asp-for="ProductPrice" class="form-control pl-12" type="number" min="0" step="1000" />
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">₫</span>
+                            </div>
+                            <span asp-validation-for="ProductPrice" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ProductType" class="form-label">Loại sản phẩm</label>
+                            <input asp-for="ProductType" class="form-control" placeholder="Sản phẩm / Dịch vụ / Khóa học / Combo..." />
+                            <span asp-validation-for="ProductType" class="field-validation-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột phải: Ảnh & Trạng thái -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="form-group">
+                        <label class="form-label">Hình ảnh sản phẩm</label>
+
+                        <!-- Preview -->
+                        <div id="image-preview" class="mb-4 border border-gray-200 rounded-xl overflow-hidden bg-gray-50 aspect-video flex items-center justify-center">
+                            <div class="text-center text-gray-400">
+                                <i class="fa-solid fa-image fa-3x"></i>
+                                <p class="mt-2 text-sm">Chưa có ảnh</p>
+                            </div>
+                        </div>
+
+                        <!-- Upload file -->
+                        <div class="mb-3">
+                            <label class="form-label text-sm">Tải ảnh lên từ máy</label>
+                            <input type="file" id="image-upload" name="ImageFile" accept="image/*" class="form-control" />
+                        </div>
+
+                        <!-- Hoặc URL -->
+                        <div>
+                            <label asp-for="ProductImage" class="form-label text-sm">Hoặc dán link ảnh (URL)</label>
+                            <input asp-for="ProductImage" class="form-control" id="image-url" placeholder="https://example.com/anh-san-pham.jpg" />
+                            <span asp-validation-for="ProductImage" class="field-validation-error"></span>
+                        </div>
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="form-group">
+                        <label class="form-label flex items-center gap-3">
+                            Trạng thái hiển thị
+                            <label class="switch">
+                                <input asp-for="Disabled" type="checkbox" id="disabled-toggle" />
+                                <span class="slider round"></span>
+                            </label>
+                            <span id="status-label" class="text-sm font-medium text-green-600">Đang hiển thị</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-10 border-t pt-8">
+                <a asp-action="Index" class="text-gray-500 hover:text-gray-700 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Quay lại danh sách
+                </a>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="window.history.back()" class="btn btn-secondary px-6 py-3">Hủy</button>
+                    <button type="submit" class="btn btn-primary px-8 py-3 flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i>
+                        Tạo sản phẩm
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Preview ảnh URL
+        document.getElementById('image-url').addEventListener('input', function () {
+            const url = this.value.trim();
+            const preview = document.getElementById('image-preview');
+            if (url) {
+                preview.innerHTML = `<img src="${url}" alt="Preview" class="max-h-full max-w-full object-contain">`;
+            }
+        });
+
+        // Preview ảnh upload
+        document.getElementById('image-upload').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    document.getElementById('image-preview').innerHTML =
+                        `<img src="${ev.target.result}" alt="Preview" class="max-h-full max-w-full object-contain">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Đếm ký tự mô tả
+        const desc = document.getElementById('ProductDescription');
+        const count = document.getElementById('desc-count');
+        if (desc) {
+            desc.addEventListener('input', () => count.textContent = desc.value.length);
+        }
+
+        // Cập nhật label trạng thái
+        document.getElementById('disabled-toggle').addEventListener('change', function () {
+            document.getElementById('status-label').textContent = this.checked ? 'Đã ẩn' : 'Đang hiển thị';
+            document.getElementById('status-label').classList.toggle('text-green-600', !this.checked);
+            document.getElementById('status-label').classList.toggle('text-red-600', this.checked);
+        });
+    </script>
+}
