@@ -1,4 +1,4 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@* @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -447,6 +447,601 @@
                 icon.classList.add('fa-bars');
             }
         });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> *@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Trustify</title>
+
+    <meta name="description" content="@(ViewData["Description"] ?? "Trustify - Nền tảng đánh giá sản phẩm và dịch vụ trung thực giúp bạn đưa ra quyết định thông minh.")" />
+    <meta name="keywords" content="Trustify, review, đánh giá, sản phẩm, dịch vụ, công ty" />
+    <meta property="og:title" content="@ViewData["Title"] | Trustify" />
+    <meta property="og:description" content="@(ViewData["Description"] ?? "Nền tảng đánh giá sản phẩm và dịch vụ trung thực.")" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" href="~/images/logo.ico" type="image/x-icon" />
+    <link href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" rel="stylesheet">
+
+    @await RenderSectionAsync("Styles", required: false)
+
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-hover: #6d28d9;
+            --dark: #111827;
+            --gray: #6b7280;
+            --light: #f3f4f6;
+            --header-h: 70px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #fafafa;
+            color: var(--dark);
+        }
+
+        a {
+            text-decoration: none;
+            transition: color .2s;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* ── HEADER ─────────────────────────────────────────── */
+        .main-header {
+            background: #fff;
+            box-shadow: 0 2px 16px rgba(0,0,0,.06);
+            border-top: 4px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-h);
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -.5px;
+            flex-shrink: 0;
+        }
+
+        .header-nav-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+            justify-content: flex-start;
+            padding-left: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.25rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: .925rem;
+            padding: .25rem 0;
+            border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s;
+        }
+
+            .nav-link:hover, .nav-link.active {
+                color: var(--primary);
+                border-bottom-color: var(--primary);
+            }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 50px;
+            padding: 6px 14px;
+            border: 1.5px solid #e5e7eb;
+            transition: border-color .2s;
+            margin-left: auto;
+        }
+
+            .header-search:focus-within {
+                border-color: var(--primary);
+            }
+
+            .header-search input {
+                border: none;
+                background: transparent;
+                outline: none;
+                font-size: .875rem;
+                width: 180px;
+                color: var(--dark);
+            }
+
+            .header-search button {
+                border: none;
+                background: transparent;
+                color: var(--primary);
+                cursor: pointer;
+                font-size: .95rem;
+                padding: 0;
+                display: flex;
+            }
+
+        /* ── VÙNG NÚT AUTH CỐ ĐỊNH ─────────────────────────── */
+        .header-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: .75rem;
+            align-items: center;
+        }
+
+        .btn-login {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .btn-login:hover {
+                color: var(--primary);
+            }
+
+        .btn-register {
+            background: var(--primary);
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: .875rem;
+            border: none;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .btn-register:hover {
+                background: var(--primary-hover);
+                transform: translateY(-1px);
+            }
+
+        /* ── RESPONSIVE & MOBILE MENU ─────────────────────────── */
+        .mobile-toggle {
+            display: none;
+            font-size: 1.4rem;
+            color: var(--dark);
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 4px;
+            border-radius: 6px;
+            transition: background .2s;
+        }
+
+            .mobile-toggle:hover {
+                background: var(--light);
+            }
+
+        .show-on-mobile {
+            display: none;
+        }
+
+        .hide-on-mobile {
+            display: inline;
+        }
+
+        
+
+        .header-nav-wrapper {
+            display: none;
+            position: absolute;
+            top: var(--header-h);
+            left: 0;
+            right: 0;
+            background: #fff;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            padding: 1rem 1.25rem 1.5rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,.1);
+            border-top: 1px solid #f3f4f6;
+            z-index: 999;
+        }
+
+            .header-nav-wrapper.active {
+                display: flex;
+            }
+
+        .nav-menu {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+            width: 100%;
+        }
+
+        .nav-link {
+            display: block;
+            padding: .75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+            border-radius: 0;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+            .nav-link:last-child {
+                border-bottom: none;
+            }
+
+        .header-search {
+            width: 100%;
+            margin: 1rem 0 0;
+        }
+
+            .header-search input {
+                width: 100%;
+            }
+
+        /* Tối ưu Auth buttons trên Mobile */
+        .hide-on-mobile {
+            display: none !important;
+        }
+
+        .show-on-mobile {
+            display: inline-block;
+            font-size: 1.15rem;
+        }
+
+        .btn-register {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        }
+
+        /* ── MAIN CONTENT ───────────────────────────────────── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        /* ── FOOTER ─────────────────────────────────────────── */
+        .main-footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding: 4.5rem 0 0;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 3rem;
+        }
+
+        .footer-col h3 {
+            color: #fff;
+            font-size: 1rem;
+            margin: 0 0 1.25rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: .65rem;
+        }
+
+            .footer-col h3::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 32px;
+                height: 3px;
+                background: var(--primary);
+                border-radius: 2px;
+            }
+
+        .footer-brand {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+            .footer-brand i {
+                color: var(--primary);
+            }
+
+        .footer-desc {
+            color: #94a3b8;
+            line-height: 1.75;
+            margin-bottom: 1.5rem;
+            font-size: .9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: .75rem;
+        }
+
+            .social-links a {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: #1e293b;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #94a3b8;
+                font-size: .9rem;
+                transition: background .2s, color .2s, transform .2s;
+            }
+
+                .social-links a:hover {
+                    background: var(--primary);
+                    color: #fff;
+                    transform: translateY(-3px);
+                }
+
+        .footer-links li {
+            margin-bottom: .7rem;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            font-size: .9rem;
+            transition: color .2s, transform .2s;
+            display: inline-block;
+        }
+
+            .footer-links a:hover {
+                color: #fff;
+                transform: translateX(4px);
+            }
+
+        .contact-info li {
+            display: flex;
+            gap: 10px;
+            margin-bottom: .9rem;
+            color: #94a3b8;
+            font-size: .875rem;
+            line-height: 1.5;
+        }
+
+        .contact-info i {
+            color: var(--primary);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .75rem;
+            font-size: .85rem;
+            color: #64748b;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 1.25rem;
+        }
+
+            .footer-bottom-links a {
+                color: #64748b;
+            }
+
+                .footer-bottom-links a:hover {
+                    color: #fff;
+                }
+
+        .footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header" role="banner">
+        <div class="header-container">
+            <a asp-controller="Home" asp-action="Index" class="logo" aria-label="Trustify - Trang chủ">
+                <i class="fa-solid fa-shield-check" aria-hidden="true"></i> Trustify
+            </a>
+
+            <div class="header-nav-wrapper" id="navWrapper">
+                <nav class="nav-menu" aria-label="Menu chính">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">Trang chủ</a>
+                    <a asp-controller="Product" asp-action="Index" class="nav-link">Sản phẩm</a>
+                    <a asp-controller="Company" asp-action="Index" class="nav-link">Doanh nghiệp</a>
+                </nav>
+
+                <form class="header-search" asp-controller="Search" asp-action="Index" method="get" role="search">
+                    <input type="search" name="query" placeholder="Tìm kiếm sản phẩm..." required>
+                    <button type="submit" aria-label="Tìm kiếm">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="header-actions-right">
+                <div class="auth-buttons">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Profile" asp-action="Index" class="nav-link" style="color: var(--primary);">
+                            <i class="fa-solid fa-circle-user"></i> <span class="hide-on-mobile">@User.Identity.Name</span>
+                        </a>
+                        <form asp-controller="Auth" asp-action="Logout" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-register" aria-label="Đăng xuất">
+                                <i class="fa-solid fa-right-from-bracket show-on-mobile"></i>
+                                <span class="hide-on-mobile">Đăng xuất</span>
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Auth" asp-action="Login" class="btn-login" aria-label="Đăng nhập">
+                            <i class="fa-solid fa-arrow-right-to-bracket show-on-mobile"></i>
+                            <span class="hide-on-mobile">Đăng nhập</span>
+                        </a>
+                        <a asp-controller="Auth" asp-action="Register" class="btn-register">Đăng ký</a>
+                    }
+                </div>
+
+                <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Mở menu" aria-expanded="false">
+                    <i class="fa-solid fa-bars" id="menuIcon" aria-hidden="true"></i>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <main role="main" class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="main-footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <i class="fa-solid fa-shield-check" aria-hidden="true"></i> Trustify
+                </div>
+                <p class="footer-desc">
+                    Nền tảng đánh giá độc lập và minh bạch hàng đầu Việt Nam. Chúng tôi kết nối người tiêu dùng với những sản phẩm và dịch vụ uy tín nhất thông qua sức mạnh của cộng đồng.
+                </p>
+                <div class="social-links" aria-label="Mạng xã hội">
+                    <a href="#"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Khám phá</h3>
+                <ul class="footer-links">
+                    <li><a asp-controller="Product" asp-action="Index">Tất cả sản phẩm</a></li>
+                    <li><a asp-controller="Company" asp-action="Index">Top doanh nghiệp</a></li>
+                    <li><a href="#">Reviews mới nhất</a></li>
+                    <li><a href="#">Bảng xếp hạng</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Doanh nghiệp</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Đăng ký đối tác</a></li>
+                    <li><a href="#">Xác thực tài khoản</a></li>
+                    <li><a href="#">Quy định khiếu nại</a></li>
+                    <li><a href="#">Bảng giá dịch vụ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Hỗ trợ</h3>
+                <ul class="contact-info" aria-label="Thông tin liên hệ">
+                    <li>
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                        <span>Công viên phần mềm Quang Trung, Quận 12, TP.HCM</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                        <span>Hotline: 1900 9999 (8h–18h)</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                        <span>support@trustify.vn</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; @DateTime.Now.Year Trustify. All rights reserved.</p>
+            <nav class="footer-bottom-links" aria-label="Liên kết pháp lý">
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Chính sách bảo mật</a>
+                <a href="#">Quy chế hoạt động</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const btn = document.getElementById('mobileMenuBtn');
+            const nav = document.getElementById('navWrapper');
+            const icon = document.getElementById('menuIcon');
+            if (!btn || !nav) return;
+
+            btn.addEventListener('click', function () {
+                const isOpen = nav.classList.toggle('active');
+                btn.setAttribute('aria-expanded', isOpen);
+                icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+            });
+
+            // Tự đóng menu khi click ra ngoài
+            document.addEventListener('click', function (e) {
+                if (!btn.contains(e.target) && !nav.contains(e.target)) {
+                    nav.classList.remove('active');
+                    btn.setAttribute('aria-expanded', 'false');
+                    icon.className = 'fa-solid fa-bars';
+                }
+            });
+        })();
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

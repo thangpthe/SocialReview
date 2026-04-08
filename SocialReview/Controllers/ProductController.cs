@@ -93,13 +93,53 @@ namespace SocialReview.Controllers
             return View(viewModel);
         }
 
+        //[Authorize]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateReview(
+        //     [Bind(Prefix = "NewReviewForm")] CreateReviewViewModel model)
+        //{
+        //    // --- XỬ LÝ TRƯỜNG HỢP FORM HỢP LỆ (Happy Path) ---
+        //    if (ModelState.IsValid)
+        //    {
+        //        var userIdString = _userManager.GetUserId(User);
+        //        int.TryParse(userIdString, out int userIdInt);
+
+        //        var review = new Review
+        //        {
+        //            Title = model.Title,
+        //            Content = model.Content,
+        //            Rating = model.Rating,
+        //            ProductID = model.ProductId,
+        //            UserId = userIdInt,
+        //            CreatedAt = DateTime.UtcNow,
+        //            //Status = "Pending"
+        //        };
+
+        //        await _reviewRepo.AddAsync(review);
+
+        //        var user = await _userManager.GetUserAsync(User);
+        //        review.User = user;
+
+        //        return PartialView("~/Views/Shared/_ReviewCardPartial.cshtml", review);
+        //    }
+
+        //    // --- XỬ LÝ TRƯỜNG HỢP FORM LỖI (Unhappy Path) ---
+        //    // (Nếu Model Binding thất bại, ModelState.IsValid sẽ là false)
+        //    var errors = ModelState.Values.SelectMany(v => v.Errors)
+        //                                  .Select(e => e.ErrorMessage);
+
+        //    // Trả về lỗi 400 (BadRequest) kèm danh sách lỗi
+        //    return BadRequest(new { errors = errors });
+        //}
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateReview(
-             [Bind(Prefix = "NewReviewForm")] CreateReviewViewModel model)
+     [Bind(Prefix = "NewReviewForm")] CreateReviewViewModel model)
         {
-            // --- XỬ LÝ TRƯỜNG HỢP FORM HỢP LỆ (Happy Path) ---
+            // --- XỬ LÝ TRƯỜNG HỢP FORM HỢP LỆ ---
             if (ModelState.IsValid)
             {
                 var userIdString = _userManager.GetUserId(User);
@@ -113,24 +153,21 @@ namespace SocialReview.Controllers
                     ProductID = model.ProductId,
                     UserId = userIdInt,
                     CreatedAt = DateTime.UtcNow,
-                    //Status = "Pending"
+                    Status = "Approved" // Hoặc "Pending" nếu bạn muốn duyệt trước khi hiện
                 };
 
                 await _reviewRepo.AddAsync(review);
 
-                var user = await _userManager.GetUserAsync(User);
-                review.User = user;
+                // Lưu thông báo thành công để hiển thị ngoài View
+                TempData["SuccessMessage"] = "Cảm ơn bạn! Đánh giá đã được gửi thành công.";
 
-                return PartialView("~/Views/Shared/_ReviewCardPartial.cshtml", review);
+                // Load lại trang chi tiết sản phẩm
+                return RedirectToAction("Detail", new { id = model.ProductId });
             }
 
-            // --- XỬ LÝ TRƯỜNG HỢP FORM LỖI (Unhappy Path) ---
-            // (Nếu Model Binding thất bại, ModelState.IsValid sẽ là false)
-            var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                          .Select(e => e.ErrorMessage);
-
-            // Trả về lỗi 400 (BadRequest) kèm danh sách lỗi
-            return BadRequest(new { errors = errors });
+            // --- XỬ LÝ KHI FORM CÓ LỖI ---
+            TempData["ErrorMessage"] = "Dữ liệu không hợp lệ, vui lòng điền đầy đủ tiêu đề, nội dung và đánh giá sao.";
+            return RedirectToAction("Detail", new { id = model.ProductId });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model SocialReview.ViewModels.EditReviewViewModel
+﻿@* @model SocialReview.ViewModels.EditReviewViewModel
 @{
     ViewData["Title"] = "Chỉnh sửa review";
 }
@@ -287,5 +287,355 @@
                 }
             });
         }
+    </script>
+} *@
+@model SocialReview.ViewModels.EditReviewViewModel
+@{
+    ViewData["Title"] = $"Chỉnh sửa review — {Model.ProductName}";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --pp: #7c3aed;
+            --pp-d: #6d28d9;
+            --pp-l: #f5f3ff; /* Tím nhạt hơn cho nền */
+            --yellow: #f59e0b;
+        }
+
+        .edit-review-page {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 4rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--pp);
+            font-weight: 600;
+            font-size: .875rem;
+            margin-bottom: 1.75rem;
+            transition: gap .2s, color .2s;
+        }
+
+            .back-link:hover {
+                gap: .75rem;
+                color: var(--pp-d);
+            }
+
+        .edit-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+            border: 1px solid #f3f4f6;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111827;
+            margin: 0 0 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .page-title i {
+                color: var(--pp);
+            }
+
+        .product-banner {
+            background: var(--pp-l);
+            border-left: 4px solid var(--pp);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-banner-label {
+            font-size: .75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--pp);
+            margin-bottom: .25rem;
+        }
+
+        .product-banner-name {
+            font-weight: 700;
+            color: #111827;
+            font-size: 1.05rem;
+        }
+
+        .validation-summary {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #b91c1c;
+            font-size: .875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: .9rem;
+            color: #374151;
+            margin-bottom: .5rem;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: .75rem 1rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: .95rem;
+            color: #111827;
+            transition: border-color .2s, box-shadow .2s;
+            background: #f9fafb;
+        }
+
+            .form-input:focus, .form-textarea:focus {
+                border-color: var(--pp);
+                background: #fff;
+                box-shadow: 0 0 0 4px var(--pp-l);
+                outline: none;
+            }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: .8rem;
+            margin-top: .4rem;
+            display: block;
+        }
+
+        .rating-wrap {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: .25rem;
+        }
+
+            .rating-stars i {
+                font-size: 2rem;
+                cursor: pointer;
+                color: #e5e7eb;
+                transition: color .15s, transform .15s;
+            }
+
+                .rating-stars i.fas, .rating-stars i.active {
+                    color: var(--yellow);
+                }
+
+                .rating-stars i:hover {
+                    transform: scale(1.15);
+                    color: var(--yellow);
+                }
+
+        .rating-text-display {
+            font-size: .9rem;
+            font-weight: 600;
+            color: #4b5563;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: .35rem .85rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn-save {
+            flex: 1;
+            background: var(--pp);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: .85rem 1.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            transition: background .2s, transform .2s, box-shadow .2s;
+        }
+
+            .btn-save:hover {
+                background: var(--pp-d);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+            }
+
+        .btn-cancel {
+            flex: 1;
+            background: #fff;
+            color: #374151;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            padding: .85rem 1.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            text-decoration: none;
+            transition: background .2s, border-color .2s;
+        }
+
+            .btn-cancel:hover {
+                background: #f9fafb;
+                border-color: #9ca3af;
+            }
+
+        /* Responsive Mobile */
+        .page-title {
+            font-size: 1.35rem;
+        }
+
+        .rating-wrap {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: .75rem;
+        }
+
+        .btn-group {
+            flex-direction: column;
+            gap: .75rem;
+        }
+
+        }
+    </style>
+}
+
+<div class="edit-review-page">
+    <a asp-action="Index" class="back-link" aria-label="Quay lại hồ sơ cá nhân">
+        <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
+        Quay lại trang cá nhân
+    </a>
+
+    <div class="edit-card">
+        <h1 class="page-title"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa review</h1>
+
+        <div class="product-banner" aria-label="Sản phẩm đang đánh giá">
+            <div class="product-banner-label">Sản phẩm đang đánh giá</div>
+            <div class="product-banner-name">@Model.ProductName</div>
+        </div>
+
+        <form asp-action="EditReview" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReviewID" />
+            <input type="hidden" asp-for="ProductID" />
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="form-label">
+                    Tiêu đề <span style="color:#ef4444;">*</span>
+                </label>
+                <input asp-for="Title" class="form-input" placeholder="VD: Sản phẩm tuyệt vời!">
+                <span asp-validation-for="Title" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    Điểm đánh giá <span style="color:#ef4444;">*</span>
+                </label>
+                <div class="rating-wrap">
+                    <div class="rating-stars" id="starContainer" aria-label="Chọn số sao" role="group">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="@(i <= Model.Rating ? "fas fa-star" : "far fa-star")"
+                               data-rating="@i"
+                               onclick="setRating(@i)"
+                               tabindex="0"
+                               role="button"
+                               aria-label="@i sao"
+                               onkeypress="if(event.key==='Enter'||event.key===' ')setRating(@i)"></i>
+                        }
+                    </div>
+                    <span id="ratingText" class="rating-text-display">@Model.Rating/5 sao</span>
+                </div>
+                <input type="hidden" asp-for="Rating" id="ratingInput" />
+                <span asp-validation-for="Rating" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Content" class="form-label">
+                    Nội dung đánh giá <span style="color:#ef4444;">*</span>
+                </label>
+                <textarea asp-for="Content" class="form-textarea" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea>
+                <span asp-validation-for="Content" class="error-message"></span>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                    Lưu thay đổi
+                </button>
+                <a asp-action="Index" class="btn-cancel">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Logic xử lý khi click chọn sao
+        function setRating(rating) {
+            document.getElementById('ratingInput').value = rating;
+            document.getElementById('ratingText').textContent = rating + '/5 sao';
+            document.querySelectorAll('#starContainer i').forEach((star, idx) => {
+                if (idx < rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        // Logic xử lý khi di chuột (Hover) lên sao
+        document.querySelectorAll('#starContainer i').forEach((star, idx) => {
+            star.addEventListener('mouseenter', function () {
+                document.querySelectorAll('#starContainer i').forEach((s, i) => {
+                    s.style.color = i <= idx ? '#f59e0b' : '#e5e7eb';
+                });
+            });
+            star.addEventListener('mouseleave', function () {
+                document.querySelectorAll('#starContainer i').forEach(s => s.style.color = '');
+            });
+        });
     </script>
 }

@@ -1,4 +1,4 @@
-﻿@model SocialReview.ViewModels.ProductSearchViewModel
+﻿@* @model SocialReview.ViewModels.ProductSearchViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Khám phá sản phẩm";
@@ -370,6 +370,379 @@
             <div class="empty-icon">🔍</div>
             <h3 class="empty-title">Không tìm thấy sản phẩm</h3>
             <p class="empty-text">Thử thay đổi bộ lọc hoặc xóa bộ lọc để xem tất cả sản phẩm</p>
+        </div>
+    }
+</div> *@
+
+@model SocialReview.ViewModels.ProductSearchViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Khám phá sản phẩm";
+    ViewData["Description"] = "Khám phá và đánh giá hàng ngàn sản phẩm, dịch vụ uy tín tại Trustify.";
+}
+
+@section Styles {
+<style>
+
+:root {
+    --pp: #7c3aed;
+    --pp-d: #6d28d9;
+    --pp-bg: #ede9fe;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.product-hero {
+    background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 60%, #7c3aed 100%);
+    padding: 4rem 1.5rem 3.5rem;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 2.5rem;
+}
+.product-hero h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin: 0 0 .75rem;
+    letter-spacing: -.5px;
+}
+.product-hero p {
+    font-size: 1.05rem;
+    opacity: .9;
+    margin: 0;
+}
+
+/* ── MAIN CONTAINER ──────────────────────────────────────── */
+.product-page-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.25rem 4rem;
+}
+
+/* ── FILTER BAR ──────────────────────────────────────────── */
+.filter-bar {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    border: 1px solid #f3f4f6;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+.filter-group { flex: 1; min-width: 180px; }
+.filter-label {
+    display: block;
+    font-size: .8rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: .4rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+.filter-select {
+    width: 100%;
+    padding: .65rem 1rem;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: .875rem;
+    color: #1f2937;
+    background: #fff;
+    transition: border-color .2s;
+    cursor: pointer;
+}
+.filter-select:hover, .filter-select:focus {
+    border-color: var(--pp);
+    outline: none;
+}
+.btn-reset {
+    padding: .65rem 1.25rem;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: .875rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    transition: background .2s;
+    white-space: nowrap;
+}
+.btn-reset:hover { background: #e5e7eb; }
+
+/* ── RESULTS HEADER ─────────────────────────────────────── */
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+.results-count {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+}
+.results-count span { color: var(--pp); }
+
+/* ── PRODUCT GRID ────────────────────────────────────────── */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* ── PRODUCT CARD ────────────────────────────────────────── */
+.product-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    border: 1px solid #f3f4f6;
+    transition: transform .25s ease, box-shadow .25s ease;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(124,58,237,.14);
+    border-color: #ddd6fe;
+}
+
+.product-img-wrap {
+    position: relative;
+    overflow: hidden;
+    background: #f5f3ff;
+}
+.product-img-wrap img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+}
+.product-img-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c4b5fd;
+    font-size: 3rem;
+}
+.product-card:hover .product-img-wrap img { transform: scale(1.05); }
+
+.product-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.product-type-tag {
+    display: inline-block;
+    padding: .2rem .75rem;
+    background: var(--pp-bg);
+    color: var(--pp);
+    border-radius: 50px;
+    font-size: .72rem;
+    font-weight: 700;
+    margin-bottom: .6rem;
+    width: fit-content;
+    letter-spacing: .3px;
+}
+
+.product-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 .4rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-desc {
+    color: #6b7280;
+    font-size: .85rem;
+    line-height: 1.55;
+    margin: 0 0 1rem;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: .85rem;
+    border-top: 1px solid #f3f4f6;
+    gap: .5rem;
+}
+.product-company {
+    font-size: .8rem;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    min-width: 0;
+}
+.product-company span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.product-cta {
+    color: var(--pp);
+    font-weight: 700;
+    font-size: .8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── EMPTY STATE ─────────────────────────────────────────── */
+.empty-state {
+    background: #fff;
+    border-radius: 14px;
+    padding: 5rem 2rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.empty-state i { font-size: 3.5rem; color: #d1d5db; margin-bottom: 1rem; }
+.empty-state h3 { font-size: 1.35rem; color: #374151; margin-bottom: .4rem; }
+.empty-state p { color: #9ca3af; }
+.btn-clear {
+    display: inline-block;
+    margin-top: 1.5rem;
+    background: var(--pp);
+    color: #fff;
+    padding: .75rem 1.75rem;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: background .2s;
+}
+.btn-clear:hover { background: var(--pp-d); color: #fff; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@@media (max-width: 768px) {
+    .product-hero h1 { font-size: 1.75rem; }
+    .products-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .filter-bar { padding: 1rem; gap: .75rem; }
+    .filter-group { min-width: 140px; }
+}
+@@media (max-width: 480px) {
+    .product-hero { padding: 2.5rem 1rem 2rem; }
+    .product-hero h1 { font-size: 1.5rem; }
+    .products-grid { grid-template-columns: 1fr; }
+    .filter-group { min-width: 100%; }
+    .btn-reset { width: 100%; justify-content: center; }
+}
+</style>
+}
+
+<div class="product-hero" aria-label="Banner khám phá sản phẩm">
+    <h1> Khám phá sản phẩm tuyệt vời</h1>
+    <p>Tìm kiếm và đánh giá các sản phẩm chất lượng từ cộng đồng</p>
+</div>
+
+<div class="product-page-container">
+    <form asp-controller="Product" asp-action="Index" method="get" role="search" aria-label="Bộ lọc sản phẩm">
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label" for="CurrentType">Loại sản phẩm</label>
+                <select asp-for="CurrentType" id="CurrentType" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Tất cả các loại</option>
+                    @if (Model.TypeOptions != null)
+                    {
+                        @foreach (var type in Model.TypeOptions)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label" for="CurrentRating">Đánh giá tối thiểu</label>
+                <select asp-for="CurrentRating" id="CurrentRating" class="filter-select" onchange="this.form.submit()">
+                    <option value="">Tất cả đánh giá</option>
+                    @if (Model.RatingOptions != null)
+                    {
+                        @foreach (var r in Model.RatingOptions)
+                        {
+                            <option value="@r">@r ⭐ trở lên</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <a asp-controller="Product" asp-action="Index" class="btn-reset">
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Xóa bộ lọc
+            </a>
+        </div>
+    </form>
+
+    <div class="results-header">
+        <h2 class="results-count">
+            Tìm thấy <span>@Model.Products.Count()</span> sản phẩm
+        </h2>
+    </div>
+
+    @if (Model.Products.Any())
+    {
+        <div class="products-grid" role="list" aria-label="Danh sách sản phẩm">
+            @foreach (var product in Model.Products)
+            {
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID"
+                   class="product-card" role="listitem" aria-label="@product.ProductName">
+                    <div class="product-img-wrap">
+                        @if (!string.IsNullOrEmpty(product.ProductImage))
+                        {
+                            <img src="@product.ProductImage" alt="@product.ProductName" loading="lazy">
+                        }
+                        else
+                        {
+                            <div class="product-img-placeholder">
+                                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                            </div>
+                        }
+                    </div>
+                    <div class="product-body">
+                        <span class="product-type-tag">@product.ProductType</span>
+                        <h3 class="product-name">@product.ProductName</h3>
+                        <p class="product-desc">@product.ProductDescription</p>
+                        <div class="product-footer">
+                            @if (product.Company != null)
+                            {
+                                <div class="product-company">
+                                    <i class="fa-solid fa-building" aria-hidden="true"></i>
+                                    <span>@product.Company.CompanyName</span>
+                                </div>
+                            }
+                            <span class="product-cta">Xem chi tiết →</span>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state" role="status">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <h3>Không tìm thấy sản phẩm</h3>
+            <p>Thử thay đổi bộ lọc hoặc xóa bộ lọc để xem tất cả sản phẩm.</p>
+            <a asp-controller="Product" asp-action="Index" class="btn-clear">Xem tất cả sản phẩm</a>
         </div>
     }
 </div>

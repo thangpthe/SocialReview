@@ -2,100 +2,723 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
-    ViewData["Title"] = Model.Product.ProductName; // Tốt cho SEO
+    ViewData["Title"] = Model.Product.ProductName;
+    ViewData["Description"] = $"{Model.Product.ProductName} — {Model.Product.ProductDescription?.Substring(0, Math.Min(Model.Product.ProductDescription?.Length ?? 0, 120))}";
 }
+
 @section Styles {
-    @* <script src="https://cdn.tailwindcss.com"></script> *@
     <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/site.css" />
-    <link rel="stylesheet" href="~/css/product_detail.css" />
+    <style>
+        /* ── PRODUCT DETAIL PAGE ──────────────────────────────────── */
+        :root {
+            --pp: #7c3aed;
+            --pp-d: #6d28d9;
+            --pp-l: #ede9fe;
+            --yellow: #f59e0b;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        .detail-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 4rem;
+        }
+
+        /* ── BREADCRUMB ──────────────────────────────────────────── */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .85rem;
+            color: var(--gray);
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+        }
+
+            .breadcrumb a {
+                color: var(--pp);
+                font-weight: 500;
+            }
+
+                .breadcrumb a:hover {
+                    text-decoration: underline;
+                }
+
+            .breadcrumb i {
+                font-size: .7rem;
+                color: #d1d5db;
+            }
+
+        /* ── PRODUCT HEADER GRID ────────────────────────────────── */
+        .product-header-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 3rem;
+            margin-bottom: 3.5rem;
+            align-items: start;
+        }
+
+        /* Image */
+        .product-img-card {
+            border-radius: 16px;
+            overflow: hidden;
+            background: #f5f3ff;
+            border: 1px solid var(--border);
+            aspect-ratio: 4/3;
+        }
+
+            .product-img-card img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+        .product-img-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c4b5fd;
+            font-size: 5rem;
+        }
+
+        /* Info */
+        .product-info-details {
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+        }
+
+        .product-type-badge {
+            display: inline-block;
+            background: var(--pp-l);
+            color: var(--pp);
+            font-size: .72rem;
+            font-weight: 700;
+            padding: .25rem .85rem;
+            border-radius: 50px;
+            width: fit-content;
+            letter-spacing: .3px;
+        }
+
+        .product-info-details h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        /* Rating summary */
+        .rating-summary {
+            display: flex;
+            align-items: center;
+            gap: .65rem;
+            flex-wrap: wrap;
+        }
+
+        .stars {
+            color: var(--yellow);
+            font-size: .95rem;
+            letter-spacing: 1px;
+        }
+
+            .stars .empty {
+                color: #e5e7eb;
+            }
+
+        .rating-text {
+            font-size: .9rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* Description */
+        .product-description {
+            color: #4b5563;
+            line-height: 1.75;
+            font-size: .975rem;
+            padding-top: .5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Company */
+        .company-section {
+            border-top: 1px solid var(--border);
+            padding-top: .85rem;
+        }
+
+        .company-section-label {
+            font-size: .78rem;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: .5rem;
+        }
+
+        .company-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .75rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: .6rem .9rem;
+            transition: border-color .2s, box-shadow .2s;
+            color: inherit;
+        }
+
+            .company-link:hover {
+                border-color: var(--pp);
+                box-shadow: 0 0 0 3px var(--pp-l);
+            }
+
+        .company-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .company-name {
+            font-weight: 700;
+            font-size: .9rem;
+            color: #111827;
+        }
+
+        /* ── SECTION TITLE ───────────────────────────────────────── */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #111827;
+            padding-bottom: .75rem;
+            border-bottom: 2px solid var(--pp-l);
+            margin-bottom: 1.75rem;
+        }
+
+            .section-title span {
+                color: var(--pp);
+                font-size: 1rem;
+                font-weight: 600;
+                margin-left: .4rem;
+            }
+
+        /* ── REVIEW CARDS ────────────────────────────────────────── */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+
+        .review-card-wrapper {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,.04);
+        }
+
+        .review-card {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .avatar, .avatar-icon-wrapper {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        .avatar-icon-wrapper {
+            background: var(--pp-l);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pp);
+            font-size: 1rem;
+        }
+
+        .review-card-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: .25rem;
+            margin-bottom: .35rem;
+        }
+
+        .review-author {
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--pp);
+            text-decoration: none;
+        }
+
+            .review-author:hover {
+                text-decoration: underline;
+            }
+
+        .review-date {
+            font-size: .78rem;
+            color: #9ca3af;
+        }
+
+        .review-stars {
+            margin-bottom: .4rem;
+        }
+
+            .review-stars i {
+                color: var(--yellow);
+                font-size: .85rem;
+            }
+
+                .review-stars i.fa-regular {
+                    color: #e5e7eb;
+                }
+
+        .review-card-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0 0 .4rem;
+        }
+
+        .review-card-content p {
+            font-size: .875rem;
+            color: #4b5563;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .review-actions {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin-top: .85rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: .3rem .85rem;
+            cursor: pointer;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--gray);
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            transition: border-color .2s, color .2s, background .2s;
+        }
+
+            .action-btn:hover, .action-btn.text-purple-600 {
+                border-color: var(--pp);
+                color: var(--pp);
+                background: var(--pp-l);
+            }
+
+            .action-btn:disabled {
+                opacity: .5;
+                cursor: not-allowed;
+            }
+
+        /* Comments */
+        .comment-section {
+            background: #fafafa;
+            border-top: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+        }
+
+            .comment-section.hidden {
+                display: none;
+            }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: .85rem;
+            margin-bottom: 1rem;
+        }
+
+        .comment-card {
+            display: flex;
+            gap: .65rem;
+            align-items: flex-start;
+        }
+
+        .comment-avatar, .comment-avatar.avatar-icon-wrapper {
+            width: 30px;
+            height: 30px;
+            font-size: .8rem;
+        }
+
+        .comment-body {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .5rem .85rem;
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: .2rem;
+            font-size: .8rem;
+        }
+
+            .comment-header strong {
+                color: #111827;
+            }
+
+            .comment-header span {
+                color: #9ca3af;
+            }
+
+        .comment-body p {
+            font-size: .82rem;
+            color: #4b5563;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .no-comments {
+            font-size: .85rem;
+            color: var(--gray);
+            padding: .25rem;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: .5rem;
+        }
+
+            .comment-form .form-input {
+                flex: 1;
+                border: 1.5px solid var(--border);
+                border-radius: 50px;
+                padding: .5rem 1rem;
+                font-size: .875rem;
+                outline: none;
+                transition: border-color .2s;
+                font-family: inherit;
+            }
+
+                .comment-form .form-input:focus {
+                    border-color: var(--pp);
+                }
+
+        .btn-submit-comment {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--pp);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+
+            .btn-submit-comment:hover {
+                background: var(--pp-d);
+            }
+
+        .comment-error-message {
+            font-size: .82rem;
+            color: #ef4444;
+            margin-top: .4rem;
+        }
+
+            .comment-error-message.hidden {
+                display: none;
+            }
+
+        /* ── REVIEW FORM ────────────────────────────────────────── */
+        .review-form-section {
+            margin-top: 2.5rem;
+        }
+
+        .review-form-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,.04);
+        }
+
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+        }
+
+        .form-label {
+            font-weight: 700;
+            font-size: .875rem;
+            color: #374151;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: .65rem 1rem;
+            font-family: inherit;
+            font-size: .925rem;
+            color: #111827;
+            transition: border-color .2s, box-shadow .2s;
+            background: #fff;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                border-color: var(--pp);
+                box-shadow: 0 0 0 3px var(--pp-l);
+                outline: none;
+            }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .field-validation-error {
+            font-size: .8rem;
+            color: #ef4444;
+        }
+
+        .form-error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: .75rem 1rem;
+            font-size: .875rem;
+            color: #b91c1c;
+        }
+
+            .form-error-message.hidden {
+                display: none;
+            }
+
+        .btn-primary {
+            background: var(--pp);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: .85rem 2.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background .2s, transform .2s, box-shadow .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+            .btn-primary:hover {
+                background: var(--pp-d);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 18px rgba(124,58,237,.35);
+            }
+
+            .btn-primary:disabled {
+                opacity: .6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        /* Empty state */
+        .reviews-empty {
+            background: #faf5ff;
+            border: 2px dashed #ddd6fe;
+            border-radius: 14px;
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--gray);
+        }
+
+            .reviews-empty i {
+                font-size: 2.5rem;
+                color: #c4b5fd;
+                margin-bottom: .75rem;
+            }
+
+        /* ── RESPONSIVE ──────────────────────────────────────────── */
+        @@media (max-width: 900px) {
+            .product-header-grid {
+                grid-template-columns: 1fr;
+                gap: 1.75rem;
+            }
+
+            .product-img-card {
+                aspect-ratio: 16/9;
+            }
+        }
+
+        @@media (max-width: 600px) {
+            .detail-container {
+                padding: 1.25rem 1rem 3rem;
+            }
+
+            .product-info-details h1 {
+                font-size: 1.6rem;
+            }
+
+            .review-card {
+                padding: 1rem;
+                gap: .75rem;
+            }
+
+            .review-form-card {
+                padding: 1.25rem;
+            }
+
+            .btn-primary {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 }
 
-<main class="container product-detail-container">
+<div class="detail-container">
 
-    <section class="product-header-grid">
-        <div class="card product-image-wrapper">
-            <img src="@Model.Product.ProductImage" alt="@Model.Product.ProductName" class="product-image">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        <a asp-controller="Product" asp-action="Index">Sản phẩm</a>
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        <span aria-current="page">@Model.Product.ProductName</span>
+    </nav>
+
+    <section class="product-header-grid" aria-label="Thông tin sản phẩm">
+        <div class="product-img-card">
+            @if (!string.IsNullOrEmpty(Model.Product.ProductImage))
+            {
+                <img src="@Model.Product.ProductImage" alt="@Model.Product.ProductName" loading="eager">
+            }
+            else
+            {
+                <div class="product-img-placeholder">
+                    <i class="fa-solid fa-box" aria-hidden="true"></i>
+                </div>
+            }
         </div>
 
         <div class="product-info-details">
             <span class="product-type-badge">@Model.Product.ProductType</span>
-            <h1 class="font-poppins">@Model.Product.ProductName</h1>
 
-            <div class="product-rating-summary">
-                @if (Model.TotalReviews > 0)
-                {
-                    <div class="star-rating" title="@Model.AverageRating.ToString("F1") sao">
+            <h1>@Model.Product.ProductName</h1>
+
+            @if (Model.TotalReviews > 0)
+            {
+                <div class="rating-summary" aria-label="Đánh giá trung bình">
+                    <div class="stars" aria-hidden="true">
                         @for (int i = 1; i <= 5; i++)
                         {
-                            <i class="@(i <= Model.AverageRating ? "fa-solid fa-star" : "fa-regular fa-star")"></i>
+                            <i class="@(i <= Math.Round(Model.AverageRating) ? "fa-solid fa-star" : "fa-regular fa-star @(\"empty\")")"></i>
                         }
                     </div>
-                    <span class="rating-summary-text">(@Model.AverageRating.ToString("F1")) / @Model.TotalReviews.ToString("N0") đánh giá</span>
-                }
-                
-            </div>
+                    <span class="rating-text">
+                        <strong>@Model.AverageRating.ToString("F1")</strong>/5
+                        &bull; @Model.TotalReviews.ToString("N0") đánh giá
+                    </span>
+                </div>
+            }
+            else
+            {
+                <p class="rating-text" style="color:#9ca3af;">Chưa có đánh giá nào</p>
+            }
 
-            <div class="product-description">
-                <p>@Model.Product.ProductDescription</p>
-            </div>
+            @if (!string.IsNullOrEmpty(Model.Product.ProductDescription))
+            {
+                <div class="product-description">
+                    <p>@Model.Product.ProductDescription</p>
+                </div>
+            }
 
-            <div class="product-company-section">
-                <p class="font-semibold" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Cung cấp bởi:</p>
-                @if (Model.Product.Company != null)
-                {
-                    <a asp-controller="Company" asp-action="Index" asp-route-id="@Model.Product.CompanyID" class="company-link-card">
-                        <img src="@(Model.Product.Company.Logo ?? "https://placehold.co/40x40/ccc/999?text=C")" alt="Logo @Model.Product.Company.CompanyName" class="company-logo">
-                        <div>
-                            <p class="font-semibold">@Model.Product.Company.CompanyName</p>
-                        </div>
+            @if (Model.Product.Company != null)
+            {
+                <div class="company-section">
+                    <div class="company-section-label">Cung cấp bởi</div>
+                    <a asp-controller="Company" asp-action="Index" asp-route-id="@Model.Product.CompanyID" class="company-link">
+                        <img src="@(Model.Product.Company.Logo ?? "https://placehold.co/36x36/ede9fe/7c3aed?text=C")"
+                             alt="Logo @Model.Product.Company.CompanyName" class="company-logo">
+                        <span class="company-name">@Model.Product.Company.CompanyName</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:.7rem; color:#9ca3af;" aria-hidden="true"></i>
                     </a>
-                }
-            </div>
-
-           
+                </div>
+            }
         </div>
     </section>
 
-    <section id="reviews">
-        <h2 class="section-title">Đánh giá về @Model.Product.ProductName (@Model.TotalReviews)</h2>
+    <section id="reviews" aria-label="Đánh giá sản phẩm">
+        <h2 class="section-title">
+            Đánh giá về @Model.Product.ProductName
+            <span>(@Model.TotalReviews)</span>
+        </h2>
 
         <div class="reviews-list">
-
             @if (Model.Reviews != null && Model.Reviews.Any())
             {
                 @foreach (var review in Model.Reviews)
                 {
-                    <div class="review-card-wrapper" id="review-@review.ReviewID">
-                        @* Thẻ div này chứa 1 card review và khu vực comment của nó *@
-
-                        @* 1. CARD REVIEW (Hiển thị Review) *@
-                        <div class="card review-card">
-                            @* Avatar *@
+                    <article class="review-card-wrapper" id="review-@review.ReviewID">
+                        <div class="review-card">
                             @if (review.User != null && !string.IsNullOrEmpty(review.User.UserAvatar))
                             {
-                                <img src="@review.User.UserAvatar" class="avatar" alt="Avatar của @review.User.UserName">
+                                <img src="@review.User.UserAvatar" class="avatar" alt="Avatar @review.User.UserName" loading="lazy">
                             }
                             else
                             {
-                                <div class="avatar-icon-wrapper" title="@(review.User?.FullName ?? "Người dùng ẩn danh")">
+                                <div class="avatar-icon-wrapper" aria-hidden="true">
                                     <i class="fa-solid fa-user"></i>
                                 </div>
                             }
 
-                            @* Nội dung review *@
                             <div class="review-card-content">
                                 <div class="review-header">
-                                    <a class="review-author" asp-action="Index" asp-controller="User" asp-route-username="@review.User.UserName">@(review.User?.UserName ?? "Người dùng ẩn danh")</a>
-                                    <span class="review-date">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                    <a class="review-author"
+                                       asp-action="Index" asp-controller="User"
+                                       asp-route-username="@review.User?.UserName">
+                                        @(review.User?.UserName ?? "Người dùng")
+                                    </a>
+                                    <time class="review-date" datetime="@review.CreatedAt.ToString("yyyy-MM-dd")">
+                                        @review.CreatedAt.ToString("dd/MM/yyyy")
+                                    </time>
                                 </div>
-                                <div class="star-rating" title="@review.Rating.ToString("F1") sao" style="margin-bottom: 0.5rem;">
+
+                                <div class="review-stars" aria-label="@review.Rating sao trên 5">
                                     @for (int i = 1; i <= 5; i++)
                                     {
-                                        <i class="@(i <= review.Rating ? "fa-solid fa-star" : "fa-regular fa-star")"></i>
+                                        <i class="@(i <= review.Rating ? "fa-solid fa-star" : "fa-regular fa-star")" aria-hidden="true"></i>
                                     }
                                 </div>
 
@@ -105,29 +728,29 @@
                                 <div class="review-actions">
                                     <button class="action-btn btn-toggle-reaction"
                                             data-review-id="@review.ReviewID"
-                                            data-type="Helpful">
-                                        <i class="fa-regular fa-thumbs-up"></i>
+                                            data-type="Helpful"
+                                            aria-label="Đánh dấu hữu ích">
+                                        <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
                                         Hữu ích <span>(@(review.Reactions?.Count(r => r.Type == "Helpful") ?? 0))</span>
                                     </button>
-
-                                    <button class="action-btn btn-toggle-comment" data-review-id="@review.ReviewID">
-                                        <i class="fa-regular fa-comment"></i>
+                                    <button class="action-btn btn-toggle-comment"
+                                            data-review-id="@review.ReviewID"
+                                            aria-label="Xem bình luận" aria-expanded="false">
+                                        <i class="fa-regular fa-comment" aria-hidden="true"></i>
                                         Bình luận <span>(@(review.Comments?.Count ?? 0))</span>
                                     </button>
                                     <button class="action-btn btn-toggle-reaction"
                                             data-review-id="@review.ReviewID"
-                                            data-type="Report">
-                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                            data-type="Report"
+                                            aria-label="Báo cáo vi phạm">
+                                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
                                         Báo cáo
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        @* 2. KHU VỰC COMMENT (Bị ẩn ban đầu) *@
                         <div class="comment-section hidden" id="comment-section-@review.ReviewID">
-
-                            @* 2a. Danh sách comment đã có *@
                             <div class="comment-list" id="comment-list-@review.ReviewID">
                                 @if (review.Comments != null && review.Comments.Any())
                                 {
@@ -142,77 +765,87 @@
                                 }
                             </div>
 
-                            @* 2b. Form viết comment mới (Cho AJAX) *@
                             <form asp-controller="Comment" asp-action="Create" method="post"
                                   class="comment-form" data-review-id="@review.ReviewID">
                                 <input type="hidden" name="ReviewID" value="@review.ReviewID" />
-                                <input type="text" name="Content" class="form-input" placeholder="Viết bình luận của bạn..." required />
-                                <button type="submit" class="btn-submit-comment">
-                                    <i class="fa-solid fa-paper-plane"></i>
+                                <input type="text" name="Content" class="form-input"
+                                       placeholder="Viết bình luận của bạn..." required
+                                       aria-label="Nhập bình luận" />
+                                <button type="submit" class="btn-submit-comment" aria-label="Gửi bình luận">
+                                    <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
                                 </button>
                             </form>
-                            <div class="comment-error-message hidden" id="comment-error-@review.ReviewID"></div>
+                            <div class="comment-error-message hidden" id="comment-error-@review.ReviewID" role="alert"></div>
                         </div>
-
-                    </div>
+                    </article>
                 }
             }
             else
             {
-                <div class="card" style="padding: 1.25rem; text-align: center;">
-                    <p style="color: var(--text-gray);">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên!</p>
+                <div class="reviews-empty" role="status">
+                    <i class="fa-regular fa-comment-dots" aria-hidden="true"></i>
+                    <p>Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên!</p>
                 </div>
             }
         </div>
     </section>
 
-    <section id="write-review">
+    <section id="write-review" class="review-form-section" aria-label="Viết đánh giá">
         <h2 class="section-title">Chia sẻ đánh giá của bạn</h2>
-        <div class="card review-form-card">
-
+        <div class="review-form-card">
             <form id="form-create-review"
                   asp-controller="Product" asp-action="CreateReview" method="post"
                   class="review-form">
                 @Html.AntiForgeryToken()
 
-                <div id="review-form-error" class="form-error-message hidden"></div>
+                <div id="review-form-error" class="form-error-message hidden" role="alert"></div>
 
                 <input type="hidden" asp-for="NewReviewForm.ProductId" value="@Model.Product.ProductID" />
 
                 <div class="form-group">
-                    <label asp-for="NewReviewForm.Title" class="form-label">Tiêu đề đánh giá *</label>
-                    <input asp-for="NewReviewForm.Title" class="form-input" placeholder="Ví dụ: Dịch vụ tuyệt vời!" required>
+                    <label asp-for="NewReviewForm.Title" class="form-label">
+                        Tiêu đề đánh giá <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input asp-for="NewReviewForm.Title" class="form-input"
+                           placeholder="Ví dụ: Dịch vụ tuyệt vời!" required>
                     <span asp-validation-for="NewReviewForm.Title" class="field-validation-error"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="NewReviewForm.Rating" class="form-label">Đánh giá của bạn *</label>
+                    <label asp-for="NewReviewForm.Rating" class="form-label">
+                        Đánh giá của bạn <span style="color:#ef4444;">*</span>
+                    </label>
                     <select asp-for="NewReviewForm.Rating" class="form-select" required>
-                        <option value="">Chọn số sao</option>
-                        <option value="5">5 sao - Rất hài lòng</option>
-                        <option value="4">4 sao - Hài lòng</option>
-                        <option value="3">3 sao - Bình thường</option>
-                        <option value="2">2 sao - Không hài lòng</option>
-                        <option value="1">1 sao - Rất tệ</option>
+                        <option value="">Chọn số sao...</option>
+                        <option value="5">⭐⭐⭐⭐⭐ — Rất hài lòng</option>
+                        <option value="4">⭐⭐⭐⭐ — Hài lòng</option>
+                        <option value="3">⭐⭐⭐ — Bình thường</option>
+                        <option value="2">⭐⭐ — Không hài lòng</option>
+                        <option value="1">⭐ — Rất tệ</option>
                     </select>
                     <span asp-validation-for="NewReviewForm.Rating" class="field-validation-error"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="NewReviewForm.Content" class="form-label">Nội dung đánh giá *</label>
-                    <textarea asp-for="NewReviewForm.Content" rows="5" class="form-textarea" placeholder="Chia sẻ chi tiết trải nghiệm của bạn..." required></textarea>
+                    <label asp-for="NewReviewForm.Content" class="form-label">
+                        Nội dung đánh giá <span style="color:#ef4444;">*</span>
+                    </label>
+                    <textarea asp-for="NewReviewForm.Content" class="form-textarea"
+                              placeholder="Chia sẻ chi tiết trải nghiệm của bạn..." required></textarea>
                     <span asp-validation-for="NewReviewForm.Content" class="field-validation-error"></span>
                 </div>
 
-                <div class="form-actions">
-                    <button type="submit" id="btn-submit-review" class="btn-primary">Gửi đánh giá</button>
+                <div>
+                    <button type="submit" id="btn-submit-review" class="btn-primary">
+                        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                        Gửi đánh giá
+                    </button>
                 </div>
             </form>
         </div>
     </section>
 
-</main>
-
+</div>
 
 @section Scripts {
     <script src="~/js/product-detail.js" asp-append-version="true"></script>
