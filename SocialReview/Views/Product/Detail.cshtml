@@ -848,5 +848,119 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/product-detail.js" asp-append-version="true"></script>
+    @* <script src="~/js/product-detail.js" asp-append-version="true"></script> *@
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // 1. MỞ/ĐÓNG KHU VỰC BÌNH LUẬN
+            document.querySelectorAll('.btn-toggle-comment').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const reviewId = this.getAttribute('data-review-id');
+                    const section = document.getElementById('comment-section-' + reviewId);
+                    if (section) section.classList.toggle('hidden');
+                });
+            });
+
+            // 2. AJAX GỬI BÌNH LUẬN MÀ KHÔNG VĂNG TRANG
+            document.querySelectorAll('.comment-form').forEach(form => {
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault(); // CHẶN reload trang
+                    
+                    const formData = new FormData(this);
+                    const reviewId = this.getAttribute('data-review-id');
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    
+                    submitBtn.disabled = true; // Chống spam click
+                    
+                    try {
+                        const response = await fetch(this.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        });
+
+                        if (response.ok) {
+                            const html = await response.text();
+                            
+                            // Nếu hết hạn đăng nhập, server trả về trang HTML Đăng nhập
+                            if(html.includes('auth-section') || html.includes('Đăng nhập')) {
+                                window.location.href = '/Auth/Login';
+                                return;
+                            }
+
+                            const list = document.getElementById('comment-list-' + reviewId);
+                            // Xóa chữ "Chưa có bình luận nào" (nếu có)
+                            const noCmt = list.querySelector('.no-comments');
+                            if (noCmt) noCmt.remove();
+                            
+                            // Chèn comment mới vào ngay cuối danh sách
+                            list.insertAdjacentHTML('beforeend', html);
+                            this.reset(); // Xóa trắng ô nhập
+                            
+                            // Tăng số đếm bình luận lên 1
+                            const btnSpan = document.querySelector(`.btn-toggle-comment[data-review-id="${reviewId}"] span`);
+                            if (btnSpan) {
+                                let count = parseInt(btnSpan.innerText.replace(/\D/g, '')) || 0;
+                                btnSpan.innerText = `(${count + 1})`;
+                            }
+                        } else if (response.status === 401) {
+                            window.location.href = '/Auth/Login';
+                        } else {
+                            alert("Có lỗi xảy ra, vui lòng thử lại.");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
+                    submitBtn.disabled = false;
+                });
+            });
+
+            // 3. AJAX THẢ CẢM XÚC (HỮU ÍCH/REPORT)
+            document.querySelectorAll('.btn-toggle-reaction').forEach(btn => {
+                btn.addEventListener('click', async function (e) {
+                    e.preventDefault();
+                    
+                    const reviewId = this.getAttribute('data-review-id');
+                    const type = this.getAttribute('data-type');
+                    
+                    const formData = new FormData();
+                    formData.append('reviewId', reviewId);
+                    formData.append('reactionType', type);
+
+                    try {
+                        const response = await fetch('/api/Reaction/toggle', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            
+                            // Cập nhật con số hiển thị
+                            const span = this.querySelector('span');
+                            if (span) span.innerText = `(${data.newCount})`;
+                            
+                            // Đổi màu nút nếu user vừa ấn (highlight)
+                            if (data.userHasReacted) {
+                                this.style.color = '#7c3aed';       // Màu tím
+                                this.style.borderColor = '#7c3aed';
+                                this.style.background = '#f5f3ff';
+                            } else {
+                                this.style.color = '';
+                                this.style.borderColor = '';
+                                this.style.background = '';
+                            }
+                        } else if (response.status === 401) {
+                            // Chưa đăng nhập thì chuyển hướng ra trang Login
+                            window.location.href = '/Auth/Login';
+                        }
+                    } catch (err) {
+                        console.error("Lỗi thả tim:", err);
+                    }
+                });
+            });
+
+        });
+    </script>
 }

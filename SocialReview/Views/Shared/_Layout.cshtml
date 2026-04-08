@@ -451,7 +451,7 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html> *@
+</html>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="vi">
@@ -1040,6 +1040,495 @@
                     btn.setAttribute('aria-expanded', 'false');
                     icon.className = 'fa-solid fa-bars';
                 }
+            });
+        })();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> *@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Trustify</title>
+
+    <meta name="description" content="Trustify - Nền tảng đánh giá sản phẩm và dịch vụ trung thực giúp bạn đưa ra quyết định thông minh." />
+    <link rel="icon" href="~/images/logo.ico" type="image/x-icon" />
+    <link href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" rel="stylesheet">
+
+    @await RenderSectionAsync("Styles", required: false)
+
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-hover: #6d28d9;
+            --primary-light: #ede9fe;
+            --dark: #111827;
+            --light: #f3f4f6;
+            --header-h: 75px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #fafafa;
+            color: var(--dark);
+        }
+
+        a {
+            text-decoration: none;
+            transition: color .2s;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* ── HEADER ─────────────────────────────────────────── */
+        .main-header {
+            background: #fff;
+            box-shadow: 0 2px 16px rgba(0,0,0,.06);
+            border-top: 4px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-h);
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* ── SEARCH BAR (DESKTOP) - ĐẢM BẢO HIỂN THỊ ───────── */
+        .search-desktop {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 50px;
+            padding: 8px 20px;
+            border: 1.5px solid #e5e7eb;
+            transition: all .2s ease;
+        }
+
+            .search-desktop:focus-within {
+                border-color: var(--primary);
+                background: #fff;
+                box-shadow: 0 0 0 4px var(--primary-light);
+            }
+
+            .search-desktop input {
+                border: none;
+                background: transparent;
+                outline: none;
+                font-size: .95rem;
+                width: 100%;
+                color: var(--dark);
+            }
+
+            .search-desktop button {
+                border: none;
+                background: transparent;
+                color: var(--primary);
+                cursor: pointer;
+                font-size: 1.1rem;
+                padding: 0 0 0 10px;
+            }
+
+        /* ── SEARCH BAR (MOBILE) ───────────────────────────── */
+        .search-mobile {
+            display: none; /* Mặc định ẩn trên Desktop */
+            align-items: center;
+            background: var(--light);
+            border-radius: 50px;
+            padding: 10px 20px;
+            border: 1.5px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+
+            .search-mobile input {
+                border: none;
+                background: transparent;
+                outline: none;
+                width: 100%;
+                font-size: 1rem;
+            }
+
+            .search-mobile button {
+                border: none;
+                background: transparent;
+                color: var(--primary);
+                cursor: pointer;
+                font-size: 1.1rem;
+            }
+
+        /* ── NAVIGATION & AUTH ─────────────────────────────── */
+        .header-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.25rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: .95rem;
+            padding: .25rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+            .nav-link:hover {
+                color: var(--primary);
+            }
+
+        .auth-buttons {
+            display: flex;
+            gap: .75rem;
+            align-items: center;
+            padding-left: 1.5rem;
+            border-left: 1px solid #e5e7eb;
+        }
+
+        .btn-login {
+            font-weight: 600;
+            font-size: .95rem;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+            .btn-login:hover {
+                color: var(--primary);
+            }
+
+        .btn-register {
+            background: var(--primary);
+            color: #fff !important;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: .95rem;
+            border: none;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .btn-register:hover {
+                background: var(--primary-hover);
+            }
+
+        /* ── RESPONSIVE & MOBILE ────────────────────────────── */
+        .mobile-toggle {
+            display: none;
+            font-size: 1.4rem;
+            color: var(--dark);
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+       
+
+        .search-desktop {
+            display: none !important;
+        }
+        /* Ẩn thanh search máy tính */
+        .nav-menu, .auth-buttons {
+            display: none;
+        }
+
+        .header-nav-wrapper {
+            display: none;
+            position: absolute;
+            top: var(--header-h);
+            left: 0;
+            right: 0;
+            background: #fff;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,.1);
+            border-top: 1px solid #f3f4f6;
+            z-index: 999;
+        }
+
+            .header-nav-wrapper.active {
+                display: flex;
+            }
+
+        .search-mobile {
+            display: flex !important;
+        }
+        /* HIỆN thanh search điện thoại */
+
+        .nav-menu.mobile-active {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: .85rem 0;
+            border-bottom: 1px solid #f3f4f6;
+            width: 100%;
+            font-size: 1.05rem;
+        }
+
+        .auth-buttons.mobile-active {
+            display: flex;
+            flex-direction: column;
+            border-left: none;
+            padding-left: 0;
+            padding-top: 1.5rem;
+            align-items: stretch;
+            text-align: center;
+        }
+
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        .main-footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding: 4.5rem 0 0;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 3rem;
+        }
+
+        .footer-col h3 {
+            color: #fff;
+            font-size: 1rem;
+            margin: 0 0 1.25rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: .65rem;
+        }
+
+            .footer-col h3::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 32px;
+                height: 3px;
+                background: var(--primary);
+                border-radius: 2px;
+            }
+
+        .footer-brand {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-desc {
+            line-height: 1.75;
+            margin-bottom: 1.5rem;
+            font-size: .9rem;
+        }
+
+        .footer-links li {
+            margin-bottom: .7rem;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            font-size: .9rem;
+            transition: color .2s;
+        }
+
+            .footer-links a:hover {
+                color: #fff;
+            }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            font-size: .85rem;
+            color: #64748b;
+        }
+      
+    </style>
+</head>
+<body>
+    <header class="main-header" role="banner">
+        <div class="header-container">
+            <a asp-controller="Home" asp-action="Index" class="logo">
+                <i class="fa-solid fa-shield-check"></i> Trustify
+            </a>
+
+            <form class="search-desktop" asp-controller="Search" asp-action="Index" method="get">
+                <input type="search" name="query" placeholder="Tìm kiếm tên sản phẩm, dịch vụ..." required>
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+
+            <div class="header-actions-right">
+                <nav class="nav-menu">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">Trang chủ</a>
+                    <a asp-controller="Product" asp-action="Index" class="nav-link">Sản phẩm</a>
+                    <a asp-controller="Company" asp-action="Index" class="nav-link">Doanh nghiệp</a>
+                </nav>
+
+                <div class="auth-buttons">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Profile" asp-action="Index" class="nav-link" style="color: var(--primary);">
+                            <i class="fa-solid fa-circle-user"></i> @User.Identity.Name
+                        </a>
+                        <form asp-controller="Auth" asp-action="Logout" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-register">Đăng xuất</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Auth" asp-action="Login" class="btn-login">Đăng nhập</a>
+                        <a asp-controller="Auth" asp-action="Register" class="btn-register">Đăng ký</a>
+                    }
+                </div>
+
+                <button class="mobile-toggle" id="mobileMenuBtn">
+                    <i class="fa-solid fa-bars" id="menuIcon"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-nav-wrapper" id="navWrapper">
+
+            <form class="search-mobile" asp-controller="Search" asp-action="Index" method="get">
+                <input type="search" name="query" placeholder="Tìm kiếm..." required>
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+
+            <nav class="nav-menu mobile-active">
+                <a asp-controller="Home" asp-action="Index" class="nav-link">Trang chủ</a>
+                <a asp-controller="Product" asp-action="Index" class="nav-link">Sản phẩm</a>
+                <a asp-controller="Company" asp-action="Index" class="nav-link">Doanh nghiệp</a>
+            </nav>
+
+            <div class="auth-buttons mobile-active">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Profile" asp-action="Index" class="nav-link" style="color: var(--primary);">
+                        <i class="fa-solid fa-circle-user"></i> @User.Identity.Name
+                    </a>
+                    <form asp-controller="Auth" asp-action="Logout" method="post" style="margin-top: 1rem;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-register" style="width: 100%; justify-content: center;">Đăng xuất</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Auth" asp-action="Login" class="btn-login" style="margin-bottom: 1rem; text-align: center; display: block;">Đăng nhập</a>
+                    <a asp-controller="Auth" asp-action="Register" class="btn-register" style="width: 100%; justify-content: center;">Đăng ký</a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main role="main" class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="main-footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-brand"><i class="fa-solid fa-shield-check"></i> Trustify</div>
+                <p class="footer-desc">Nền tảng đánh giá độc lập và minh bạch hàng đầu Việt Nam.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Khám phá</h3>
+                <ul class="footer-links">
+                    <li><a asp-controller="Product" asp-action="Index">Tất cả sản phẩm</a></li>
+                    <li><a asp-controller="Company" asp-action="Index">Top doanh nghiệp</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Doanh nghiệp</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Đăng ký đối tác</a></li>
+                    <li><a href="#">Xác thực tài khoản</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ trợ</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Email: support@trustify.vn</a></li>
+                    <li><a href="#">Hotline: 1900 9999</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; @DateTime.Now.Year Trustify. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const btn = document.getElementById('mobileMenuBtn');
+            const nav = document.getElementById('navWrapper');
+            const icon = document.getElementById('menuIcon');
+            if (!btn || !nav) return;
+
+            btn.addEventListener('click', function () {
+                const isOpen = nav.classList.toggle('active');
+                icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
             });
         })();
     </script>
