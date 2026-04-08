@@ -35,6 +35,14 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 })
     .AddEntityFrameworkStores<ApplicationDbContext>() // Báo Identity dùng DbContext này
     .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+  
+    options.LoginPath = "/Auth/Login";
+
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+});
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

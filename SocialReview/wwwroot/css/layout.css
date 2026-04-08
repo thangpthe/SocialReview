@@ -197,3 +197,94 @@ footer {
         align-self: flex-end;
     }
 }
+
+/* =========================================================
+   BỔ SUNG LÀM ĐẦY GIAO DIỆN (HEADER & FOOTER)
+   ========================================================= */
+
+/* 1. Làm Header nổi bật & có chiều sâu */
+header {
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); /* Đổ bóng mềm tách biệt với thân trang */
+    border-top: 4px solid #8b5cf6; /* Điểm nhấn viền màu tím ở mép trên cùng */
+    padding: 15px 0; /* Tăng độ dày cho Header */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+    header .nav-left, header .nav-right {
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+/* 2. Làm Footer phong phú, dày dặn hơn (Dark Mode) */
+footer {
+    background: linear-gradient(to right, #1f2937, #111827); /* Nền chuyển màu đen nhám sang trọng */
+    color: #e5e7eb;
+    padding: 50px 0 30px 0; /* Tăng mạnh khoảng không gian (padding) để lấp đầy phần đáy */
+    margin-top: 60px; /* Đẩy cách xa phần nội dung chính */
+    border-top: 1px solid #374151;
+}
+
+    footer .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+
+    footer p {
+        font-size: 0.95rem;
+        color: #9ca3af;
+        margin-bottom: 0;
+    }
+
+    footer nav ul {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+        footer nav ul li a {
+            color: #d1d5db;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+            footer nav ul li a:hover {
+                color: #8b5cf6; /* Hover sáng màu tím Trustify */
+                transform: translateY(-2px);
+            }
+
+/* =========================================================
+   3. CLASS NÚT BẤM GRADIENT (XEM TẤT CẢ SẢN PHẨM)
+   ========================================================= */
+.btn-gradient-primary {
+    background: linear-gradient(135deg, #8b5cf6, #ec4899); /* Nền chuyển màu Tím sang Hồng */
+    color: #ffffff !important; /* Chữ màu trắng */
+    padding: 12px 32px;
+    border-radius: 50px; /* Bo tròn hai đầu hiện đại */
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); /* Bóng đổ phát sáng cùng tone màu */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    .btn-gradient-primary:hover {
+        transform: translateY(-3px); /* Hiệu ứng nhấc lên nhẹ khi di chuột */
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6); /* Sáng rực hơn khi hover */
+        color: #ffffff;
+    }

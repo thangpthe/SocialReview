@@ -6,26 +6,87 @@
 
 <div class="admin-container">
     <div class="admin-header">
-        <div>
-            <h1 class="admin-title">Tổng quan hệ thống</h1>
-            <p class="admin-subtitle">Thống kê tổng quan</p>
-        </div>
+        <h1 class="admin-title">Tổng quan hệ thống</h1>
+        <p class="admin-subtitle">Thống kê nhanh toàn bộ nền tảng</p>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon blue"><i class="fa-solid fa-users fa-lg"></i></div>
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-users"></i>
+            </div>
             <div class="stat-content">
                 <p class="stat-label">Tổng User</p>
                 <p class="stat-number">@Model.TotalUsers</p>
             </div>
         </div>
+
         <div class="stat-card">
-            <div class="stat-icon green"><i class="fa-solid fa-star fa-lg"></i></div>
+            <div class="stat-icon green">
+                <i class="fa-solid fa-star"></i>
+            </div>
             <div class="stat-content">
                 <p class="stat-label">Tổng Review</p>
                 <p class="stat-number">@Model.TotalReviews</p>
             </div>
         </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="fa-solid fa-building"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Doanh nghiệp</p>
+                <p class="stat-number">@Model.TotalCompanies</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-box"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-label">Sản phẩm</p>
+                <p class="stat-number">@Model.TotalProducts</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-header" style="margin-top: 3rem;">
+        <h2 class="admin-title" style="font-size: 1.25rem;">Truy cập nhanh</h2>
+    </div>
+
+    <div class="stats-grid">
+        <a asp-area="Admin" asp-controller="User" asp-action="Index" class="stat-card stat-card-link">
+            <div class="stat-icon blue"><i class="fa-solid fa-users-gear"></i></div>
+            <div class="stat-content">
+                <p class="stat-label">Người dùng</p>
+                <p class="stat-action-text">Quản lý <i class="fa-solid fa-arrow-right fa-sm"></i></p>
+            </div>
+        </a>
+
+        <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="stat-card stat-card-link">
+            <div class="stat-icon purple"><i class="fa-solid fa-building-circle-check"></i></div>
+            <div class="stat-content">
+                <p class="stat-label">Doanh nghiệp</p>
+                <p class="stat-action-text">Quản lý <i class="fa-solid fa-arrow-right fa-sm"></i></p>
+            </div>
+        </a>
+
+        <a asp-area="Admin" asp-controller="Review" asp-action="Reviews" class="stat-card stat-card-link">
+            <div class="stat-icon green"><i class="fa-solid fa-comments"></i></div>
+            <div class="stat-content">
+                <p class="stat-label">Reviews</p>
+                <p class="stat-action-text">Duyệt bài <i class="fa-solid fa-arrow-right fa-sm"></i></p>
+            </div>
+        </a>
+
+        <a asp-area="Admin" asp-controller="Report" asp-action="Index" class="stat-card stat-card-link">
+            <div class="stat-icon orange"><i class="fa-solid fa-chart-pie"></i></div>
+            <div class="stat-content">
+                <p class="stat-label">Báo cáo</p>
+                <p class="stat-action-text">Xem chi tiết <i class="fa-solid fa-arrow-right fa-sm"></i></p>
+            </div>
+        </a>
     </div>
 </div>

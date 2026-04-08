@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SocialReview.Data;
 using SocialReview.Repositories.Interface;
 
 namespace SocialReview.Areas.Admin.Controllers
 {
-    [Area("Admin")] 
+    [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
@@ -20,6 +21,19 @@ namespace SocialReview.Areas.Admin.Controllers
         {
             var users = await _userRepository.GetAllUser();
             return View(users);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            //var user = await _userRepository.GetUserById(id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound("Không tìm thấy tài khoản người dùng.");
+            }
+
+            return View(user);
         }
     }
 }

@@ -58,9 +58,9 @@ namespace SocialReview.Repositories.Class
         }
 
 
-        //public async Task<User> GetUserById(int id)
-        //{
-        //    return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-        //}
+        public async Task<User> GetUserById(int id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
     }
 }

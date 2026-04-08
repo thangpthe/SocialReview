@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SocialReview.Data;
 using SocialReview.Repositories.Interface;
 
 namespace SocialReview.Areas.Admin.Controllers
@@ -9,10 +11,12 @@ namespace SocialReview.Areas.Admin.Controllers
     public class ReviewController : Controller
     {
         private readonly IAdminReviewRepository _adminReviewRepo;
+        private readonly ApplicationDbContext _context;
 
-        public ReviewController(IAdminReviewRepository adminReviewRepo)
+        public ReviewController(IAdminReviewRepository adminReviewRepo,ApplicationDbContext context)
         {
             _adminReviewRepo = adminReviewRepo;
+            _context = context;
         }
 
         // ===== REVIEWS =====
@@ -122,6 +126,19 @@ namespace SocialReview.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var review = await _context.Reviews
+                .Include(r => r.User)
+                .Include(r => r.Product)
+                .Include(r => r.Comments)
+                    .ThenInclude(c => c.User) // Lấy thông tin người bình luận
+                .FirstOrDefaultAsync(r => r.ReviewID == id);
+
+            if (review == null) return NotFound();
+            return View(review);
         }
     }
 }

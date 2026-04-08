@@ -1,66 +1,56 @@
 ﻿@model IEnumerable<SocialReview.Models.Product>
 @{
+    ViewData["Title"] = "Kết quả tìm kiếm - Trustify";
     Layout = "_Layout";
-    var searchQuery = ViewData["SearchQuery"] as string;
-    ViewData["Title"] = $"Kết quả cho '{searchQuery}'";
 }
 
 @section Styles {
-    <!-- Dùng chung CSS với trang Dashboard Doanh nghiệp để hiển thị card -->
-    <link rel="stylesheet" href="~/css/company_dashboard.css" />
-    <style>
-        /* CSS Bổ sung cho card sản phẩm (nếu chưa có) */
-        a.product-card-link,
-        a.product-card-link:hover {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        a.product-card-link {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-            a.product-card-link:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            }
-
-                a.product-card-link:hover .product-card-link-detail {
-                    text-decoration: underline;
-                    color: var(--purple-600);
-                }
-    </style>
+    <link rel="stylesheet" href="~/css/product-search.css" asp-append-version="true" />
 }
 
-<main class="container py-10 md:py-16 space-y-12">
-    <section>
-        <h2 class="section-title">
-            Tìm thấy @Model.Count() kết quả cho "@searchQuery"
-        </h2>
+<div class="search-container">
+    <div class="search-header">
+        <h2 class="search-title">Kết quả tìm kiếm <span class="search-count">(@(Model?.Count() ?? 0) sản phẩm)</span></h2>
+    </div>
 
-        @if (Model.Any())
-        {
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach (var product in Model)
-                {
-                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductID" class="card product-card-link">
-                        <img src="@product.ProductImage" alt="@product.ProductName" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h4 class="font-semibold mb-1">@product.ProductName</h4>
-                            <p class="text-xs text-[--text-gray] mb-2">@product.ProductType</p>
-                            <p class="text-sm text-[--text-gray] line-clamp-2">@product.ProductDescription</p>
-                            <span class="text-sm text-[--purple-600] product-card-link-detail mt-2 inline-block">Xem chi tiết &rarr;</span>
+    @if (Model != null && Model.Any())
+    {
+        <div class="product-grid">
+            @foreach (var product in Model)
+            {
+                <a href="/Product/Detail/@product.ProductID" class="product-card">
+                    @if (!string.IsNullOrEmpty(product.ProductImage))
+                    {
+                        <img src="@product.ProductImage" alt="@product.ProductName" class="product-image">
+                    }
+                    else
+                    {
+                        <div class="product-image" style="display:flex; align-items:center; justify-content:center; color:#9ca3af;">
+                            <i class="fa-solid fa-image fa-3x"></i>
                         </div>
-                    </a>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="card p-6 text-center">
-                <p class="text-[--text-gray]">Rất tiếc, không tìm thấy sản phẩm nào khớp với từ khóa của bạn.</p>
-            </div>
-        }
-    </section>
-</main>
+                    }
 
+                    <div class="card-body">
+                        <h4 class="product-name">@product.ProductName</h4>
+                        <p class="product-company"><i class="fa-solid fa-building"></i> @(product.Company?.CompanyName ?? "Đang cập nhật")</p>
+
+                        <div class="product-rating">
+                            <span style="color: #fbbf24;">★★★★☆</span> (@(product.Reviews?.Count ?? 0) đánh giá)
+                        </div>
+
+                        <p class="product-price">@(product.ProductPrice > 0 ? product.ProductPrice.ToString("N0") + " ₫" : "Liên hệ")</p>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div style="text-align: center; padding: 4rem 2rem; background: white; border-radius: 12px; border: 1px solid #f3f4f6;">
+            <i class="fa-solid fa-box-open" style="font-size: 3rem; color: #d1d5db; margin-bottom: 1rem;"></i>
+            <h3 style="font-size: 1.25rem; color: #374151; margin-bottom: 0.5rem;">Không tìm thấy sản phẩm</h3>
+            <p style="color: #6b7280; margin-bottom: 1.5rem;">Vui lòng thử tìm kiếm với từ khóa khác.</p>
+            <a href="/" style="display: inline-block; background: #7c3aed; color: white; padding: 10px 24px; border-radius: 50px; text-decoration: none; font-weight: 600;">Quay lại trang chủ</a>
+        </div>
+    }
+</div>

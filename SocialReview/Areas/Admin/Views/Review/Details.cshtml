@@ -1,0 +1,73 @@
+﻿@model SocialReview.Models.Review
+@{
+    ViewData["Title"] = "Kiểm duyệt Review";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-container">
+    <div class="admin-header">
+        <a href="@Url.Action("Reviews", "Review", new { area = "Admin" })" class="btn btn-secondary" style="margin-bottom: 1rem;">
+            <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+        </a>
+        <h1 class="admin-title">Kiểm duyệt Nội dung</h1>
+    </div>
+
+    <div class="form-container" style="margin-bottom: 2rem; border-left: 4px solid var(--primary-purple);">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">@Model.Title</h2>
+                <div style="display: flex; gap: 1rem; color: #6b7280; font-size: 0.9rem;">
+                    <span><i class="fa-solid fa-user"></i> <strong>@Model.User?.UserName</strong></span>
+                    <span><i class="fa-solid fa-box"></i> @Model.Product?.ProductName</span>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div style="color: #fbbf24; font-size: 1.25rem;">@for (int i = 0; i < Model.Rating; i++) {
+                <span>★</span>
+                                }
+</div>
+            </div>
+        </div>
+        <div style="margin-top: 1.5rem; padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; line-height: 1.6;">
+            @Model.Content
+        </div>
+    </div>
+
+    <h2 class="admin-title" style="font-size: 1.25rem; margin-bottom: 1rem;">Bình luận (@(Model.Comments?.Count ?? 0))</h2>
+    <div class="table-container">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 150px;">Người dùng</th>
+                        <th>Nội dung bình luận</th>
+                        <th style="width: 100px; text-align: right;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Comments != null && Model.Comments.Any())
+                    {
+                        foreach (var comment in Model.Comments)
+                        {
+                            <tr>
+                                <td style="font-weight: 600;">@comment.User?.UserName</td>
+                                @* <td>@comment.Contents</td> *@
+                                <td style="text-align: right;">
+                                    <form asp-action="DeleteComment" method="post" class="inline-form" onsubmit="return confirm('Xóa bình luận vi phạm này?');">
+                                        <input type="hidden" name="id" value="@comment.CommentID" />
+                                        <input type="hidden" name="reviewId" value="@Model.ReviewID" />
+                                        <button type="submit" class="btn btn-red" title="Xóa"><i class="fa-solid fa-xmark"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="3" class="empty-state">Chưa có bình luận nào.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

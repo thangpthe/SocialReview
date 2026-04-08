@@ -127,18 +127,43 @@ namespace SocialReview.Repositories.Class
         }
 
         // --- THỰC HIỆN PHƯƠNG THỨC NÀY ---
+        //public async Task<IEnumerable<Product>> Search(string query)
+        //{
+        //    // Chuyển sang chữ thường để tìm kiếm không phân biệt hoa/thường
+        //    var lowerQuery = query.ToLower();
+
+        //    var results = await _context.Products
+        //                            .Include(p => p.Company) // Include Company để hiển thị card
+        //                            .Where(p =>
+        //                                // Tìm theo tên sản phẩm
+        //                                p.ProductName.ToLower().Contains(lowerQuery) ||
+        //                                // Hoặc tìm theo tên công ty
+        //                                (p.Company != null && p.Company.CompanyName.ToLower().Contains(lowerQuery))
+        //                            )
+        //                            .ToListAsync();
+
+        //    return results;
+        //}
+
+        // --- THỰC HIỆN PHƯƠNG THỨC NÀY ---
         public async Task<IEnumerable<Product>> Search(string query)
         {
-            // Chuyển sang chữ thường để tìm kiếm không phân biệt hoa/thường
-            var lowerQuery = query.ToLower();
+            if (string.IsNullOrWhiteSpace(query))
+                return new List<Product>();
+
+            // Cắt khoảng trắng và chuyển sang chữ thường để tìm kiếm chuẩn xác
+            var lowerQuery = query.Trim().ToLower();
 
             var results = await _context.Products
-                                    .Include(p => p.Company) // Include Company để hiển thị card
+                                    .Include(p => p.Company) // Include Company để hiển thị tên công ty
+                                    .Include(p => p.Reviews) // BỔ SUNG: Lấy Review để hiển thị số sao đánh giá
                                     .Where(p =>
-                                        // Tìm theo tên sản phẩm
-                                        p.ProductName.ToLower().Contains(lowerQuery) ||
-                                        // Hoặc tìm theo tên công ty
-                                        (p.Company != null && p.Company.CompanyName.ToLower().Contains(lowerQuery))
+                                        p.Disabled != true && // BỔ SUNG: KHÔNG hiển thị sản phẩm đã bị ẩn
+                                        (
+                                            p.ProductName.ToLower().Contains(lowerQuery) ||
+                                            (p.Company != null && p.Company.CompanyName.ToLower().Contains(lowerQuery)) ||
+                                            (p.ProductType != null && p.ProductType.ToLower().Contains(lowerQuery)) // Tìm theo cả loại sản phẩm
+                                        )
                                     )
                                     .ToListAsync();
 

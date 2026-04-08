@@ -5,23 +5,27 @@
 }
 
 <div class="admin-container">
-    <!-- Page Header -->
     <div class="page-section-header">
         <h3 class="page-section-title">Danh sách người dùng</h3>
-        <a asp-action="Create" class="btn btn-green">
-            <i class="fa-solid fa-plus"></i> Tạo mới
-        </a>
     </div>
 
-    <!-- Table Container -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success"><i class="fa-solid fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger"><i class="fa-solid fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
+    }
+
     <div class="table-container">
-        <!-- Desktop Table View -->
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
+                        <th>Email</th>
                         <th>Vai trò</th>
                         <th>Hành động</th>
                     </tr>
@@ -34,14 +38,30 @@
                             <tr>
                                 <td>@item.Id</td>
                                 <td>@item.UserName</td>
+                                <td>@item.Email</td>
                                 <td>
-                                    @(item.UserRole == "User" ? "Cá nhân" : "Doanh nghiệp")
+                                    @if (item.UserRole == "Business")
+                                    {
+                                        <span class="badge badge-purple">Doanh nghiệp</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-blue">Cá nhân</span>
+                                    }
                                 </td>
                                 <td>
-                                    <div class="action-buttons">
-                                        <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i></a>
-                                        <a class="btn btn-blue"><i class="fa-solid fa-eye"></i></a>
-                                        <a class="btn btn-red"><i class="fa-solid fa-trash"></i></a>
+                                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                        <a href="@Url.Action("Edit", "User", new { area = "Admin", id = item.Id })" class="btn btn-yellow" title="Sửa">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </a>
+
+                                        <a href="@Url.Action("Details", "User", new { area = "Admin", id = item.Id })" class="btn btn-blue" title="Xem">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+
+                                        <a href="@Url.Action("Delete", "User", new { area = "Admin", id = item.Id })" class="btn btn-red" title="Xóa" onclick="return confirm('Xóa tài khoản này?');">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -51,7 +71,6 @@
             </table>
         </div>
 
-        <!-- Mobile Card View -->
         <div class="mobile-cards">
             @foreach (var item in Model)
             {
@@ -64,16 +83,26 @@
                         </div>
                         <div class="mobile-card-body">
                             <div class="mobile-card-row">
+                                <div class="mobile-card-label">Email</div>
+                                <div class="mobile-card-value">@item.Email</div>
+                            </div>
+                            <div class="mobile-card-row">
                                 <div class="mobile-card-label">Vai trò</div>
-                                <div class="mobile-card-value">
-                                    @(item.UserRole == "User" ? "Cá nhân" : "Doanh nghiệp")
-                                </div>
+                                <div class="mobile-card-value">@(item.UserRole == "Business" ? "Doanh nghiệp" : "Cá nhân")</div>
                             </div>
                         </div>
                         <div class="mobile-card-actions">
-                            <a class="btn btn-yellow"><i class="fa-solid fa-pencil"></i> Sửa</a>
-                            <a class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem</a>
-                            <a class="btn btn-red"><i class="fa-solid fa-trash"></i> Xóa</a>
+                            <a href="@Url.Action("Edit", "User", new { area = "Admin", id = item.Id })" class="btn btn-yellow">
+                                <i class="fa-solid fa-pencil"></i> Sửa
+                            </a>
+
+                            <a href="@Url.Action("Details", "User", new { area = "Admin", id = item.Id })" class="btn btn-blue">
+                                <i class="fa-solid fa-eye"></i> Xem
+                            </a>
+
+                            <a href="@Url.Action("Delete", "User", new { area = "Admin", id = item.Id })" class="btn btn-red" onclick="return confirm('Xóa?');">
+                                <i class="fa-solid fa-trash"></i> Xóa
+                            </a>
                         </div>
                     </div>
                 }

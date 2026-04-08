@@ -1,8 +1,5 @@
-﻿// Trong file: SearchController.cs
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SocialReview.Repositories.Interface;
-using SocialReview.ViewModels;
 
 namespace SocialReview.Controllers
 {
@@ -13,22 +10,21 @@ namespace SocialReview.Controllers
         {
             _productRepo = productRepo;
         }
+
         public async Task<IActionResult> Index(string query)
         {
-            if (string.IsNullOrEmpty(query))
+            // Xử lý query null hoặc chỉ chứa khoảng trắng
+            if (string.IsNullOrWhiteSpace(query))
             {
-                // Nếu tìm kiếm rỗng, quay về trang chủ
                 return RedirectToAction("Index", "Home");
             }
 
             // Gọi repository để tìm
             var results = await _productRepo.Search(query);
 
-            // Lưu lại từ khóa để View có thể hiển thị: "Kết quả cho '...'"
-            ViewData["SearchQuery"] = query;
+            // Gửi query đã được dọn sạch khoảng trắng ra View
+            ViewData["SearchQuery"] = query.Trim();
 
-            // Gửi danh sách (List<Product>) đến View
-            // (File Views/Search/Index.cshtml của bạn đã sẵn sàng nhận cái này)
             return View(results);
         }
     }

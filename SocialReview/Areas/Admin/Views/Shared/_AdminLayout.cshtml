@@ -1,4 +1,4 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@* @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -9,10 +9,8 @@
 
     <link rel="icon" href="~/images/logo.ico" type="image/x-icon" />
     <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" />
-
-    <!-- CSS chính -->
-    <link rel="stylesheet" href="~/css/admin-layout.css" />
-    <link rel="stylesheet" href="~/css/admin-utilities.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-utilities.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -26,30 +24,147 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a asp-area="Admin" asp-controller="AdminDashboard" asp-action="Index" class="sidebar-link">
-                <i class="fa-solid fa-tachometer-alt"></i> <span>Tổng quan</span>
+            @{
+                // BUG FIX: active state detection for sidebar links
+                var ctrl   = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+                var action = ViewContext.RouteData.Values["action"]?.ToString()     ?? "";
+
+                bool IsActive(string controller, string? act = null)
+                    => ctrl.Equals(controller, StringComparison.OrdinalIgnoreCase)
+                       && (act == null || action.Equals(act, StringComparison.OrdinalIgnoreCase));
+            }
+
+            <a asp-area="Admin" asp-controller="AdminDashboard" asp-action="Index"
+               class="sidebar-link @(IsActive("AdminDashboard") ? "active" : "")">
+                <i class="fa-solid fa-tachometer-alt"></i>
+                <span>Tổng quan</span>
             </a>
-            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="sidebar-link">
-                <i class="fa-solid fa-users"></i> <span>Quản lý User</span>
+
+            <a asp-area="Admin" asp-controller="User" asp-action="Index"
+               class="sidebar-link @(IsActive("User") ? "active" : "")">
+                <i class="fa-solid fa-users"></i>
+                <span>Quản lý User</span>
             </a>
-            <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="sidebar-link">
-                <i class="fa-solid fa-building"></i> <span>Quản lý Doanh nghiệp</span>
+
+            <a asp-area="Admin" asp-controller="Company" asp-action="Index"
+               class="sidebar-link @(IsActive("Company") ? "active" : "")">
+                <i class="fa-solid fa-building"></i>
+                <span>Quản lý Doanh nghiệp</span>
             </a>
-            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="sidebar-link">
-                <i class="fa-solid fa-box"></i> <span>Quản lý Sản phẩm</span>
+
+            <a asp-area="Admin" asp-controller="Product" asp-action="Index"
+               class="sidebar-link @(IsActive("Product") ? "active" : "")">
+                <i class="fa-solid fa-box"></i>
+                <span>Quản lý Sản phẩm</span>
             </a>
-            <a asp-area="Admin" asp-controller="Review" asp-action="Reviews" class="sidebar-link">
-                <i class="fa-solid fa-comment"></i> <span>Quản lý Review</span>
+
+            <a asp-area="Admin" asp-controller="Review" asp-action="Reviews"
+               class="sidebar-link @(IsActive("Review", "Reviews") ? "active" : "")">
+                <i class="fa-solid fa-comment"></i>
+                <span>Quản lý Review</span>
             </a>
-            <a asp-area="Admin" asp-controller="Review" asp-action="Comments" class="sidebar-link">
-                <i class="fa-solid fa-comments"></i> <span>Quản lý Comment</span>
+
+            <a asp-area="Admin" asp-controller="Report" asp-action="Index"
+               class="sidebar-link @(IsActive("Report") ? "active" : "")">
+                <i class="fa-solid fa-chart-bar"></i>
+                <span>Báo cáo & Xuất Excel</span>
             </a>
-            <a asp-area="Admin" asp-controller="Report" asp-action="Index" class="sidebar-link">
-                <i class="fa-solid fa-flag"></i> <span>Xem Báo cáo</span>
-            </a>
-            <a asp-area="Admin" asp-controller="Setting" asp-action="Index" class="sidebar-link">
-                <i class="fa-solid fa-cog"></i> <span>Cài đặt</span>
-            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <form asp-area="" asp-controller="Auth" asp-action="Logout" method="POST" id="logout-form">
+                <a href="#"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                   class="sidebar-link sidebar-link-logout">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </form>
+        </div>
+    </aside>
+
+    <div id="overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <main class="main-content">
+        <div class="main-content-header">
+            <button class="sidebar-toggle-button" onclick="toggleSidebar()" aria-label="Mở/đóng menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <h2 id="page-title">@ViewData["Title"]</h2>
+        </div>
+
+        @RenderBody()
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+        // Close sidebar on mobile when a link is clicked
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) toggleSidebar();
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> *@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>@ViewData["Title"] - Trustify Admin</title>
+
+    <script>
+        if (localStorage.getItem('sidebarState') === 'mini') {
+            document.documentElement.classList.add('sidebar-mini'); // Gán tạm vào HTML
+        }
+    </script>
+
+    <link rel="icon" href="~/images/logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-7.1.0-web/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-utilities.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="">
+    <script>
+        if (document.documentElement.classList.contains('sidebar-mini')) {
+            document.body.classList.add('sidebar-mini');
+            document.documentElement.classList.remove('sidebar-mini');
+        }
+    </script>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">
+                Trustify
+                <span class="sidebar-subtitle">Admin</span>
+            </h1>
+        </div>
+
+        <nav class="sidebar-nav">
+            @{
+                var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+                var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+                bool IsActive(string controller, string? act = null) =>
+                ctrl.Equals(controller, StringComparison.OrdinalIgnoreCase) &&
+                (act == null || action.Equals(act, StringComparison.OrdinalIgnoreCase));
+            }
+
+            <a asp-area="Admin" asp-controller="AdminDashboard" asp-action="Index" class="sidebar-link @(IsActive("AdminDashboard") ? "active" : "")"><i class="fa-solid fa-tachometer-alt"></i> <span>Tổng quan</span></a>
+            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="sidebar-link @(IsActive("User") ? "active" : "")"><i class="fa-solid fa-users"></i> <span>Quản lý User</span></a>
+            <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="sidebar-link @(IsActive("Company") ? "active" : "")"><i class="fa-solid fa-building"></i> <span>Doanh nghiệp</span></a>
+            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="sidebar-link @(IsActive("Product") ? "active" : "")"><i class="fa-solid fa-box"></i> <span>Sản phẩm</span></a>
+            <a asp-area="Admin" asp-controller="Review" asp-action="Reviews" class="sidebar-link @(IsActive("Review", "Reviews") ? "active" : "")"><i class="fa-solid fa-comment"></i> <span>Review</span></a>
+            <a asp-area="Admin" asp-controller="Report" asp-action="Index" class="sidebar-link @(IsActive("Report") ? "active" : "")"><i class="fa-solid fa-chart-bar"></i> <span>Báo cáo</span></a>
         </nav>
 
         <div class="sidebar-footer">
@@ -61,12 +176,11 @@
         </div>
     </aside>
 
-    <div id="overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
     <main class="main-content">
-        <div class="main-content-header">
-            <h2 id="page-title">@ViewData["Title"]</h2>
-            <button class="sidebar-toggle-button" onclick="toggleSidebar()">
+        <div class="main-content-header" style="justify-content: flex-start; margin-bottom: 0;">
+            <button type="button" class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Mở/đóng menu">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
@@ -75,15 +189,34 @@
     </main>
 
     <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-        // Tự động đóng sidebar trên mobile khi click link
-        document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 1024) toggleSidebar();
-            });
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
+                    // Nếu là màn hình Desktop
+                    if (window.innerWidth >= 1024) {
+                        document.body.classList.toggle('sidebar-mini');
+                        // Lưu vết vào bộ nhớ để chuyển trang không bị mất trạng thái
+                        const isMini = document.body.classList.contains('sidebar-mini');
+                        localStorage.setItem('sidebarState', isMini ? 'mini' : 'full');
+                    }
+                    // Nếu là màn hình Điện thoại / Tablet
+                    else {
+                        document.body.classList.toggle('mobile-open');
+                        overlay.classList.toggle('active');
+                    }
+                });
+            }
+
+            // Click vào màn mờ để đóng (chỉ cho Mobile)
+            if (overlay) {
+                overlay.addEventListener('click', function () {
+                    document.body.classList.remove('mobile-open');
+                    overlay.classList.remove('active');
+                });
+            }
         });
     </script>
 

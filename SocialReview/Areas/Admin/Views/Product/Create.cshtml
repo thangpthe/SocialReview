@@ -110,7 +110,7 @@
     </div>
 </div>
 
-@section Scripts {
+@* @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
     <script>
@@ -149,5 +149,79 @@
             document.getElementById('status-label').classList.toggle('text-green-600', !this.checked);
             document.getElementById('status-label').classList.toggle('text-red-600', this.checked);
         });
+    </script>
+} *@
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const imageUrlInput = document.getElementById('image-url');
+        const imageUploadInput = document.getElementById('image-upload');
+        const imagePreviewContainer = document.getElementById('image-preview');
+
+        // Cập nhật thẻ IMG trong khung preview
+        function updatePreview(src) {
+            imagePreviewContainer.innerHTML = `<img src="${src}" alt="Preview" style="max-height: 100%; max-width: 100%; object-fit: contain;">`;
+        }
+
+        // Preview từ Link URL
+        if (imageUrlInput) {
+            imageUrlInput.addEventListener('input', function () {
+                const url = this.value.trim();
+                if (url) {
+                    updatePreview(url);
+                    imageUploadInput.value = ''; // Xóa file nếu đang nhập link
+                }
+            });
+        }
+
+        // Preview từ Upload File máy tính
+        if (imageUploadInput) {
+            imageUploadInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (ev) {
+                        updatePreview(ev.target.result);
+                        if (imageUrlInput) imageUrlInput.value = ''; // Xóa link nếu đang chọn file
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Tính năng đếm ký tự Mô tả
+        const descTextarea = document.querySelector('textarea#ProductDescription');
+        const countSpan = document.getElementById('desc-count');
+        if (descTextarea && countSpan) {
+            // Khởi tạo đếm lúc mới load trang (dành cho Edit)
+            countSpan.textContent = descTextarea.value.length;
+
+            descTextarea.addEventListener('input', function () {
+                countSpan.textContent = this.value.length;
+                if(this.value.length > 2000) countSpan.style.color = 'red';
+                else countSpan.style.color = '#6b7280';
+            });
+        }
+
+        // Cập nhật text trạng thái hiển thị
+        const toggleSwitch = document.getElementById('disabled-toggle');
+        const statusLabel = document.getElementById('status-label');
+
+        if (toggleSwitch && statusLabel) {
+            const updateStatusUI = (isChecked) => {
+                statusLabel.textContent = isChecked ? 'Đã ẩn (Không hiển thị)' : 'Đang hiển thị công khai';
+                statusLabel.style.color = isChecked ? '#dc2626' : '#16a34a'; // Đỏ khi ẩn, Xanh khi hiện
+            };
+
+            // Chạy lần đầu
+            updateStatusUI(toggleSwitch.checked);
+
+            // Lắng nghe sự kiện click
+            toggleSwitch.addEventListener('change', function () {
+                updateStatusUI(this.checked);
+            });
+        }
     </script>
 }

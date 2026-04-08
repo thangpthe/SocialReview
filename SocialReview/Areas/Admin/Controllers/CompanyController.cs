@@ -21,5 +21,16 @@ namespace SocialReview.Areas.Admin.Controllers
             var companies = await _companyRepository.GetAllAsync();
             return View(companies);
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            // Dùng _context để lấy trực tiếp từ Database cho chắc chắn
+            var company = await _companyRepository.GetByIdAsync(id);
+            if (company == null)
+            {
+                return NotFound("Không tìm thấy doanh nghiệp.");
+            }
+            return View(company);
+        }
     }
 }

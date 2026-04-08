@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SocialReview.Models;
-using SocialReview.Repositories.Interface; // <-- (Xóa Using này)
+using SocialReview.Repositories.Interface; // BẮT BUỘC PHẢI GIỮ LẠI ĐỂ DÙNG IReviewRepository
 using SocialReview.Services;
 using SocialReview.ViewModels;
 using System.Diagnostics;
@@ -10,23 +10,26 @@ namespace SocialReview.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IDashboardService _dashboardService;
-        // XÓA: private readonly IReviewRepository _reviewRepo;
+        //private readonly IDashboardService _dashboardService;
+        private readonly IReviewRepository _reviewRepo;
 
-        public HomeController(IDashboardService dashboardService) // <-- Sửa: Xóa IReviewRepository
+        // BẮT BUỘC PHẢI GIỮ LẠI IReviewRepository TRONG CONSTRUCTOR
+        public HomeController(IDashboardService dashboardService, IReviewRepository reviewRepo)
         {
-            _dashboardService = dashboardService;
-            // XÓA: _reviewRepo = reviewRepo;
+            //_dashboardService = dashboardService;
+            _reviewRepo = reviewRepo;
         }
 
-        // --- SỬA LẠI ACTION INDEX ---
         public async Task<IActionResult> Index()
         {
-            // Lấy thông tin thống kê (Total Users, Companies...)
-            var statsViewModel = await _dashboardService.GetDashboardStatsAsync();
+            // 1. MỞ LẠI CODE LẤY THÔNG TIN THỐNG KÊ (Vì View của bạn cần Model để hiển thị số lượng)
+            //var statsViewModel = await _dashboardService.GetDashboardStatsAsync();
 
-            // Gửi "khay" thống kê đến View
-            return View(statsViewModel);
+            // 2. LẤY 3 REVIEW MỚI NHẤT TỪ DATABASE
+            ViewBag.LatestReviews = await _reviewRepo.GetLatestReviewsAsync(3);
+
+            // 3. GỬI BIẾN statsViewModel RA NGOÀI VIEW
+            return View();
         }
 
         public IActionResult Privacy()
@@ -41,4 +44,3 @@ namespace SocialReview.Controllers
         }
     }
 }
-

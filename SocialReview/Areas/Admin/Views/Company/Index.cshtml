@@ -5,48 +5,62 @@
 }
 
 <div class="admin-container">
-    <div class="page-section-header">
-        <h1 class="page-section-title">Danh sách Doanh nghiệp</h1>
+    <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 class="admin-title">Danh sách Doanh nghiệp</h1>
+            <p class="admin-subtitle">Quản lý các công ty và thương hiệu trên hệ thống</p>
+        </div>
         <a asp-action="Create" class="btn btn-green">
             <i class="fa-solid fa-plus"></i> Tạo mới
         </a>
     </div>
 
     <div class="table-container">
-        <!-- Desktop Table -->
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Tên Doanh nghiệp</th>
-                        <th class="max-w-sm">Mô tả</th>
+                        <th style="max-width: 250px;">Mô tả</th>
                         <th>Lĩnh vực</th>
                         <th>Email</th>
-                        <th>SDT</th>
+                        <th>SĐT</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>#@item.CompanyID</td>
+                                <td style="font-weight: 500; color: #111827;">@item.CompanyName</td>
+                                <td>
+                                    <div class="text-truncate-cell" title="@item.CompanyDescription">
+                                        @item.CompanyDescription
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-blue">@item.Industry</span></td>
+                                <td>@item.ContactEmail</td>
+                                <td>@item.Phone</td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                        <a href="@Url.Action("Edit", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-yellow" title="Sửa"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="@Url.Action("Details", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-blue" title="Xem"><i class="fa-solid fa-eye"></i></a>
+                                        <a href="@Url.Action("Delete", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-red" title="Xóa" onclick="return confirm('Xóa doanh nghiệp này?');"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td>@item.CompanyID</td>
-                            <td>@item.CompanyName</td>
-                            <td>
-                                <div class="text-truncate-cell" title="@item.CompanyDescription">
-                                    @item.CompanyDescription
-                                </div>
-                            </td>
-                            <td>@item.Industry</td>
-                            <td>@item.ContactEmail</td>
-                            <td>@item.Phone</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a asp-action="Edit" asp-route-id="@item.CompanyID" class="btn btn-yellow" aria-label="Sửa"><i class="fa-solid fa-pencil"></i></a>
-                                    <a asp-action="Details" asp-route-id="@item.CompanyID" class="btn btn-blue" aria-label="Xem"><i class="fa-solid fa-eye"></i></a>
-                                    <a asp-action="Delete" asp-route-id="@item.CompanyID" class="btn btn-red" aria-label="Xóa" onclick="return confirm('Xóa doanh nghiệp này?');"><i class="fa-solid fa-trash"></i></a>
-                                </div>
+                            <td colspan="7" class="empty-state">
+                                <i class="fa-solid fa-building empty-state-icon"></i>
+                                <div class="empty-state-text">Chưa có doanh nghiệp nào.</div>
                             </td>
                         </tr>
                     }
@@ -54,27 +68,28 @@
             </table>
         </div>
 
-        <!-- Mobile Card -->
         <div class="mobile-cards">
-            @foreach (var item in Model)
+            @if (Model != null && Model.Any())
             {
-                <div class="mobile-card">
-                    <div class="mobile-card-header">
-                        <div class="mobile-card-title">@item.CompanyName</div>
-                        <div class="mobile-card-id">#@item.CompanyID</div>
+                @foreach (var item in Model)
+                {
+                    <div class="mobile-card">
+                        <div class="mobile-card-header">
+                            <div>@item.CompanyName</div>
+                            <div style="color:#6b7280;">#@item.CompanyID</div>
+                        </div>
+                        <div class="mobile-card-body">
+                            <div class="mobile-card-row"><span class="mobile-card-label">Mô tả</span><span class="mobile-card-value text-truncate-cell" style="max-width: 150px;">@item.CompanyDescription</span></div>
+                            <div class="mobile-card-row"><span class="mobile-card-label">Lĩnh vực</span><span class="mobile-card-value">@item.Industry</span></div>
+                            <div class="mobile-card-row"><span class="mobile-card-label">Email</span><span class="mobile-card-value">@item.ContactEmail</span></div>
+                        </div>
+                        <div class="mobile-card-actions">
+                            <a href="@Url.Action("Edit", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-yellow"><i class="fa-solid fa-pencil"></i> Sửa</a>
+                            <a href="@Url.Action("Details", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem</a>
+                            <a href="@Url.Action("Delete", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-red" onclick="return confirm('Xóa?');"><i class="fa-solid fa-trash"></i> Xóa</a>
+                        </div>
                     </div>
-                    <div class="mobile-card-body">
-                        <div class="mobile-card-row"><div class="mobile-card-label">Mô tả</div><div class="mobile-card-value">@item.CompanyDescription</div></div>
-                        <div class="mobile-card-row"><div class="mobile-card-label">Lĩnh vực</div><div class="mobile-card-value">@item.Industry</div></div>
-                        <div class="mobile-card-row"><div class="mobile-card-label">Email</div><div class="mobile-card-value">@item.ContactEmail</div></div>
-                        <div class="mobile-card-row"><div class="mobile-card-label">SDT</div><div class="mobile-card-value">@item.Phone</div></div>
-                    </div>
-                    <div class="mobile-card-actions">
-                        <a asp-action="Edit" asp-route-id="@item.CompanyID" class="btn btn-yellow">Sửa</a>
-                        <a asp-action="Details" asp-route-id="@item.CompanyID" class="btn btn-blue">Xem</a>
-                        <a asp-action="Delete" asp-route-id="@item.CompanyID" class="btn btn-red" onclick="return confirm('Xóa?');">Xóa</a>
-                    </div>
-                </div>
+                }
             }
         </div>
     </div>

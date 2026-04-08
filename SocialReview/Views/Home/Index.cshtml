@@ -5,101 +5,461 @@
     Layout = "_Layout";
 }
 
-@* CSS Tạm thời cho các Thống kê *@
 @section Styles {
-    <style>
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-            margin-bottom: 2rem; /* Thêm khoảng cách dưới */
-        }
+<style>
 
-        .stat-card {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .stat-icon {
-            font-size: 1.5rem;
-            padding: 1rem;
-            border-radius: 50%;
-            background-color: #F3E5F5; /* --purple-50 */
-            color: #6A1B9A; /* --purple-700 */
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stat-info h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #6A1B9A; /* --purple-700 */
-        }
-
-        .stat-info p {
-            font-size: 0.9rem;
-            color: #555; /* --text-gray */
-        }
-
-        .home-banner {
-            text-align: center;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-top: 1rem;
-        }
-
-            .home-banner h1 {
-                font-family: 'Poppins', sans-serif;
-                font-size: 2.25rem; /* text-4xl */
-                font-weight: 700;
-                color: #6A1B9A; /* --purple-700 */
-            }
-
-            .home-banner p {
-                font-size: 1.125rem; /* text-lg */
-                color: #555; /* --text-gray */
-                margin-top: 0.5rem; /* mt-2 */
-            }
-
-            .home-banner .btn-primary {
-                display: inline-block;
-                margin-top: 1.5rem; /* mt-6 */
-                background-color: #8E24AA; /* --purple-600 */
-                color: white;
-                padding: 10px 20px;
-                border-radius: 8px;
-                font-weight: 500;
-                text-decoration: none;
-            }
-
-                .home-banner .btn-primary:hover {
-                    background-color: #6A1B9A; /* --purple-700 */
-                }
-    </style>
+/* ── 1. STAT CARDS ─────────────────────────────────────────── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+    margin: 2rem 0;
 }
 
-<div class="container home-container">
+.stat-card {
+    background: #fff;
+    padding: 1.4rem 1.5rem;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.07);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(0,0,0,.1);
+}
 
-    <div class="home-banner">
-        <h1>Chào mừng đến với Trustify</h1>
-        <p>Nền tảng đánh giá sản phẩm và dịch vụ trung thực.</p>
-        <a asp-controller="Product" asp-action="Index" class="btn-primary">
-            Xem tất cả sản phẩm
-        </a>
-    </div>
+.stat-icon {
+    font-size: 1.4rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f3e8ff;
+    color: #7c3aed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
 
-    <!-- Hiển thị thống kê -->
+.stat-info h3 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #7c3aed;
+    margin: 0 0 .15rem;
+    line-height: 1;
+}
+.stat-info p {
+    font-size: .85rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ── 2. HERO SECTION ────────────────────────────────────────── */
+.hero-section {
+    text-align: center;
+    padding: 90px 24px 80px;
+    background: linear-gradient(160deg, #f5f3ff 0%, #fdf2f8 50%, #f0f9ff 100%);
+    border-radius: 20px;
+    margin-bottom: 56px;
+    border: 1px solid #e9d5ff;
+    position: relative;
+    overflow: hidden;
+}
+/* Decorative blobs */
+.hero-section::before,
+.hero-section::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: .35;
+    pointer-events: none;
+}
+.hero-section::before {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #c4b5fd, transparent 70%);
+    top: -120px; right: -100px;
+}
+.hero-section::after {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #fbcfe8, transparent 70%);
+    bottom: -80px; left: -80px;
+}
+
+.hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    background: #ede9fe;
+    color: #7c3aed;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: .8rem;
+    letter-spacing: .5px;
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 18px;
+    line-height: 1.2;
+}
+.hero-title span { color: #7c3aed; }
+
+.hero-desc {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-bottom: 36px;
+    line-height: 1.7;
+}
+
+.btn-gradient-primary {
+    background: linear-gradient(135deg, #7c3aed, #db2777);
+    color: #fff !important;
+    padding: 14px 34px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, .4);
+    transition: all .3s ease;
+}
+.btn-gradient-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(124, 58, 237, .55);
+    color: #fff;
+}
+
+/* ── 3. FEATURES GRID ───────────────────────────────────────── */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    margin-bottom: 64px;
+}
+
+.feature-card {
+    background: #fff;
+    padding: 38px 28px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,.05);
+    border: 1px solid #f3f4f6;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 32px rgba(0,0,0,.1);
+}
+
+.feature-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+}
+.feature-icon.purple { background: #f3e8ff; color: #7c3aed; }
+.feature-icon.pink   { background: #fce7f3; color: #db2777; }
+.feature-icon.blue   { background: #dbeafe; color: #2563eb; }
+
+.feature-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+}
+.feature-card p {
+    color: #6b7280;
+    font-size: .95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── 4. REVIEWS SECTION ─────────────────────────────────────── */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.section-header h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+.section-header p {
+    color: #6b7280;
+    margin: .4rem 0 0;
+}
+
+.reviews-section { margin-bottom: 70px; }
+
+.custom-reviews-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Main (big) review card */
+.review-card-main {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.review-card-main:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 32px rgba(0,0,0,.1);
+}
+
+.review-img-wrap { position: relative; }
+
+.review-img-main {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d1d5db;
+}
+
+.review-badge-new {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: #b45309;
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 800;
+    padding: .25rem .75rem;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.review-body { padding: 1.75rem; }
+
+.star-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1rem;
+}
+.stars-filled { color: #f59e0b; font-size: .85rem; letter-spacing: 2px; }
+.stars-empty  { color: #e5e7eb; font-size: .85rem; letter-spacing: 2px; }
+.star-score   { font-size: .85rem; font-weight: 700; color: #111827; }
+
+.review-title-lg {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: .85rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.review-content-text {
+    color: #6b7280;
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.review-author {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #7c3aed;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.author-name  { font-weight: 700; font-size: .88rem; color: #111827; }
+.author-meta  { font-size: .78rem; color: #9ca3af; margin-top: 2px; }
+
+/* Small review cards */
+.review-cards-side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.review-card-small {
+    display: flex;
+    gap: 1.1rem;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    padding: 1.1rem;
+    text-decoration: none;
+    transition: transform .22s ease, box-shadow .22s ease;
+    align-items: flex-start;
+}
+.review-card-small:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 22px rgba(0,0,0,.08);
+}
+
+.review-img-small {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: #f3f4f6;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d1d5db;
+}
+
+.review-card-small-body { flex: 1; min-width: 0; }
+
+.review-title-sm {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: .35rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.review-by { font-size: .82rem; color: #9ca3af; }
+.review-by strong { color: #6b7280; }
+
+/* ── 5. RESPONSIVE ──────────────────────────────────────────── */
+
+/* Tablet */
+@@media (max-width: 1024px) {
+    .custom-reviews-grid {
+        grid-template-columns: 1fr;
+    }
+    .review-img-main { height: 260px; }
+    .hero-title { font-size: 2.5rem; }
+}
+
+/* Mobile landscape / small tablet */
+@@media (max-width: 768px) {
+    .hero-section {
+        padding: 56px 20px 48px;
+        margin-bottom: 36px;
+        border-radius: 14px;
+    }
+    .hero-title { font-size: 2rem; }
+    .hero-desc  { font-size: 1rem; margin-bottom: 28px; }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .features-grid {
+        gap: 18px;
+        margin-bottom: 44px;
+    }
+    .feature-card { padding: 28px 20px; }
+
+    .section-header { flex-direction: column; align-items: flex-start; }
+    .section-header h2 { font-size: 1.5rem; }
+
+    .review-card-small {
+        flex-direction: row; /* keep horizontal on tablet */
+    }
+}
+
+/* Mobile portrait */
+@@media (max-width: 540px) {
+    .hero-section { padding: 44px 16px 40px; }
+    .hero-title   { font-size: 1.7rem; }
+    .hero-badge   { font-size: .75rem; }
+
+    .btn-gradient-primary {
+        padding: 12px 24px;
+        font-size: .95rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: .75rem;
+    }
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem .75rem;
+        gap: .6rem;
+    }
+    .stat-icon { width: 48px; height: 48px; font-size: 1.2rem; }
+    .stat-info h3 { font-size: 1.5rem; }
+
+    .review-img-main { height: 200px; }
+    .review-body { padding: 1.25rem; }
+    .review-title-lg { font-size: 1.2rem; }
+
+    .review-card-small {
+        flex-direction: column;
+        gap: .85rem;
+    }
+    .review-img-small {
+        width: 100%;
+        height: 160px;
+        border-radius: 10px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+}
+
+<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
+
+    
     @if (Model != null)
     {
         <div class="stats-grid">
@@ -121,7 +481,7 @@
                 <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
                 <div class="stat-info">
                     <h3>@Model.TotalProducts.ToString("N0")</h3>
-                    <p>Sản phẩm/Dịch vụ</p>
+                    <p>Sản phẩm / Dịch vụ</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -133,5 +493,159 @@
             </div>
         </div>
     }
-</div>
 
+    <section class="hero-section">
+        <div class="hero-inner">
+            <span class="hero-badge">Nền tảng Đánh giá Số 1 Việt Nam</span>
+            <h1 class="hero-title">
+                Lựa chọn thông minh với <span>Trustify</span>
+            </h1>
+            <p class="hero-desc">
+                Khám phá hàng ngàn sản phẩm, dịch vụ và doanh nghiệp được đánh giá minh bạch
+                bởi cộng đồng. Quyết định mua sắm an toàn bắt đầu từ đây.
+            </p>
+            <a asp-controller="Product" asp-action="Index" class="btn-gradient-primary">
+                Khám phá tất cả sản phẩm <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <section class="features-grid" aria-label="Tính năng nổi bật">
+        <div class="feature-card">
+            <div class="feature-icon purple">
+                <i class="fa-solid fa-shield"></i>
+            </div>
+            <h3>Đánh giá chân thực</h3>
+            <p>100% đánh giá từ người dùng thật, qua hệ thống kiểm duyệt chống spam và review ảo khắt khe.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon pink">
+                <i class="fa-solid fa-building-circle-check"></i>
+            </div>
+            <h3>Doanh nghiệp uy tín</h3>
+            <p>Hồ sơ doanh nghiệp rõ ràng, giúp bạn dễ dàng tra cứu thông tin và độ uy tín các thương hiệu.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon blue">
+                <i class="fa-solid fa-handshake"></i>
+            </div>
+            <h3>Kết nối trực tiếp</h3>
+            <p>Tạo cầu nối minh bạch — doanh nghiệp có thể trực tiếp phản hồi và hỗ trợ người dùng.</p>
+        </div>
+    </section>
+
+    @{
+        var latestReviews = ViewBag.LatestReviews as IEnumerable<SocialReview.Models.Review>;
+        var bigReview     = latestReviews?.FirstOrDefault();
+        var smallReviews  = latestReviews?.Skip(1).Take(2).ToList();
+    }
+
+    @if (latestReviews != null && latestReviews.Any())
+    {
+        <section class="reviews-section" aria-label="Reviews mới nhất">
+            <div class="section-header">
+                <div>
+                    <h2>Reviews mới nhất</h2>
+                    <p>Đánh giá chân thực từ cộng đồng người tiêu dùng.</p>
+                </div>
+            </div>
+
+            <div class="custom-reviews-grid">
+                @if (bigReview != null)
+                {
+                    string bigImg = !string.IsNullOrEmpty(bigReview.Image)
+                        ? bigReview.Image
+                        : bigReview.Product?.ProductImage;
+                    string bigInitial = (bigReview.User?.FullName ?? bigReview.User?.UserName ?? "U")
+                        .Substring(0, 1).ToUpper();
+
+                    <a href="/Product/Detail/@bigReview.ProductID" class="review-card-main">
+                        <div class="review-img-wrap">
+                            @if (!string.IsNullOrEmpty(bigImg))
+                            {
+                                <img src="@bigImg" class="review-img-main" alt="@bigReview.Title" loading="lazy">
+                            }
+                            else
+                            {
+                                <div class="review-img-main">
+                                    <i class="fa-solid fa-image fa-3x"></i>
+                                </div>
+                            }
+                            <span class="review-badge-new">Mới nhất</span>
+                        </div>
+
+                        <div class="review-body">
+                            <div class="star-row">
+                                <span class="stars-filled">
+                                    @for (int i = 0; i < bigReview.Rating; i++) { <text>★</text> }
+                                </span>
+                                <span class="stars-empty">
+                                    @for (int i = bigReview.Rating; i < 5; i++) { <text>★</text> }
+                                </span>
+                                <span class="star-score">@bigReview.Rating/5</span>
+                            </div>
+
+                            <h3 class="review-title-lg">@bigReview.Title</h3>
+                            <p class="review-content-text">@bigReview.Content</p>
+
+                            <div class="review-author">
+                                <div class="author-avatar">@bigInitial</div>
+                                <div>
+                                    <div class="author-name">
+                                        @(bigReview.User?.FullName ?? bigReview.User?.UserName ?? "Khách")
+                                    </div>
+                                    <div class="author-meta">
+                                        @bigReview.Product?.ProductName &bull; @bigReview.CreatedAt.ToString("dd/MM/yyyy")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
+
+                @if (smallReviews != null && smallReviews.Any())
+                {
+                    <div class="review-cards-side">
+                        @foreach (var review in smallReviews)
+                        {
+                            string smImg = !string.IsNullOrEmpty(review.Image)
+                                ? review.Image
+                                : review.Product?.ProductImage;
+
+                            <a href="/Product/Detail/@review.ProductID" class="review-card-small">
+                                @if (!string.IsNullOrEmpty(smImg))
+                                {
+                                    <img src="@smImg" class="review-img-small" alt="@review.Title" loading="lazy">
+                                }
+                                else
+                                {
+                                    <div class="review-img-small">
+                                        <i class="fa-solid fa-image fa-2x"></i>
+                                    </div>
+                                }
+
+                                <div class="review-card-small-body">
+                                    <div class="star-row" style="margin-bottom:.5rem;">
+                                        <span class="stars-filled">
+                                            @for (int i = 0; i < review.Rating; i++) { <text>★</text> }
+                                        </span>
+                                        <span class="stars-empty">
+                                            @for (int i = review.Rating; i < 5; i++) { <text>★</text> }
+                                        </span>
+                                        <span class="star-score">@review.Rating/5</span>
+                                    </div>
+                                    <h4 class="review-title-sm">@review.Title</h4>
+                                    <div class="review-by">
+                                        Bởi <strong>@(review.User?.FullName ?? review.User?.UserName ?? "Khách")</strong>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+
+            </div>
+        </section>
+    }
+
+</div>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SocialReview.Models.Product>
+﻿@* @model IEnumerable<SocialReview.Models.Product>
 @{
     ViewData["Title"] = "Danh sách Sản phẩm/Dịch vụ";
     Layout = "_AdminLayout";
@@ -106,6 +106,198 @@
                 alert.className = `alert alert-${type}`;
                 alert.textContent = msg;
                 document.querySelector('.admin-container').prepend(alert);
+                setTimeout(() => alert.remove(), 3000);
+            }
+        });
+    </script>
+} *@
+
+@model IEnumerable<SocialReview.Models.Product>
+@{
+    ViewData["Title"] = "Danh sách Sản phẩm / Dịch vụ";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-container">
+    <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 class="admin-title">Quản lý Sản phẩm</h1>
+            <p class="admin-subtitle">Danh sách tất cả sản phẩm và dịch vụ trên hệ thống</p>
+        </div>
+        <a asp-action="Create" class="btn btn-green" style="white-space: nowrap;">
+            <i class="fa-solid fa-plus"></i> Tạo mới
+        </a>
+    </div>
+
+    <div class="table-container">
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th style="min-width: 180px;">Tên sản phẩm</th>
+                        <th style="width: 260px;">Mô tả</th>
+                        <th style="width: 90px; text-align: center;">Ảnh</th>
+                        <th style="min-width: 110px;">Giá</th>
+                        <th style="width: 120px;">Loại</th>
+                        <th style="min-width: 140px;">Trạng thái</th>
+                        <th style="width: 140px; text-align: right;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr id="row-@item.ProductID">
+                                <td style="color: #6b7280; font-size: 0.875rem;">#@item.ProductID</td>
+                                <td style="font-weight: 600; color: #111827;">@item.ProductName</td>
+                                <td>
+                                    <div class="text-truncate-cell" title="@item.ProductDescription">
+                                        @item.ProductDescription
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    @if (!string.IsNullOrEmpty(item.ProductImage))
+                                    {
+                                        <img src="@item.ProductImage" alt="@item.ProductName" style="width: 44px; height: 44px; object-fit: cover; border-radius: 0.375rem; border: 1px solid #e5e7eb; margin: 0 auto;">
+                                    }
+                                    else
+                                    {
+                                        <div style="width: 44px; height: 44px; background: #f3f4f6; border-radius: 0.375rem; display: flex; align-items: center; justify-content: center; color: #9ca3af; border: 1px solid #e5e7eb; margin: 0 auto;">
+                                            <i class="fa-solid fa-image fa-sm"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td style="font-weight: 600; color: var(--primary-purple);">@item.ProductPrice.ToString("N0") ₫</td>
+                                <td><span class="badge badge-purple">@item.ProductType</span></td>
+                                <td>
+                                    <div class="status-cell">
+                                        <label class="switch">
+                                            <input type="checkbox" class="product-status-toggle"
+                                                   data-id="@item.ProductID"
+                                                   @(item.Disabled != true ? "checked" : "")>
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span id="status-text-@item.ProductID" style="font-size: 0.875rem; font-weight: 500; color: @(item.Disabled != true ? "#16a34a" : "#dc2626"); margin-left: 0.5rem;">
+                                            @(item.Disabled != true ? "Hoạt động" : "Đã ẩn")
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                        <a href="@Url.Action("Edit", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-yellow" title="Sửa"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="@Url.Action("Details", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-blue" title="Xem"><i class="fa-solid fa-eye"></i></a>
+                                        <a href="@Url.Action("Delete", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-red" title="Xóa" onclick="return confirm('Xóa doanh nghiệp này?');"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="empty-state">
+                                <i class="fa-solid fa-box-open empty-state-icon"></i>
+                                <div class="empty-state-text">Chưa có sản phẩm nào</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mobile-cards">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="mobile-card">
+                        <div class="mobile-card-header">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                @if (!string.IsNullOrEmpty(item.ProductImage))
+                                {
+                                    <img src="@item.ProductImage" alt="Img" style="width: 40px; height: 40px; object-fit: cover; border-radius: 0.375rem;">
+                                }
+                                <div>
+                                    <div style="font-weight: 600; color: #111827;">@item.ProductName</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">#@item.ProductID</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-card-body">
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">Giá</span>
+                                <span class="mobile-card-value" style="font-weight: 600; color: var(--primary-purple);">@item.ProductPrice.ToString("N0") ₫</span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">Loại</span>
+                                <span class="mobile-card-value"><span class="badge badge-purple">@item.ProductType</span></span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">Trạng thái</span>
+                                <span class="mobile-card-value" style="font-weight: 500; color: @(item.Disabled != true ? "#16a34a" : "#dc2626");">
+                                    @(item.Disabled != true ? "Hoạt động" : "Đã ẩn")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mobile-card-actions">
+                            <a href="@Url.Action("Edit", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-yellow"><i class="fa-solid fa-pencil"></i> Sửa</a>
+                            <a href="@Url.Action("Details", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-blue"><i class="fa-solid fa-eye"></i> Xem</a>
+                            <a href="@Url.Action("Delete", "Company", new { area = "Admin", id = item.CompanyID })" class="btn btn-red" onclick="return confirm('Xóa?');"><i class="fa-solid fa-trash"></i> Xóa</a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.product-status-toggle').forEach(toggle => {
+                toggle.addEventListener('change', function () {
+                    const productId = this.dataset.id;
+                    const isEnabled = this.checked;
+                    const statusText = document.getElementById(`status-text-${productId}`);
+                    const originalState = !isEnabled;
+
+                    this.disabled = true;
+
+                    fetch(`/Admin/Product/ToggleStatus/${productId}`, { method: 'POST' })
+                        .then(r => r.json())
+                        .then(result => {
+                            if (result.success) {
+                                // Update text and color based on toggle state
+                                statusText.textContent = result.newIsDisabledState ? "Đã ẩn" : "Hoạt động";
+                                statusText.style.color = result.newIsDisabledState ? "#dc2626" : "#16a34a";
+                                showAlert('success', `Đã cập nhật trạng thái sản phẩm #${productId}`);
+                            } else {
+                                this.checked = originalState;
+                                statusText.textContent = originalState ? "Hoạt động" : "Đã ẩn";
+                                showAlert('danger', result.message || 'Lỗi server');
+                            }
+                        })
+                        .catch(() => {
+                            this.checked = originalState;
+                            statusText.textContent = originalState ? "Hoạt động" : "Đã ẩn";
+                            showAlert('danger', 'Lỗi kết nối');
+                        })
+                        .finally(() => this.disabled = false);
+                });
+            });
+
+            function showAlert(type, msg) {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.innerHTML = type === 'success' ? `<i class="fa-solid fa-check-circle"></i> ${msg}` : `<i class="fa-solid fa-exclamation-circle"></i> ${msg}`;
+
+                const container = document.querySelector('.admin-container');
+                container.insertBefore(alert, container.firstChild);
+
+                // Tự động xóa alert sau 3 giây
                 setTimeout(() => alert.remove(), 3000);
             }
         });
